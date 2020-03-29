@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, ViewEncapsulation } from '@angular/core';
 
 import * as Chartist from 'chartist';
 import { ChartType, ChartEvent } from 'ng-chartist';
@@ -32,6 +32,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	totalCasesValues = [];
 	totalCasesIncreaseValues = [];
 	totalCases: Chart;
+	totalCasesIncrease: Chart;
 
 
 	ngOnInit() {
@@ -60,16 +61,18 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
 				this.districtName = this.districtNameInput;
-				this.totalCases = this.createChart(this.totalCasesValues, this.totalCasesIncreaseValues);
+				this.totalCases = this.createChart(this.totalCasesValues);
+				this.totalCasesIncrease = this.createChart(this.totalCasesIncreaseValues);
 			}else{
 				this.districtName = data.description;
-				this.totalCases = this.createChart(null, null);
+				this.totalCases = this.createChart(null);
+				this.totalCasesIncrease = this.createChart(null);
 			}
 		});
 
 	}
 
-	private createChart(values, totalCasesIncreaseValues): Chart{
+	private createChart(values): Chart{
 		return  {
 			type: 'Line',
 			data: {
@@ -77,8 +80,6 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 				series: [
 					{
 						data: values
-					}, {
-						data: totalCasesIncreaseValues
 					}
 				]
 			},

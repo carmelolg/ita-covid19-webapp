@@ -22,7 +22,7 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
-        path: 'provincia',
+        path: 'district',
         loadChildren: () => import('./provincia/provincia.module').then(m => m.ProvinciaModule)
       }
     ]
