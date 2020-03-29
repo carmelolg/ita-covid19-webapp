@@ -1,6 +1,6 @@
 {
-  "name": "material",
-  "short_name": "material",
+  "name": "ita-covid19",
+  "short_name": "ita-covid19",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
