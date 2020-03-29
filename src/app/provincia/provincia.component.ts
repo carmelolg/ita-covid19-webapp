@@ -30,6 +30,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	dataLabels = [];
 
 	totalCasesValues = [];
+	totalCasesIncreaseValues = [];
 	totalCases: Chart;
 
 
@@ -46,6 +47,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 		}
 
 		this.totalCasesValues = [];
+		this.totalCasesIncreaseValues = [];
 		this.dataLabels = [];
 		this.totalCases = null;
 		
@@ -55,18 +57,19 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
 					this.dataLabels.push(innerDate);
 					this.totalCasesValues.push(item.value);
+					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
 				this.districtName = this.districtNameInput;
-				this.totalCases = this.createChart(this.totalCasesValues);
+				this.totalCases = this.createChart(this.totalCasesValues, this.totalCasesIncreaseValues);
 			}else{
 				this.districtName = data.description;
-				this.totalCases = this.createChart(null);
+				this.totalCases = this.createChart(null, null);
 			}
 		});
 
 	}
 
-	private createChart(values): Chart{
+	private createChart(values, totalCasesIncreaseValues): Chart{
 		return  {
 			type: 'Line',
 			data: {
@@ -74,6 +77,8 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 				series: [
 					{
 						data: values
+					}, {
+						data: totalCasesIncreaseValues
 					}
 				]
 			},

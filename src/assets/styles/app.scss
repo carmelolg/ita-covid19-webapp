@@ -20,6 +20,15 @@ File: scss
 Global Styles 
 *******************/
 
+.ct-series-a .ct-point, .ct-series-a .ct-line, .ct-series-a .ct-bar, .ct-series-a .ct-slice-donut {
+    stroke: #26c6da;
+}
+
+.ct-series-b .ct-point, .ct-series-b .ct-line, .ct-series-b .ct-bar, .ct-series-b .ct-slice-donut {
+    stroke: #1e88e5;
+}
+
+
 * {
     outline: none;
     box-sizing:border-box;

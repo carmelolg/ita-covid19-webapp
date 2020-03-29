@@ -27,25 +27,31 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	dataLabels = [];
 
 	totalCasesValues = [];
+	totalCasesIncreaseValues = [];
 	totalCases: Chart;
 
 	totalHospitalizedValues = [];
+	totalHospitalizedIncreaseValues = [];
 	totalHospitalized: Chart;
 
 
 	totalDeadValues = [];
+	totalDeadIncreaseValues = [];
 	totalDead: Chart;
 
 
 	totalTestsValues = [];
+	totalTestsIncreaseValues = [];
 	totalTests: Chart;
 
 
 	totalIntensiveCareValues = [];
+	totalIntensiveCareIncreaseValues = [];
 	totalIntensiveCare: Chart;
 
 
 	totalRecoveredValues = [];
+	totalRecoveredIncreaseValues = [];
 	totalRecovered: Chart;
 
 	ngOnInit() {
@@ -71,13 +77,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	private createTotalCases(){
 		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total").subscribe(data => {
+			console.log(data);
+			
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
 					this.dataLabels.push(innerDate);
 					this.totalCasesValues.push(item.value);
+					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
-				this.totalCases = this.createChart(this.totalCasesValues);
+				this.totalCases = this.createChart(this.totalCasesValues, this.totalCasesIncreaseValues);
 			}
 		});
 
@@ -90,9 +99,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
 					// this.dataLabels.push(innerDate);
 					this.totalHospitalizedValues.push(item.value);
+					this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalHospitalized = this.createChart(this.totalHospitalizedValues);
+			this.totalHospitalized = this.createChart(this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
 		});
 
 
@@ -106,9 +116,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
 					// this.dataLabels.push(innerDate);
 					this.totalDeadValues.push(item.value);
+					this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalDead = this.createChart(this.totalDeadValues);
+			this.totalDead = this.createChart(this.totalDeadValues, this.totalDeadIncreaseValues);
 		});
 
 	}
@@ -121,9 +132,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
 					// this.dataLabels.push(innerDate);
 					this.totalTestsValues.push(item.value);
+					this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalTests = this.createChart(this.totalTestsValues);
+			this.totalTests = this.createChart(this.totalTestsValues, this.totalTestsIncreaseValues);
 		});
 
 	}
@@ -136,9 +148,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
 					// this.dataLabels.push(innerDate);
 					this.totalIntensiveCareValues.push(item.value);
+					this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalIntensiveCare = this.createChart(this.totalIntensiveCareValues);
+			this.totalIntensiveCare = this.createChart(this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
 		});
 
 	}
@@ -150,24 +163,33 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
 					// this.dataLabels.push(innerDate);
 					this.totalRecoveredValues.push(item.value);
+					this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalRecovered = this.createChart(this.totalRecoveredValues);
+			this.totalRecovered = this.createChart(this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
 		});
 
 	}
 
-	private createChart(values): Chart{
+	private createChart(values, increaseValue?): Chart{
 		return  {
 			type: 'Line',
 			data: {
 				labels: this.dataLabels,
-				series: [
-					{
-						data: values
-					}
-				]
+				series: [ {
+					data: values
+				}, 
+				{
+					data: increaseValue
+				} ]
 			},
+			options: {
+				seriesDistance: 25,
+				height: 300,
+				axisX: {
+				    showLabel: true
+				}
+			},	
 			responsiveOptions: [
 				[
 					'screen and (min-width: 640px)',
