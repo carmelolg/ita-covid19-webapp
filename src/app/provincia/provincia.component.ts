@@ -4,6 +4,8 @@ import * as Chartist from 'chartist';
 import { ChartType, ChartEvent } from 'ng-chartist';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import ctPointLabels from 'chartist-plugin-pointlabels';
+
 declare var require: any;
 
 export interface Chart {
@@ -74,6 +76,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	}
 
 	private createChart(values): Chart{
+
 		return  {
 			type: 'Line',
 			data: {
@@ -84,6 +87,17 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					}
 				]
 			},
+			
+			options: {
+				height: '280px',
+				plugins: [
+					// tooltip({appendToBody: false, anchorToPoint: true}),
+					ctPointLabels({
+						textAnchor: 'middle',
+						labelInterpolationFnc: function(value) {return (value) ? value: 0}
+					}) 
+				  ]
+			},
 			responsiveOptions: [
 				[
 					'screen and (min-width: 640px)',
@@ -91,7 +105,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 						axisX: {
 							labelInterpolationFnc: function (
 								value: number,
-								index: number
+								index: any
 							): string {
 								return index % 1 === 0 ? `${value}` : null;
 							}

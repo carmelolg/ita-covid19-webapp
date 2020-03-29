@@ -4,6 +4,7 @@ import * as Chartist from 'chartist';
 import { ChartType, ChartEvent } from 'ng-chartist';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import ctPointLabels from 'chartist-plugin-pointlabels';
 declare var require: any;
 
 export interface Chart {
@@ -186,9 +187,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			options: {
 				seriesDistance: 25,
 				height: 300,
-				axisX: {
-				    showLabel: true
-				}
+				plugins: [
+					// tooltip({appendToBody: false, anchorToPoint: true}),
+					ctPointLabels({
+						textAnchor: 'middle',
+						labelInterpolationFnc: function(value) {return (value) ? value: 0}
+					}) 
+				  ]
 			},	
 			responsiveOptions: [
 				[
