@@ -44,13 +44,29 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	totalIntensiveCareValues = [];
 	totalIntensiveCare: Chart;
 
+
+	totalRecoveredValues = [];
+	totalRecovered: Chart;
+
 	ngOnInit() {
+
+		this.eraseAllData();
 
 		this.createTotalCases();
 		this.createTotalDead();
 		this.createTotalHospitalized();
 		this.createTotalIntensiveCare();
-		this.createTotalTests()
+		this.createTotalTests();
+		this.createTotalRecovered();
+	}
+
+	private eraseAllData(){
+		this.totalCases = null;
+		this.totalDead = null;
+		this.totalHospitalized = null;
+		this.totalIntensiveCare = null;
+		this.totalTests = null;
+		this.totalRecovered = null;
 	}
 
 	private createTotalCases(){
@@ -127,6 +143,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	}
 
+	private createTotalRecovered(){
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/recovered").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+					// this.dataLabels.push(innerDate);
+					this.totalRecoveredValues.push(item.value);
+				});
+			}
+			this.totalRecovered = this.createChart(this.totalRecoveredValues);
+		});
+
+	}
 
 	private createChart(values): Chart{
 		return  {

@@ -25,6 +25,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	constructor(private http: HttpClient, public datepipe: DatePipe) { }
 
 	districtName = "Torino";
+	districtNameInput = "";
 
 	dataLabels = [];
 
@@ -39,22 +40,31 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	}
 
 	private createTotalCases(){
+
+		if(this.districtNameInput.length === 0 ){
+			this.districtNameInput = this.districtName;
+		}
+
 		this.totalCasesValues = [];
 		this.dataLabels = [];
+		this.totalCases = null;
 		
-		this.http.get<any>("https://ita-covid19.herokuapp.com/provincia/"+this.districtName+"/stats").subscribe(data => {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/district/"+this.districtNameInput+"/total").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
 					this.dataLabels.push(innerDate);
 					this.totalCasesValues.push(item.value);
 				});
+				this.districtName = this.districtNameInput;
 				this.totalCases = this.createChart(this.totalCasesValues);
+			}else{
+				this.districtName = data.description;
+				this.totalCases = this.createChart(null);
 			}
 		});
 
 	}
-
 
 	private createChart(values): Chart{
 		return  {
