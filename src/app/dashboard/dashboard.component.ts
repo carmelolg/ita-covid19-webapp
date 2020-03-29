@@ -6,8 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 declare var require: any;
 
-const data: any = require('./data.json');
-
 export interface Chart {
 	type: ChartType;
 	data: Chartist.IChartistData;
@@ -63,10 +61,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.dataLabels.push(innerDate);
 					this.totalCasesValues.push(item.value);
 				});
+				this.totalCases = this.createChart(this.totalCasesValues);
 			}
 		});
 
-		this.totalCases = this.createChart(this.totalCasesValues);
 	}
 
 	private createTotalHospitalized(){
@@ -78,9 +76,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.totalHospitalizedValues.push(item.value);
 				});
 			}
+			this.totalHospitalized = this.createChart(this.totalHospitalizedValues);
 		});
 
-		this.totalHospitalized = this.createChart(this.totalHospitalizedValues);
 
 	}
 
@@ -94,9 +92,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.totalDeadValues.push(item.value);
 				});
 			}
+			this.totalDead = this.createChart(this.totalDeadValues);
 		});
 
-		this.totalDead = this.createChart(this.totalDeadValues);
 	}
 
 
@@ -109,9 +107,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.totalTestsValues.push(item.value);
 				});
 			}
+			this.totalTests = this.createChart(this.totalTestsValues);
 		});
 
-		this.totalTests = this.createChart(this.totalTestsValues);
 	}
 
 
@@ -124,9 +122,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.totalIntensiveCareValues.push(item.value);
 				});
 			}
+			this.totalIntensiveCare = this.createChart(this.totalIntensiveCareValues);
 		});
 
-		this.totalIntensiveCare = this.createChart(this.totalIntensiveCareValues);
 	}
 
 
