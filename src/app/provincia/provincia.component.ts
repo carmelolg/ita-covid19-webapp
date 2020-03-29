@@ -51,6 +51,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 		this.totalCasesIncreaseValues = [];
 		this.dataLabels = [];
 		this.totalCases = null;
+		this.totalCasesIncrease = null;
 		
 		this.http.get<any>("https://ita-covid19.herokuapp.com/district/"+this.districtNameInput+"/total").subscribe(data => {
 			if (data.results.length > 0) {
