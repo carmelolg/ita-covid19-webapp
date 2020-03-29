@@ -26,29 +26,118 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	constructor(private http: HttpClient, public datepipe: DatePipe) { }
 
-	cityLabels = [];
-	cityValues = [];
-	barChart1: Chart;
+	dataLabels = [];
+
+	totalCasesValues = [];
+	totalCases: Chart;
+
+	totalHospitalizedValues = [];
+	totalHospitalized: Chart;
+
+
+	totalDeadValues = [];
+	totalDead: Chart;
+
+
+	totalTestsValues = [];
+	totalTests: Chart;
+
+
+	totalIntensiveCareValues = [];
+	totalIntensiveCare: Chart;
+
 	ngOnInit() {
 
-		this.http.get<any>("https://ita-covid19.herokuapp.com/provincia/Torino/stats").subscribe(data => {
+		this.createTotalCases();
+		this.createTotalDead();
+		this.createTotalHospitalized();
+		this.createTotalIntensiveCare();
+		this.createTotalTests()
+	}
+
+	private createTotalCases(){
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-					this.cityLabels.push(innerDate);
-					this.cityValues.push(item.value);
+					this.dataLabels.push(innerDate);
+					this.totalCasesValues.push(item.value);
 				});
 			}
 		});
 
-		// Barchart
-		this.barChart1 = {
+		this.totalCases = this.createChart(this.totalCasesValues);
+	}
+
+	private createTotalHospitalized(){
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/hospitalized").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+					// this.dataLabels.push(innerDate);
+					this.totalHospitalizedValues.push(item.value);
+				});
+			}
+		});
+
+		this.totalHospitalized = this.createChart(this.totalHospitalizedValues);
+
+	}
+
+
+	private createTotalDead(){
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/dead").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+					// this.dataLabels.push(innerDate);
+					this.totalDeadValues.push(item.value);
+				});
+			}
+		});
+
+		this.totalDead = this.createChart(this.totalDeadValues);
+	}
+
+
+	private createTotalTests(){
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/test").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+					// this.dataLabels.push(innerDate);
+					this.totalTestsValues.push(item.value);
+				});
+			}
+		});
+
+		this.totalTests = this.createChart(this.totalTestsValues);
+	}
+
+
+	private createTotalIntensiveCare(){
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/intensive-care").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+					// this.dataLabels.push(innerDate);
+					this.totalIntensiveCareValues.push(item.value);
+				});
+			}
+		});
+
+		this.totalIntensiveCare = this.createChart(this.totalIntensiveCareValues);
+	}
+
+
+	private createChart(values): Chart{
+		return  {
 			type: 'Line',
 			data: {
-				labels: this.cityLabels,
+				labels: this.dataLabels,
 				series: [
 					{
-						data: this.cityValues
+						data: values
 					}
 				]
 			},
@@ -68,20 +157,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				]
 			]
 		};
-
 	}
 
-
-
-	// This is for the donute chart
-	donuteChart1: Chart = {
-		type: 'Pie',
-		data: data['Pie'],
-		options: {
-			donut: true,
-			height: 260,
-			showLabel: false,
-			donutWidth: 20
-		}
-	};
 }
