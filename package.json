@@ -1,7 +1,10 @@
 {
-  "name": "material",
-  "version": "0.0.0",
+  "name": "ita-covid19-webapp",
+  "version": "0.0.1",
   "license": "MIT",
+  "engines": {
+    "node": "13.5.x"
+  },
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
