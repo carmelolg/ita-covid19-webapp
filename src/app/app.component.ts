@@ -3,8 +3,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.styl']
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'ita-covid19-webapp';
-}
+export class AppComponent {}
