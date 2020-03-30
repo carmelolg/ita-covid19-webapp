@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.createTotalRecovered();
 	}
 
-	private eraseAllData(){
+	private eraseAllData() {
 		this.totalCases = null;
 		this.totalDead = null;
 		this.totalHospitalized = null;
@@ -69,8 +69,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.totalRecovered = null;
 	}
 
-	private createTotalCases(){
-		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total").subscribe(data => {	
+	private createTotalCases() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
@@ -84,7 +84,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	}
 
-	private createTotalHospitalized(){
+	private createTotalHospitalized() {
 		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/hospitalized").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
@@ -101,7 +101,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 
-	private createTotalDead(){
+	private createTotalDead() {
 		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/dead").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
@@ -117,7 +117,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 
-	private createTotalTests(){
+	private createTotalTests() {
 		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/test").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
@@ -133,7 +133,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 
-	private createTotalIntensiveCare(){
+	private createTotalIntensiveCare() {
 		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/intensive-care").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
@@ -148,7 +148,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	}
 
-	private createTotalRecovered(){
+	private createTotalRecovered() {
 		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/recovered").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
@@ -163,41 +163,86 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	}
 
-	private createChart(values, increaseValue?): Chart{
-		return  {
+	private createChart(values, increaseValue?): Chart {
+		return {
 			type: 'Line',
 			data: {
 				labels: this.dataLabels,
-				series: [ {
+				series: [{
 					data: values
-				}, 
+				},
 				{
 					data: increaseValue
-				} ]
+				}]
 			},
 			options: {
 				seriesDistance: 25,
 				height: 300,
 				plugins: [
 					// tooltip({appendToBody: false, anchorToPoint: true}),
-					ctPointLabels({
-						textAnchor: 'middle',
-						labelInterpolationFnc: function(value) {return (value) ? value: 0}
-					}) 
-				  ]
-			},	
+					// ctPointLabels({
+					// 	textAnchor: 'middle',
+					// 	labelInterpolationFnc: function (value) { return (value) ? value : 0 }
+					// })
+				]
+			},
 			responsiveOptions: [
 				[
-					'screen and (min-width: 640px)',
+					'screen and (max-width: 400px)',
 					{
 						axisX: {
 							labelInterpolationFnc: function (
 								value: number,
 								index: number
 							): string {
-								return index % 1 === 0 ? `${value}` : null;
+								return index % 10 === 0 ? `${value}` : null;
 							}
 						}
+					}
+				],
+				[
+					'screen and (min-width: 401px) and (max-width: 640px)',
+					{
+						axisX: {
+							labelInterpolationFnc: function (
+								value: number,
+								index: number
+							): string {
+								return index % 6 === 0 ? `${value}` : null;
+							}
+						}
+					}
+				],
+				[
+					'screen and (min-width: 641px) and (max-width: 990px)',
+					{
+						axisX: {
+							labelInterpolationFnc: function (
+								value: number,
+								index: number
+							): string {
+								return index % 5 === 0 ? `${value}` : null;
+							}
+						}
+					}
+				],
+				[
+					'screen and (min-width: 991px) and (max-width: 1550px)',
+					{
+						axisX: {
+							labelInterpolationFnc: function (
+								value: number,
+								index: number
+							): string {
+								return index % 3 === 0 ? `${value}` : null;
+							}
+						}
+					}
+				],
+				[
+					'screen and (max-height: 600px)',
+					{
+						height: 200
 					}
 				]
 			]

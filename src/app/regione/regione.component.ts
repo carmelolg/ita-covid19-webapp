@@ -215,24 +215,69 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 				height: 300,
 				plugins: [
 					// tooltip({appendToBody: false, anchorToPoint: true}),
-					ctPointLabels({
-						textAnchor: 'middle',
-						labelInterpolationFnc: function (value) { return (value) ? value : 0 }
-					})
+					// ctPointLabels({
+					// 	textAnchor: 'middle',
+					// 	labelInterpolationFnc: function (value) { return (value) ? value : 0 }
+					// })
 				]
 			},
 			responsiveOptions: [
 				[
-					'screen and (min-width: 640px)',
+					'screen and (max-width: 400px)',
 					{
 						axisX: {
 							labelInterpolationFnc: function (
 								value: number,
 								index: number
 							): string {
-								return index % 1 === 0 ? `${value}` : null;
+								return index % 10 === 0 ? `${value}` : null;
 							}
 						}
+					}
+				],
+				[
+					'screen and (min-width: 401px) and (max-width: 640px)',
+					{
+						axisX: {
+							labelInterpolationFnc: function (
+								value: number,
+								index: number
+							): string {
+								return index % 6 === 0 ? `${value}` : null;
+							}
+						}
+					}
+				],
+				[
+					'screen and (min-width: 641px) and (max-width: 990px)',
+					{
+						axisX: {
+							labelInterpolationFnc: function (
+								value: number,
+								index: number
+							): string {
+								return index % 5 === 0 ? `${value}` : null;
+							}
+						}
+					}
+				],
+				[
+					'screen and (min-width: 991px) and (max-width: 1550px)',
+					{
+						axisX: {
+							labelInterpolationFnc: function (
+								value: number,
+								index: number
+							): string {
+								return index % 3 === 0 ? `${value}` : null;
+							}
+						}
+					}
+				],
+				[
+					'screen and (max-height: 600px)',
+					{
+						height: 200
 					}
 				]
 			]
