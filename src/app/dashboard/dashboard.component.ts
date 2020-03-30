@@ -188,56 +188,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			},
 			responsiveOptions: [
 				[
-					'screen and (max-width: 400px)',
-					{
-						axisX: {
-							labelInterpolationFnc: function (
-								value: number,
-								index: number
-							): string {
-								return index % 10 === 0 ? `${value}` : null;
-							}
-						}
-					}
+					'screen and (max-width: 360px)',
+					this.generateResponsiveOptions(10)
 				],
 				[
-					'screen and (min-width: 401px) and (max-width: 640px)',
-					{
-						axisX: {
-							labelInterpolationFnc: function (
-								value: number,
-								index: number
-							): string {
-								return index % 6 === 0 ? `${value}` : null;
-							}
-						}
-					}
+					'screen and (min-width: 361px) and (max-width: 490px)',
+					this.generateResponsiveOptions(6)
 				],
 				[
-					'screen and (min-width: 641px) and (max-width: 990px)',
-					{
-						axisX: {
-							labelInterpolationFnc: function (
-								value: number,
-								index: number
-							): string {
-								return index % 5 === 0 ? `${value}` : null;
-							}
-						}
-					}
+					'screen and (min-width: 491px) and (max-width: 570px)',
+					this.generateResponsiveOptions(5)
 				],
 				[
-					'screen and (min-width: 991px) and (max-width: 1550px)',
-					{
-						axisX: {
-							labelInterpolationFnc: function (
-								value: number,
-								index: number
-							): string {
-								return index % 3 === 0 ? `${value}` : null;
-							}
-						}
-					}
+					'screen and (min-width: 570px) and (max-width: 1024px)',
+					this.generateResponsiveOptions(3)
+				],
+				[
+					'screen and (min-width: 1025px) and (max-width: 1550px)',
+					this.generateResponsiveOptions(2)
 				],
 				[
 					'screen and (max-height: 600px)',
@@ -247,6 +215,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				]
 			]
 		};
+	}
+
+	private generateResponsiveOptions(xValueMod: number) {
+		return {
+			axisX: {
+				labelInterpolationFnc: function (
+					value: number,
+					index: number
+				): string {
+					return index % xValueMod === 0 ? `${value}` : null;
+				}
+			}
+		}
 	}
 
 }
