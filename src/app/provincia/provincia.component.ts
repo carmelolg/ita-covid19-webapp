@@ -5,16 +5,8 @@ import { ChartType, ChartEvent } from 'ng-chartist';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import ctPointLabels from 'chartist-plugin-pointlabels';
+import { Chart } from '../shared/model/Chart';
 
-declare var require: any;
-
-export interface Chart {
-	type: ChartType;
-	data: Chartist.IChartistData;
-	options?: any;
-	responsiveOptions?: any;
-	events?: ChartEvent;
-}
 
 @Component({
 	selector: 'app-provincia',

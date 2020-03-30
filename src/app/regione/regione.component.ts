@@ -1,7 +1,5 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit, ViewEncapsulation } from '@angular/core';
 
-import * as Chartist from 'chartist';
-import { ChartType, ChartEvent } from 'ng-chartist';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import ctPointLabels from 'chartist-plugin-pointlabels';
@@ -9,14 +7,17 @@ import { Chart } from '../shared/model/Chart';
 
 
 @Component({
-	selector: 'app-dashboard',
-	templateUrl: './dashboard.component.html',
-	styleUrls: ['./dashboard.component.scss']
+	selector: 'app-regione',
+	templateUrl: './regione.component.html',
+	styleUrls: ['./regione.component.scss']
 })
-export class DashboardComponent implements OnInit, AfterViewInit {
+export class RegioneComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() { }
 
 	constructor(private http: HttpClient, public datepipe: DatePipe) { }
+
+	regionName = "Lombardia";
+	regionNameInput = "";
 
 	dataLabels = [];
 
@@ -49,6 +50,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	totalRecovered: Chart;
 
 	ngOnInit() {
+		this.call();
+	}
+
+	public call() {
+
+		if (this.regionNameInput.length === 0) {
+			this.regionNameInput = this.regionName;
+		}
 
 		this.eraseAllData();
 
@@ -60,17 +69,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.createTotalRecovered();
 	}
 
-	private eraseAllData(){
-		this.totalCases = null;
-		this.totalDead = null;
-		this.totalHospitalized = null;
-		this.totalIntensiveCare = null;
-		this.totalTests = null;
-		this.totalRecovered = null;
-	}
+	private createTotalCases() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total").subscribe(data => {
 
-	private createTotalCases(){
-		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total").subscribe(data => {	
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
@@ -78,18 +79,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.totalCasesValues.push(item.value);
 					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
+				this.regionName = this.regionNameInput;
 				this.totalCases = this.createChart(this.totalCasesValues, this.totalCasesIncreaseValues);
+			} else {
+				this.regionName = data.description;
+				this.totalCases = this.createChart(null);
 			}
 		});
 
 	}
 
-	private createTotalHospitalized(){
-		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/hospitalized").subscribe(data => {
+	private createTotalHospitalized() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/hospitalized").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
-					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-					// this.dataLabels.push(innerDate);
 					this.totalHospitalizedValues.push(item.value);
 					this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
 				});
@@ -101,8 +104,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 
-	private createTotalDead(){
-		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/dead").subscribe(data => {
+	private createTotalDead() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/dead").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
@@ -117,8 +120,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 
-	private createTotalTests(){
-		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/test").subscribe(data => {
+	private createTotalTests() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/test").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
@@ -133,8 +136,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 
-	private createTotalIntensiveCare(){
-		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/intensive-care").subscribe(data => {
+	private createTotalIntensiveCare() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/intensive-care").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
@@ -148,8 +151,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	}
 
-	private createTotalRecovered(){
-		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/recovered").subscribe(data => {
+	private createTotalRecovered() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/recovered").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
@@ -163,17 +166,46 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	}
 
-	private createChart(values, increaseValue?): Chart{
-		return  {
+	private eraseAllData() {
+		this.totalCases = null;
+		this.totalDead = null;
+		this.totalHospitalized = null;
+		this.totalIntensiveCare = null;
+		this.totalTests = null;
+		this.totalRecovered = null;
+
+		this.dataLabels = [];
+
+		this.totalCasesValues = [];
+		this.totalCasesIncreaseValues = [];
+
+		this.totalHospitalizedValues = [];
+		this.totalHospitalizedIncreaseValues = [];
+
+		this.totalDeadValues = [];
+		this.totalDeadIncreaseValues = [];
+
+		this.totalTestsValues = [];
+		this.totalTestsIncreaseValues = [];
+
+		this.totalIntensiveCareValues = [];
+		this.totalIntensiveCareIncreaseValues = [];
+
+		this.totalRecoveredValues = [];
+		this.totalRecoveredIncreaseValues = [];
+	}
+
+	private createChart(values, increaseValue?): Chart {
+		return {
 			type: 'Line',
 			data: {
 				labels: this.dataLabels,
-				series: [ {
+				series: [{
 					data: values
-				}, 
+				},
 				{
 					data: increaseValue
-				} ]
+				}]
 			},
 			options: {
 				seriesDistance: 25,
@@ -182,10 +214,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					// tooltip({appendToBody: false, anchorToPoint: true}),
 					ctPointLabels({
 						textAnchor: 'middle',
-						labelInterpolationFnc: function(value) {return (value) ? value: 0}
-					}) 
-				  ]
-			},	
+						labelInterpolationFnc: function (value) { return (value) ? value : 0 }
+					})
+				]
+			},
 			responsiveOptions: [
 				[
 					'screen and (min-width: 640px)',
