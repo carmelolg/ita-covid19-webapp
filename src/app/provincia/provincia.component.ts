@@ -20,6 +20,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 	districtName = "Torino";
 	districtNameInput = "";
+	isLoading = false;
 
 	dataLabels = [];
 
@@ -32,12 +33,13 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 
 		this.createTotalCases();
-		
+
 	}
 
-	private createTotalCases(){
+	public createTotalCases() {
 
-		if(this.districtNameInput.length === 0 ){
+		this.isLoading = true;
+		if (this.districtNameInput.length === 0) {
 			this.districtNameInput = this.districtName;
 		}
 
@@ -46,8 +48,8 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 		this.dataLabels = [];
 		this.totalCases = null;
 		this.totalCasesIncrease = null;
-		
-		this.http.get<any>("https://ita-covid19.herokuapp.com/district/"+this.districtNameInput+"/total").subscribe(data => {
+
+		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/total").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
@@ -58,18 +60,20 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 				this.districtName = this.districtNameInput;
 				this.totalCases = this.createChart(this.totalCasesValues);
 				this.totalCasesIncrease = this.createChart(this.totalCasesIncreaseValues);
-			}else{
+			} else {
 				this.districtName = data.description;
 				this.totalCases = this.createChart(null);
 				this.totalCasesIncrease = this.createChart(null);
 			}
+
+			this.isLoading = false;
 		});
 
 	}
 
-	private createChart(values): Chart{
+	private createChart(values): Chart {
 
-		return  {
+		return {
 			type: 'Line',
 			data: {
 				labels: this.dataLabels,
@@ -79,16 +83,16 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					}
 				]
 			},
-			
+
 			options: {
 				height: '280px',
 				plugins: [
 					// tooltip({appendToBody: false, anchorToPoint: true}),
 					ctPointLabels({
 						textAnchor: 'middle',
-						labelInterpolationFnc: function(value) {return (value) ? value: 0}
-					}) 
-				  ]
+						labelInterpolationFnc: function (value) { return (value) ? value : 0 }
+					})
+				]
 			},
 			responsiveOptions: [
 				[

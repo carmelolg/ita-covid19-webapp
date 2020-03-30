@@ -18,6 +18,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 
 	regionName = "Lombardia";
 	regionNameInput = "";
+	isLoading = false;
 
 	dataLabels = [];
 
@@ -55,6 +56,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 
 	public call() {
 
+		this.isLoading = true;
 		if (this.regionNameInput.length === 0) {
 			this.regionNameInput = this.regionName;
 		}
@@ -85,6 +87,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 				this.regionName = data.description;
 				this.totalCases = this.createChart(null);
 			}
+			this.isLoading = false;
 		});
 
 	}
