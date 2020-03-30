@@ -2,7 +2,7 @@
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-form-field class="form-field m-l-20">
             <mat-label>Region</mat-label>
-            <input matInput type="text" [(ngModel)]="regionNameInput" placeholder="es. Piemonte/Calabria">
+            <input matInput type="text" [(ngModel)]="regionNameInput" placeholder="es. Piemonte/Calabria" (keyup.enter)="call()">
             <button *ngIf="regionNameInput" mat-button matSuffix mat-icon-button aria-label="Search" (click)="call()">
                 <mat-icon>check</mat-icon>
             </button>

@@ -2,7 +2,7 @@
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-form-field class="form-field m-l-20">
             <mat-label>District</mat-label>
-            <input matInput type="text" [(ngModel)]="districtNameInput" placeholder="es. Milano/Torino">
+            <input matInput type="text" [(ngModel)]="districtNameInput" placeholder="es. Milano/Torino" (keyup.enter)="call()">
             <button *ngIf="districtNameInput" mat-button matSuffix mat-icon-button aria-label="Search"
                 (click)="createTotalCases()">
                 <mat-icon>check</mat-icon>
