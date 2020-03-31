@@ -1,12 +1,12 @@
 import { Component, AfterViewInit, OnInit, ViewEncapsulation } from '@angular/core';
 
-import * as Chartist from 'chartist';
-import { ChartType, ChartEvent } from 'ng-chartist';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
-import ctPointLabels from 'chartist-plugin-pointlabels';
 import { Chart } from '../shared/model/Chart';
 
+declare var require: any
+require('chartist-plugin-tooltips-updated');
+import * as Chartist from 'chartist';
 
 @Component({
 	selector: 'app-provincia',
@@ -87,11 +87,10 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 			options: {
 				height: '280px',
 				plugins: [
-					// tooltip({appendToBody: false, anchorToPoint: true}),
-					// ctPointLabels({
-					// 	textAnchor: 'middle',
-					// 	labelInterpolationFnc: function (value) { return (value) ? value : 0 }
-					// })
+					Chartist.plugins.tooltip({
+						appendToBody: false,
+						className: "ct-tooltip"
+					})
 				]
 			},
 			responsiveOptions: [

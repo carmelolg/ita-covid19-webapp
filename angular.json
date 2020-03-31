@@ -25,9 +25,11 @@
             "styles": [
               "node_modules/chartist/dist/chartist.css",
               "src/styles.css",
-              "src/assets/styles/style.scss"
+              "src/assets/styles/style.scss",
+              "node_modules/chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.css"
             ],
-            "scripts": []
+            "scripts": [
+            ]
           },
           "configurations": {
             "production": {
@@ -86,7 +88,8 @@
             ],
             "styles": [
               "src/styles.css",
-              "src/assets/styles/style.scss"
+              "src/assets/styles/style.scss",
+              "node_modules/chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.css"
             ],
             "assets": [
               "src/assets",
