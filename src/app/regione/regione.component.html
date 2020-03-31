@@ -1,28 +1,43 @@
 <div fxLayout="row wrap">
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-form-field class="form-field m-l-20">
-            <mat-label>Region</mat-label>
-            <input matInput [disabled]="isLoading" type="text" [(ngModel)]="regionNameInput" placeholder="es. Piemonte/Calabria" (keyup.enter)="call()">
-            <button *ngIf="regionNameInput" mat-button matSuffix mat-icon-button aria-label="Search" (click)="call()">
-                <mat-icon>check</mat-icon>
-            </button>
-        </mat-form-field>
+        <mat-card>
+            <mat-card-content>
+                <div class="d-flex flex-wrap">
+                    <div>
+                        <mat-card-title>Epidemia da COVID-19 per regioni italiane</mat-card-title>
+                        <mat-card-subtitle>Per visualizzare il grafico scrivi il nome della regione</mat-card-subtitle>
+                    </div>
+                </div>
+            </mat-card-content>
+            <mat-form-field class="form-field m-l-20">
+                <mat-label>Regione</mat-label>
+                <input matInput [disabled]="isLoading" type="text" [(ngModel)]="regionNameInput" placeholder="es. Piemonte/Calabria" (keyup.enter)="call()">
+                <button *ngIf="regionNameInput" mat-button matSuffix mat-icon-button aria-label="Search" (click)="call()">
+                    <mat-icon>check</mat-icon>
+                </button>
+            </mat-form-field>    
+        </mat-card>
+    </div>
+</div>
+
+<div fxLayout="row wrap">
+    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-card >
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Daily cases</mat-card-title>
+                        <mat-card-title>Casi ad oggi</mat-card-title>
                         <mat-card-subtitle>{{regionName}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Daily cases</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
                             </li>
                             <li>
                                 <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Daily increase</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero</h6>
                             </li>
                         </ul>
                     </div>
@@ -51,18 +66,18 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Total hospitalized</mat-card-title>
+                        <mat-card-title>Ospedalizzati totali</mat-card-title>
                         <mat-card-subtitle>{{regionName}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Daily cases</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
                             </li>
                             <li>
                                 <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Daily increase</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero</h6>
                             </li>
                         </ul>
                     </div>
@@ -91,18 +106,18 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Total intensive care</mat-card-title>
+                        <mat-card-title>Pazienti in terapia intensiva</mat-card-title>
                         <mat-card-subtitle>{{regionName}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Daily cases</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
                             </li>
                             <li>
                                 <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Daily increase</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero</h6>
                             </li>
                         </ul>
                     </div>
@@ -132,18 +147,18 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Total dead</mat-card-title>
+                        <mat-card-title>Morti totali</mat-card-title>
                         <mat-card-subtitle>{{regionName}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Daily cases</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
                             </li>
                             <li>
                                 <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Daily increase</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero</h6>
                             </li>
                         </ul>
                     </div>
@@ -171,18 +186,18 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Total recovered</mat-card-title>
+                        <mat-card-title>Guariti totali</mat-card-title>
                         <mat-card-subtitle>{{regionName}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Daily cases</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
                             </li>
                             <li>
                                 <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Daily increase</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero</h6>
                             </li>
                         </ul>
                     </div>
@@ -210,18 +225,18 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Total tests</mat-card-title>
+                        <mat-card-title>Tamponi effettuati</mat-card-title>
                         <mat-card-subtitle>{{regionName}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Daily cases</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
                             </li>
                             <li>
                                 <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Daily increase</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero</h6>
                             </li>
                         </ul>
                     </div>

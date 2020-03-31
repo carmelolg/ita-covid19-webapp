@@ -1,13 +1,24 @@
 <div fxLayout="row wrap">
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-form-field class="form-field m-l-20">
-            <mat-label>District</mat-label>
-            <input matInput [disabled]="isLoading" type="text" [(ngModel)]="districtNameInput" placeholder="es. Milano/Torino" (keyup.enter)="createTotalCases()">
-            <button *ngIf="districtNameInput" mat-button matSuffix mat-icon-button aria-label="Search"
-                (click)="createTotalCases()">
-                <mat-icon>check</mat-icon>
-            </button>
-        </mat-form-field>
+        <mat-card>
+            <mat-card-content>
+                <div class="d-flex flex-wrap">
+                    <div>
+                        <mat-card-title>Epidemia da COVID-19 per province italiane</mat-card-title>
+                        <mat-card-subtitle>Per visualizzare il grafico scrivi il nome della provincia</mat-card-subtitle>
+                    </div>
+                </div>
+            </mat-card-content>
+            <mat-form-field class="form-field m-l-20">
+                <mat-label>Provincia</mat-label>
+                <input matInput [disabled]="isLoading" type="text" [(ngModel)]="districtNameInput"
+                    placeholder="es. Milano/Torino" (keyup.enter)="createTotalCases()">
+                <button *ngIf="districtNameInput" mat-button matSuffix mat-icon-button aria-label="Search"
+                    (click)="createTotalCases()">
+                    <mat-icon>check</mat-icon>
+                </button>
+            </mat-form-field>
+        </mat-card>
     </div>
 </div>
 
@@ -17,14 +28,14 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Daily cases</mat-card-title>
+                        <mat-card-title>Casi ad oggi</mat-card-title>
                         <mat-card-subtitle>{{districtName}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class="text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Daily cases</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
                             </li>
                         </ul>
                     </div>
@@ -52,14 +63,15 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Daily increase</mat-card-title>
+                        <mat-card-title>Incremento giornaliero</mat-card-title>
                         <mat-card-subtitle>{{districtName}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Daily increase</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
+                                </h6>
                             </li>
                         </ul>
                     </div>
