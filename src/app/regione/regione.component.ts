@@ -64,11 +64,6 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 		this.eraseAllData();
 
 		this.createTotalCases();
-		this.createTotalDead();
-		this.createTotalHospitalized();
-		this.createTotalIntensiveCare();
-		this.createTotalTests();
-		this.createTotalRecovered();
 	}
 
 	private createTotalCases() {
@@ -87,6 +82,12 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 				this.regionName = data.description;
 				this.totalCases = this.createChart(null);
 			}
+
+			this.createTotalDead();
+			this.createTotalHospitalized();
+			this.createTotalIntensiveCare();
+			this.createTotalTests();
+			this.createTotalRecovered();
 			this.isLoading = false;
 		});
 

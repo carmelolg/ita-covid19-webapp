@@ -53,11 +53,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.eraseAllData();
 
 		this.createTotalCases();
-		this.createTotalDead();
-		this.createTotalHospitalized();
-		this.createTotalIntensiveCare();
-		this.createTotalTests();
-		this.createTotalRecovered();
 	}
 
 	private eraseAllData() {
@@ -79,6 +74,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
 				this.totalCases = this.createChart(this.totalCasesValues, this.totalCasesIncreaseValues);
+
+				this.createTotalDead();
+				this.createTotalHospitalized();
+				this.createTotalIntensiveCare();
+				this.createTotalTests();
+				this.createTotalRecovered();
 			}
 		});
 
