@@ -5,9 +5,23 @@
                 <div class="d-flex flex-wrap">
                     <div>
                         <mat-card-title>Epidemia da COVID-19 per province italiane</mat-card-title>
-                        <mat-card-subtitle>Per visualizzare il grafico scrivi il nome della provincia</mat-card-subtitle>
+                        <mat-card-subtitle>Per visualizzare il grafico scrivi il nome della provincia
+                        </mat-card-subtitle>
                     </div>
                 </div>
+
+            <span>
+                Breve guida
+                <br>
+                <ul>
+                    <li>Sono presi in considerazione i dati degli ultimi 30 giorni</li>
+                    <li>Per visualizzare i valori per ogni giornata:</li>
+                    <ul>
+                        <li>Da Desktop: passaggio con il mouse sui punti all'interno del grafico</li>
+                        <li>Da Mobile: cliccare sui punti all'interno del grafico</li>
+                    </ul>
+                </ul>
+            </span>
             </mat-card-content>
             <mat-form-field class="form-field m-l-20">
                 <mat-label>Provincia</mat-label>
@@ -40,7 +54,9 @@
                         </ul>
                     </div>
                 </div>
-
+                <p>
+                    Il seguente grafico rappresenta l'andamento dei casi totali a {{districtName}}
+                </p>
                 <div *ngIf="totalCases && totalCases.data.series.length > 0" class="ct-chart">
                     <x-chartist class="" [data]="totalCases.data" [type]="totalCases.type"
                         [options]="totalCases.options" [responsiveOptions]="totalCases.responsiveOptions"
@@ -76,7 +92,9 @@
                         </ul>
                     </div>
                 </div>
-
+                <p>
+                    Il seguente grafico rappresenta l'andamento dell'incremento giornaliero dei positivi a {{districtName}}
+                </p>
                 <div *ngIf="totalCasesIncrease && totalCasesIncrease.data.series.length > 0" class="ct-chart">
                     <x-chartist class="" [data]="totalCasesIncrease.data" [type]="totalCasesIncrease.type"
                         [options]="totalCasesIncrease.options"

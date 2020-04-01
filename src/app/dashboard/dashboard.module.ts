@@ -17,5 +17,5 @@ import { ChartistModule } from 'ng-chartist';
   ],
   providers: [DatePipe],
   declarations: [DashboardComponent]
-})
+})  
 export class DashboardModule {}
