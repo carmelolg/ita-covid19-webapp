@@ -4,9 +4,9 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { DemoMaterialModule } from '../demo-material-module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RegioneComponent } from './regione.component';
-import { ProvinciaRoutes } from './regione.routing';
 import { ChartistModule } from 'ng-chartist';
 import { FormsModule } from '@angular/forms';
+import { RegioneRoutes } from './regione.routing';
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
     FlexLayoutModule,
     ChartistModule,
     FormsModule,
-    RouterModule.forChild(ProvinciaRoutes)
+    RouterModule.forChild(RegioneRoutes)
   ],
   providers: [DatePipe],
   declarations: [RegioneComponent]

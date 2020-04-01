@@ -28,6 +28,10 @@ export const AppRoutes: Routes = [
       {
         path: 'regione',
         loadChildren: () => import('./regione/regione.module').then(m => m.RegioneModule)
+      },
+      {
+        path: 'info',
+        loadChildren: () => import('./info/info.module').then(m => m.InfoModule)
       }
     ]
   }
