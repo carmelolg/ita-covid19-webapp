@@ -7,6 +7,7 @@ import { Chart } from '../shared/model/Chart';
 declare var require: any
 require('chartist-plugin-tooltips-updated');
 import * as Chartist from 'chartist';
+import { ChartService } from '../dashboard/chart.service';
 
 @Component({
 	selector: 'app-provincia',
@@ -16,7 +17,7 @@ import * as Chartist from 'chartist';
 export class ProvinciaComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() { }
 
-	constructor(private http: HttpClient, public datepipe: DatePipe) { }
+	constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
 
 	districtName = "Torino";
 	districtNameInput = "";
@@ -58,86 +59,17 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
 				this.districtName = this.districtNameInput;
-				this.totalCases = this.createChart(this.totalCasesValues);
-				this.totalCasesIncrease = this.createChart(this.totalCasesIncreaseValues);
+				this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues);
+				this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, this.totalCasesIncreaseValues);
 			} else {
 				this.districtName = data.description;
-				this.totalCases = this.createChart(null);
-				this.totalCasesIncrease = this.createChart(null);
+				this.totalCases = this.chartService.createChart(this.dataLabels, null);
+				this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, null);
 			}
 
 			this.isLoading = false;
 		});
 
-	}
-
-	private createChart(values): Chart {
-
-		const labels = this.dataLabels;
-		values = values.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
-
-		return {
-			type: 'Line',
-			data: {
-				labels: this.dataLabels,
-				series: [
-					{
-						data: values
-					}
-				]
-			},
-
-			options: {
-				height: '280px',
-				plugins: [
-					Chartist.plugins.tooltip({
-						appendToBody: false,
-						className: "ct-tooltip"
-					})
-				]
-			},
-			responsiveOptions: [
-				[
-					'screen and (max-width: 360px)',
-					this.generateResponsiveOptions(10)
-				],
-				[
-					'screen and (min-width: 361px) and (max-width: 490px)',
-					this.generateResponsiveOptions(6)
-				],
-				[
-					'screen and (min-width: 491px) and (max-width: 570px)',
-					this.generateResponsiveOptions(5)
-				],
-				[
-					'screen and (min-width: 570px) and (max-width: 1024px)',
-					this.generateResponsiveOptions(3)
-				],
-				[
-					'screen and (min-width: 1025px) and (max-width: 1550px)',
-					this.generateResponsiveOptions(2)
-				],
-				[
-					'screen and (max-height: 600px)',
-					{
-						height: 200
-					}
-				]
-			]
-		};
-	}
-
-	private generateResponsiveOptions(xValueMod: number) {
-		return {
-			axisX: {
-				labelInterpolationFnc: function (
-					value: number,
-					index: number
-				): string {
-					return index % xValueMod === 0 ? `${value}` : null;
-				}
-			}
-		}
 	}
 
 }

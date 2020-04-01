@@ -7,6 +7,7 @@ import { Chart } from '../shared/model/Chart';
 declare var require: any
 require('chartist-plugin-tooltips-updated');
 import * as Chartist from 'chartist';
+import { ChartService } from '../dashboard/chart.service';
 
 @Component({
 	selector: 'app-regione',
@@ -16,7 +17,7 @@ import * as Chartist from 'chartist';
 export class RegioneComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() { }
 
-	constructor(private http: HttpClient, public datepipe: DatePipe) { }
+	constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
 
 	regionName = "Lombardia";
 	regionNameInput = "";
@@ -79,10 +80,10 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
 				this.regionName = this.regionNameInput;
-				this.totalCases = this.createChart(this.totalCasesValues, this.totalCasesIncreaseValues);
+				this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues, this.totalCasesIncreaseValues);
 			} else {
 				this.regionName = data.description;
-				this.totalCases = this.createChart(null);
+				this.totalCases = this.chartService.createChart(this.dataLabels, null);
 			}
 
 			this.createTotalDead();
@@ -103,7 +104,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 					this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalHospitalized = this.createChart(this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
+			this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
 		});
 
 
@@ -120,7 +121,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 					this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalDead = this.createChart(this.totalDeadValues, this.totalDeadIncreaseValues);
+			this.totalDead = this.chartService.createChart(this.dataLabels, this.totalDeadValues, this.totalDeadIncreaseValues);
 		});
 
 	}
@@ -136,7 +137,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 					this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalTests = this.createChart(this.totalTestsValues, this.totalTestsIncreaseValues);
+			this.totalTests = this.chartService.createChart(this.dataLabels, this.totalTestsValues, this.totalTestsIncreaseValues);
 		});
 
 	}
@@ -152,7 +153,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 					this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalIntensiveCare = this.createChart(this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
+			this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
 		});
 
 	}
@@ -167,7 +168,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 					this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
 				});
 			}
-			this.totalRecovered = this.createChart(this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
+			this.totalRecovered = this.chartService.createChart(this.dataLabels, this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
 		});
 
 	}
@@ -199,78 +200,6 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 
 		this.totalRecoveredValues = [];
 		this.totalRecoveredIncreaseValues = [];
-	}
-
-	private createChart(values, increaseValue?): Chart {
-
-
-		const labels = this.dataLabels;
-		values = values.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
-		increaseValue = increaseValue.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
-		
-		return {
-			type: 'Line',
-			data: {
-				labels: this.dataLabels,
-				series: [{
-					data: values
-				},
-				{
-					data: increaseValue
-				}]
-			},
-			options: {
-				seriesDistance: 25,
-				height: 300,
-				plugins: [
-					Chartist.plugins.tooltip({
-						appendToBody: false,
-						className: "ct-tooltip"
-					})
-				]
-			},
-			responsiveOptions: [
-				[
-					'screen and (max-width: 360px)',
-					this.generateResponsiveOptions(10)
-				],
-				[
-					'screen and (min-width: 361px) and (max-width: 490px)',
-					this.generateResponsiveOptions(6)
-				],
-				[
-					'screen and (min-width: 491px) and (max-width: 570px)',
-					this.generateResponsiveOptions(5)
-				],
-				[
-					'screen and (min-width: 570px) and (max-width: 1024px)',
-					this.generateResponsiveOptions(3)
-				],
-				[
-					'screen and (min-width: 1025px) and (max-width: 1550px)',
-					this.generateResponsiveOptions(2)
-				],
-				[
-					'screen and (max-height: 600px)',
-					{
-						height: 200
-					}
-				]
-			]
-		};
-	}
-
-	private generateResponsiveOptions(xValueMod: number) {
-		return {
-			axisX: {
-				labelInterpolationFnc: function (
-					value: number,
-					index: number
-				): string {
-					return index % xValueMod === 0 ? `${value}` : null;
-				}
-			}
-		}
 	}
 
 }
