@@ -73,6 +73,9 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 	private createChart(values): Chart {
 
+		const labels = this.dataLabels;
+		values = values.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
+
 		return {
 			type: 'Line',
 			data: {

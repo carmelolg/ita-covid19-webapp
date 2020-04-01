@@ -202,6 +202,12 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 	}
 
 	private createChart(values, increaseValue?): Chart {
+
+
+		const labels = this.dataLabels;
+		values = values.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
+		increaseValue = increaseValue.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
+		
 		return {
 			type: 'Line',
 			data: {

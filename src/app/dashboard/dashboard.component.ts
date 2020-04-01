@@ -166,10 +166,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	}
 
 	private createChart(values, increaseValue?): Chart {
+		const labels = this.dataLabels;
+		values = values.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
+		increaseValue = increaseValue.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
+
 		return {
 			type: 'Line',
 			data: {
-				labels: this.dataLabels,
+				labels: labels,
 				series: [{
 					data: values
 				},
@@ -183,7 +187,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				plugins: [
 					Chartist.plugins.tooltip({
 						appendToBody: false,
-						className: "ct-tooltip"
+						className: "ct-tooltip",
+						transformTooltipTextFnc: function(value){
+							return value;
+							
+						}
 					})
 				]
 			},
