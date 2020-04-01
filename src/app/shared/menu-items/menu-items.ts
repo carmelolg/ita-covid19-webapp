@@ -9,7 +9,7 @@ export interface Menu {
 
 const MENUITEMS = [
   { state: 'dashboard', name: 'Italia', type: 'link', icon: 'outlined_flag' },
-  { state: 'regione', name: 'Regioni', type: 'link', icon: 'domain' },
+  { state: 'region', name: 'Regioni', type: 'link', icon: 'domain' },
   { state: 'district', name: 'Province', type: 'link', icon: 'location_city' },
   { state: 'info', name: 'Info', type: 'link', icon: 'info' }
 ];

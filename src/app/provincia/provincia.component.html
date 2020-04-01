@@ -43,7 +43,7 @@
                 <div class="d-flex flex-wrap">
                     <div>
                         <mat-card-title>Casi ad oggi</mat-card-title>
-                        <mat-card-subtitle>{{districtName}}</mat-card-subtitle>
+                        <mat-card-subtitle>{{districtName | uppercase}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 <p>
-                    Il seguente grafico rappresenta l'andamento dei casi totali a {{districtName}}
+                    Il seguente grafico rappresenta l'andamento dei casi totali a <span class="mat-subheading-2">{{districtName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalCases && totalCases.data.series.length > 0" class="ct-chart">
                     <x-chartist class="" [data]="totalCases.data" [type]="totalCases.type"
@@ -80,7 +80,7 @@
                 <div class="d-flex flex-wrap">
                     <div>
                         <mat-card-title>Incremento giornaliero</mat-card-title>
-                        <mat-card-subtitle>{{districtName}}</mat-card-subtitle>
+                        <mat-card-subtitle>{{districtName | uppercase}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 <p>
-                    Il seguente grafico rappresenta l'andamento dell'incremento giornaliero dei positivi a {{districtName}}
+                    Il seguente grafico rappresenta l'andamento dell'incremento giornaliero dei positivi a <span class="mat-subheading-2">{{districtName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalCasesIncrease && totalCasesIncrease.data.series.length > 0" class="ct-chart">
                     <x-chartist class="" [data]="totalCasesIncrease.data" [type]="totalCasesIncrease.type"
