@@ -6,7 +6,6 @@ import { Chart } from '../shared/model/Chart';
 
 declare var require: any
 require('chartist-plugin-tooltips-updated');
-import * as Chartist from 'chartist';
 import { ChartService } from '../dashboard/chart.service';
 
 @Component({
@@ -34,11 +33,13 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 
 		this.createTotalCases();
-
 	}
 
 	public createTotalCases() {
 
+		// if (this.districtName.length === 0) {
+		// 	this.totalCases = this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, null);
+		// } else {
 		this.isLoading = true;
 		if (this.districtNameInput.length === 0) {
 			this.districtNameInput = this.districtName;
@@ -69,6 +70,9 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 			this.isLoading = false;
 		});
+		// }
+
+
 
 	}
 

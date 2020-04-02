@@ -6,7 +6,6 @@ import { Chart } from '../shared/model/Chart';
 
 declare var require: any
 require('chartist-plugin-tooltips-updated');
-import * as Chartist from 'chartist';
 import { ChartService } from '../dashboard/chart.service';
 
 @Component({
