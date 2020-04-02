@@ -50,11 +50,17 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	totalRecoveredIncreaseValues = [];
 	totalRecovered: Chart;
 
+	currentGrowthRate = 0;
+	currentNewPositiveGrowthRate = 0;
+	percentageCasesBasedOnTests = 0;
+
 	ngOnInit() {
 
 		this.eraseAllData();
 
 		this.createTotalCases();
+
+		this.getGenericStats();
 	}
 
 	private eraseAllData() {
@@ -99,8 +105,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			}
 			this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
 		});
-
-
 	}
 
 
@@ -165,88 +169,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		});
 
 	}
-
-	// private createChart(values, increaseValue?): Chart {
-	// 	const labels = this.dataLabels;
-	// 	values = values.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
-	// 	increaseValue = increaseValue.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
-
-	// 	return {
-	// 		type: 'Line',
-	// 		data: {
-	// 			labels: labels,
-	// 			series: [{
-	// 				data: values
-	// 			},
-	// 			{
-	// 				data: increaseValue
-	// 			}]
-	// 		},
-	// 		options: {
-	// 			seriesDistance: 25,
-	// 			height: 300,
-	// 			plugins: [
-	// 				Chartist.plugins.tooltip({
-	// 					appendToBody: false,
-	// 					className: "ct-tooltip",
-	// 					transformTooltipTextFnc: function(value){
-	// 						return value;
-							
-	// 					}
-	// 				})
-	// 			]
-	// 		},
-	// 		responsiveOptions: [
-	// 			[
-	// 				'screen and (max-width: 360px)',
-	// 				this.generateResponsiveOptions(10)
-	// 			],
-	// 			[
-	// 				'screen and (min-width: 361px) and (max-width: 490px)',
-	// 				this.generateResponsiveOptions(6)
-	// 			],
-	// 			[
-	// 				'screen and (min-width: 491px) and (max-width: 570px)',
-	// 				this.generateResponsiveOptions(5)
-	// 			],
-	// 			[
-	// 				'screen and (min-width: 570px) and (max-width: 1024px)',
-	// 				this.generateResponsiveOptions(3)
-	// 			],
-	// 			[
-	// 				'screen and (min-width: 1025px) and (max-width: 1550px)',
-	// 				this.generateResponsiveOptions(2)
-	// 			],
-	// 			[
-	// 				'screen and (max-height: 600px)',
-	// 				{
-	// 					height: 200
-	// 				}
-	// 			]
-	// 		]
-	// 	};
-	// }
-	
-	// private generateResponsiveOptions(xValueMod: number) {
-		
-	// 	return {
-	// 		axisY:{
-	// 			labelInterpolationFnc: function (
-	// 				value: number,
-	// 				index: number
-	// 			): string {
-	// 				return Math.abs(value) > 999 ? Math.sign(value)*((Math.abs(value)/1000)) + 'k' : (Math.sign(value)*Math.abs(value)).toFixed();
-	// 			}
-	// 		},
-	// 		axisX: {
-	// 			labelInterpolationFnc: function (
-	// 				value: number,
-	// 				index: number
-	// 			): string {
-	// 				return index % xValueMod === 0 ? `${value}` : null;
-	// 			}
-	// 		}
-	// 	}
-	// }
+	private getGenericStats() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/stats").subscribe(data => {
+			if (!!data) {
+				this.currentGrowthRate = data.currentRateOfGrowth;
+				this.currentNewPositiveGrowthRate = data.currentNewPositiveRateOfGrowth;
+				this.percentageCasesBasedOnTests = data.currentPositivePercentageBasedOnTests; 	
+			}
+		});
+	}
 
 }
