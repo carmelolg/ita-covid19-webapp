@@ -3,12 +3,16 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Chart } from '../shared/model/Chart';
-import {ChartService} from './chart.service'
+import { ChartService } from './chart.service'
 
-
-declare var require: any
-require('chartist-plugin-tooltips-updated');
-import * as Chartist from 'chartist';
+export interface Tile {
+	color: string;
+	cols: number;
+	rows: number;
+	header: string;
+	footer: string;
+	percentage: string;
+}
 
 @Component({
 	selector: 'app-dashboard',
@@ -50,11 +54,24 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	totalRecoveredIncreaseValues = [];
 	totalRecovered: Chart;
 
+	currentGrowthRate = 0;
+	currentNewPositiveGrowthRate = 0;
+	percentageCasesBasedOnTests = 0;
+	currentRecoveredPercentage = 0;
+	currentDeadPercentage = 0;
+    currentIntensiveCarePercentage = 0;
+    currentHospitalizedPercentage = 0;
+
+
+	tiles: Tile[] = [];
+
 	ngOnInit() {
 
 		this.eraseAllData();
 
 		this.createTotalCases();
+
+		this.getGenericStats();
 	}
 
 	private eraseAllData() {
@@ -75,7 +92,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 					this.totalCasesValues.push(item.value);
 					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
-				this.totalCases = this.chartService.createChart(this.dataLabels,this.totalCasesValues, this.totalCasesIncreaseValues);
+				this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues, this.totalCasesIncreaseValues);
 
 				this.createTotalDead();
 				this.createTotalHospitalized();
@@ -99,8 +116,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 			}
 			this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
 		});
-
-
 	}
 
 
@@ -165,88 +180,28 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		});
 
 	}
+	private getGenericStats() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/stats").subscribe(data => {
+			if (!!data) {
+				this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
+				this.currentNewPositiveGrowthRate = (!!data.currentNewPositiveRateOfGrowth) ? data.currentNewPositiveRateOfGrowth : 0;
+				this.percentageCasesBasedOnTests = (!!data.currentPositivePercentageBasedOnTests) ? data.currentPositivePercentageBasedOnTests : 0;
+				this.currentRecoveredPercentage = (!!data.currentRecoveredPercentage) ? data.currentRecoveredPercentage : 0;
+				this.currentDeadPercentage = (!!data.currentDeadPercentage) ? data.currentDeadPercentage : 0;
+				this.currentIntensiveCarePercentage = (!!data.currentIntensiveCarePercentage) ? data.currentIntensiveCarePercentage : 0;
+				this.currentHospitalizedPercentage = (!!data.currentHospitalizedPercentage) ? data.currentHospitalizedPercentage : 0;
 
-	// private createChart(values, increaseValue?): Chart {
-	// 	const labels = this.dataLabels;
-	// 	values = values.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
-	// 	increaseValue = increaseValue.map(function(v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
+				this.tiles = [
+					{ footer: 'Percentuale', header: 'Deceduti', percentage: this.currentDeadPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+					{ footer: 'Percentuale', header: 'Guariti', percentage: this.currentRecoveredPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+					{ footer: 'Percentuale', header: 'Terapia intensiva', percentage: this.currentIntensiveCarePercentage + '%', cols: 2, rows: 2, color: '#99d6ff' },
+					{ footer: 'Percentuale', header: 'Positivi per tamponi', percentage: this.percentageCasesBasedOnTests + '%', cols: 2, rows: 2, color: '#99d6ff' },
+					{ footer: 'Tasso di crescita', header:'% incr. totale', percentage: this.currentGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+					{ footer: 'Tasso di crescita', header: '% incr. nuovi positivi', percentage: this.currentNewPositiveGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' }
+				];
 
-	// 	return {
-	// 		type: 'Line',
-	// 		data: {
-	// 			labels: labels,
-	// 			series: [{
-	// 				data: values
-	// 			},
-	// 			{
-	// 				data: increaseValue
-	// 			}]
-	// 		},
-	// 		options: {
-	// 			seriesDistance: 25,
-	// 			height: 300,
-	// 			plugins: [
-	// 				Chartist.plugins.tooltip({
-	// 					appendToBody: false,
-	// 					className: "ct-tooltip",
-	// 					transformTooltipTextFnc: function(value){
-	// 						return value;
-							
-	// 					}
-	// 				})
-	// 			]
-	// 		},
-	// 		responsiveOptions: [
-	// 			[
-	// 				'screen and (max-width: 360px)',
-	// 				this.generateResponsiveOptions(10)
-	// 			],
-	// 			[
-	// 				'screen and (min-width: 361px) and (max-width: 490px)',
-	// 				this.generateResponsiveOptions(6)
-	// 			],
-	// 			[
-	// 				'screen and (min-width: 491px) and (max-width: 570px)',
-	// 				this.generateResponsiveOptions(5)
-	// 			],
-	// 			[
-	// 				'screen and (min-width: 570px) and (max-width: 1024px)',
-	// 				this.generateResponsiveOptions(3)
-	// 			],
-	// 			[
-	// 				'screen and (min-width: 1025px) and (max-width: 1550px)',
-	// 				this.generateResponsiveOptions(2)
-	// 			],
-	// 			[
-	// 				'screen and (max-height: 600px)',
-	// 				{
-	// 					height: 200
-	// 				}
-	// 			]
-	// 		]
-	// 	};
-	// }
-	
-	// private generateResponsiveOptions(xValueMod: number) {
-		
-	// 	return {
-	// 		axisY:{
-	// 			labelInterpolationFnc: function (
-	// 				value: number,
-	// 				index: number
-	// 			): string {
-	// 				return Math.abs(value) > 999 ? Math.sign(value)*((Math.abs(value)/1000)) + 'k' : (Math.sign(value)*Math.abs(value)).toFixed();
-	// 			}
-	// 		},
-	// 		axisX: {
-	// 			labelInterpolationFnc: function (
-	// 				value: number,
-	// 				index: number
-	// 			): string {
-	// 				return index % xValueMod === 0 ? `${value}` : null;
-	// 			}
-	// 		}
-	// 	}
-	// }
+			}
+		});
+	}
 
 }
