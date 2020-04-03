@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	dataLabels = [];
 
+	growthRateDateLabels = [];
 	growthRateValues = [];
 	growthRateIncreaseValues = [];
 	growthRates: Chart;
@@ -90,9 +91,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/growthRate").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
+					let innerDate = this.datepipe.transform(item.date, 'dd/MM')
+					this.growthRateDateLabels.push(innerDate);
 					this.growthRateValues.push(item.value);
 				});
-				this.growthRates = this.chartService.createChart(this.dataLabels, this.growthRateValues, [], 'Bar');
+				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, this.growthRateValues, [], 'Bar');
 			}
 		});
 	}
