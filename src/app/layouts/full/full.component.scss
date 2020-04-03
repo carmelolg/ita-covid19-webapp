@@ -1,0 +1,17 @@
+.header {
+    &__logo {
+        height: 64px;
+        width: 240px;
+        &::after {
+            content: '';
+            display: inline-block;
+            background-image: url('../../../assets/icons/logo.png') !important;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center center;
+            height: 64px;
+            width: 240px;
+        }
+    }
+
+}
