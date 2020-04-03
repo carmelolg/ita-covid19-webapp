@@ -14,7 +14,7 @@ export class ChartService {
 
 	constructor() { }
 
-	public createChart(labels, values, increaseValue?): Chart {
+	public createChart(labels, values, increaseValue?, chartType?): Chart {
 
 		let _series = [];
 
@@ -27,10 +27,8 @@ export class ChartService {
 			_series.push({ data: increaseValue });
 		}
 
-
-
 		return {
-			type: 'Line',
+			type: chartType || 'Line',
 			data: {
 				labels: labels,
 				series: _series
