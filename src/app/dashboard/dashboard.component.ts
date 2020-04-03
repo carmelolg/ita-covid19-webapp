@@ -86,15 +86,13 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.totalNewCases = null;
 	}
 
-	// TODO Calcolare i dati correttamente
 	private createGrowthRates() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total").subscribe(data => {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/growthRate").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					this.growthRateValues.push(item.value);
-					this.growthRateIncreaseValues.push(item.increaseFromYesterday);
 				});
-				this.growthRates = this.chartService.createChart(this.dataLabels, this.totalCasesValues, this.totalCasesIncreaseValues, 'Bar');
+				this.growthRates = this.chartService.createChart(this.dataLabels, this.growthRateValues, [], 'Bar');
 			}
 		});
 	}
