@@ -27,6 +27,33 @@
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-card>
             <mat-card-content>
+                    <mat-grid-list cols="4" rowHeight="50px">
+                        <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+                            [style.background]="tile.color">
+                            <mat-grid-tile-header>
+                                {{tile.header}}
+                            </mat-grid-tile-header>
+                            <span class="percentage">{{tile.percentage}}</span>
+                            <!-- <mat-grid-tile-footer>
+                                {{tile.footer}}
+                            </mat-grid-tile-footer> -->
+                        </mat-grid-tile>
+                    </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+        <span *ngIf="!currentGrowthRate">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </span>
+    </div>
+</div>
+
+<div fxLayout="row wrap">
+    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
                         <mat-card-title>Casi ad oggi</mat-card-title>

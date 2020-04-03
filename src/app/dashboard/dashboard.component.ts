@@ -3,16 +3,8 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Chart } from '../shared/model/Chart';
+import { Tile } from '../shared/model/Tiles';
 import { ChartService } from './chart.service'
-
-export interface Tile {
-	color: string;
-	cols: number;
-	rows: number;
-	header: string;
-	footer: string;
-	percentage: string;
-}
 
 @Component({
 	selector: 'app-dashboard',
