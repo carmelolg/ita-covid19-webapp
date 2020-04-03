@@ -18,9 +18,38 @@
                     <mat-icon>check</mat-icon>
                 </button>
             </mat-form-field>
+
         </mat-card>
     </div>
 </div>
+
+<div fxLayout="row wrap">
+    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                    <mat-grid-list cols="4" rowHeight="50px">
+                        <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+                            [style.background]="tile.color">
+                            <mat-grid-tile-header>
+                                {{tile.header}}
+                            </mat-grid-tile-header>
+                            <span class="percentage">{{tile.percentage}}</span>
+                            <!-- <mat-grid-tile-footer>
+                                {{tile.footer}}
+                            </mat-grid-tile-footer> -->
+                        </mat-grid-tile>
+                    </mat-grid-list>
+            </mat-card-content>
+        </mat-card>
+        <span *ngIf="!currentGrowthRate">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </span>
+    </div>
+</div>
+
 
 <div fxLayout="row wrap">
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
@@ -46,7 +75,8 @@
                     </div>
                 </div>
                 <p>
-                    Il seguente grafico rappresenta l'andamento dei casi totali nella regione <span class="mat-subheading-2">{{regionName | uppercase}}</span>
+                    Il seguente grafico rappresenta l'andamento dei casi totali nella regione <span
+                        class="mat-subheading-2">{{regionName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalCases && totalCases.data.series.length > 0" class="ct-chart">
                     <x-chartist class="" [data]="totalCases.data" [type]="totalCases.type"
@@ -64,6 +94,50 @@
     </div>
 </div>
 
+
+<div fxLayout="row wrap">
+    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <div class="d-flex flex-wrap">
+                    <div>
+                        <mat-card-title>Nuovi casi</mat-card-title>
+                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
+                    </div>
+                    <div class="ml-auto">
+                        <ul class="list-inline">
+                            <li>
+                                <h6 class="text-success m-0"><i
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Nuovi casi ad oggi</h6>
+                            </li>
+                            <li>
+                                <h6 class=" text-info m-0"><i
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                    giornaliero
+                                </h6>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p>
+                    Il seguente grafico rappresenta l'andamento dei nuovi casi nella regione <span
+                    class="mat-subheading-2">{{regionName | uppercase}}</span>
+                </p>
+                <div *ngIf="totalNewCases" class="ct-chart">
+                    <x-chartist class="" [data]="totalNewCases.data" [type]="totalNewCases.type"
+                        [options]="totalNewCases.options" [responsiveOptions]="totalNewCases.responsiveOptions"
+                        [events]="totalNewCases.events"> </x-chartist>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <span *ngIf="!totalNewCases">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </span>
+    </div>
+</div>
 
 <div fxLayout="row wrap">
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
@@ -89,7 +163,8 @@
                     </div>
                 </div>
                 <p>
-                    Il seguente grafico rappresenta l'andamento delle persone Ospedalizzate nella regione <span class="mat-subheading-2">{{regionName | uppercase}}</span>
+                    Il seguente grafico rappresenta l'andamento delle persone Ospedalizzate nella regione <span
+                        class="mat-subheading-2">{{regionName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalHospitalized" class="ct-chart">
                     <x-chartist class="" [data]="totalHospitalized.data" [type]="totalHospitalized.type"
@@ -132,7 +207,8 @@
                     </div>
                 </div>
                 <p>
-                    Il seguente grafico rappresenta l'andamento delle persone ricoverate in terapia intensiva nella regione <span class="mat-subheading-2">{{regionName | uppercase}}</span>
+                    Il seguente grafico rappresenta l'andamento delle persone ricoverate in terapia intensiva nella
+                    regione <span class="mat-subheading-2">{{regionName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalIntensiveCare" class="ct-chart">
                     <x-chartist class="" [data]="totalIntensiveCare.data" [type]="totalIntensiveCare.type"
@@ -176,7 +252,8 @@
                     </div>
                 </div>
                 <p>
-                    Il seguente grafico rappresenta l'andamento delle persone decedute nella regione <span class="mat-subheading-2">{{regionName | uppercase}}</span>
+                    Il seguente grafico rappresenta l'andamento delle persone decedute nella regione <span
+                        class="mat-subheading-2">{{regionName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalDead" class="ct-chart">
                     <x-chartist class="" [data]="totalDead.data" [type]="totalDead.type" [options]="totalDead.options"
@@ -219,7 +296,8 @@
                 </div>
 
                 <p>
-                    Il seguente grafico rappresenta l'andamento delle persone guarite nella regione <span class="mat-subheading-2">{{regionName | uppercase}}</span>
+                    Il seguente grafico rappresenta l'andamento delle persone guarite nella regione <span
+                        class="mat-subheading-2">{{regionName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalRecovered" class="ct-chart">
                     <x-chartist class="" [data]="totalRecovered.data" [type]="totalRecovered.type"
@@ -262,7 +340,8 @@
                 </div>
 
                 <p>
-                    Il seguente grafico rappresenta l'andamento dei tamponi effettuati nella regione <span class="mat-subheading-2">{{regionName | uppercase}}</span>
+                    Il seguente grafico rappresenta l'andamento dei tamponi effettuati nella regione <span
+                        class="mat-subheading-2">{{regionName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalTests" class="ct-chart">
                     <x-chartist class="" [data]="totalTests.data" [type]="totalTests.type"

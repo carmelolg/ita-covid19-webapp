@@ -3,16 +3,8 @@ import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Chart } from '../shared/model/Chart';
+import { Tile } from '../shared/model/Tiles';
 import { ChartService } from './chart.service'
-
-export interface Tile {
-	color: string;
-	cols: number;
-	rows: number;
-	header: string;
-	footer: string;
-	percentage: string;
-}
 
 @Component({
 	selector: 'app-dashboard',
@@ -33,6 +25,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	totalCasesValues = [];
 	totalCasesIncreaseValues = [];
 	totalCases: Chart;
+
+	totalNewCaseValues = [];
+	totalNewCaseIncreaseValues = [];
+	totalNewCases: Chart;
 
 	totalHospitalizedValues = [];
 	totalHospitalizedIncreaseValues = [];
@@ -87,6 +83,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.totalIntensiveCare = null;
 		this.totalTests = null;
 		this.totalRecovered = null;
+		this.totalNewCases = null;
 	}
 
 	// TODO Calcolare i dati correttamente
@@ -118,6 +115,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				this.createTotalIntensiveCare();
 				this.createTotalTests();
 				this.createTotalRecovered();
+				this.createTotalNewCases();
 			}
 		});
 	}
@@ -133,6 +131,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				});
 			}
 			this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
+		});
+	}
+
+	private createTotalNewCases() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/new").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+					// this.dataLabels.push(innerDate);
+					this.totalNewCaseValues.push(item.value);
+					this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
+				});
+			}
+			this.totalNewCases = this.chartService.createChart(this.dataLabels, this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
 		});
 	}
 

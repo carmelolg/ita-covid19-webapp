@@ -7,6 +7,7 @@ import { Chart } from '../shared/model/Chart';
 declare var require: any
 require('chartist-plugin-tooltips-updated');
 import { ChartService } from '../dashboard/chart.service';
+import { Tile } from '../shared/model/Tiles';
 
 @Component({
 	selector: 'app-regione',
@@ -27,6 +28,10 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 	totalCasesValues = [];
 	totalCasesIncreaseValues = [];
 	totalCases: Chart;
+
+	totalNewCaseValues = [];
+	totalNewCaseIncreaseValues = [];
+	totalNewCases: Chart;
 
 	totalHospitalizedValues = [];
 	totalHospitalizedIncreaseValues = [];
@@ -52,8 +57,20 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 	totalRecoveredIncreaseValues = [];
 	totalRecovered: Chart;
 
+	currentGrowthRate = 0;
+	currentNewPositiveGrowthRate = 0;
+	percentageCasesBasedOnTests = 0;
+	currentRecoveredPercentage = 0;
+	currentDeadPercentage = 0;
+    currentIntensiveCarePercentage = 0;
+	currentHospitalizedPercentage = 0;
+	
+	tiles: Tile[] = [];
+	
 	ngOnInit() {
 		this.call();
+
+		this.getGenericStats();
 	}
 
 	public call() {
@@ -66,6 +83,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 		this.eraseAllData();
 
 		this.createTotalCases();
+		this.getGenericStats();
 	}
 
 	private createTotalCases() {
@@ -86,12 +104,27 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 			}
 
 			this.createTotalDead();
+			this.createNewCases();
 			this.createTotalHospitalized();
 			this.createTotalIntensiveCare();
 			this.createTotalTests();
 			this.createTotalRecovered();
 			this.isLoading = false;
 		});
+
+	}
+
+	private createNewCases() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					this.totalNewCaseValues.push(item.value);
+					this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
+				});
+			}
+			this.totalNewCases = this.chartService.createChart(this.dataLabels, this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
+		});
+
 
 	}
 
@@ -172,6 +205,30 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 
 	}
 
+	private getGenericStats() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/stats").subscribe(data => {
+			if (!!data) {
+				this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
+				this.currentNewPositiveGrowthRate = (!!data.currentNewPositiveRateOfGrowth) ? data.currentNewPositiveRateOfGrowth : 0;
+				this.percentageCasesBasedOnTests = (!!data.currentPositivePercentageBasedOnTests) ? data.currentPositivePercentageBasedOnTests : 0;
+				this.currentRecoveredPercentage = (!!data.currentRecoveredPercentage) ? data.currentRecoveredPercentage : 0;
+				this.currentDeadPercentage = (!!data.currentDeadPercentage) ? data.currentDeadPercentage : 0;
+				this.currentIntensiveCarePercentage = (!!data.currentIntensiveCarePercentage) ? data.currentIntensiveCarePercentage : 0;
+				this.currentHospitalizedPercentage = (!!data.currentHospitalizedPercentage) ? data.currentHospitalizedPercentage : 0;
+
+				this.tiles = [
+					{ footer: 'Percentuale', header: 'Deceduti', percentage: this.currentDeadPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+					{ footer: 'Percentuale', header: 'Guariti', percentage: this.currentRecoveredPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+					{ footer: 'Percentuale', header: 'Terapia intensiva', percentage: this.currentIntensiveCarePercentage + '%', cols: 2, rows: 2, color: '#99d6ff' },
+					{ footer: 'Percentuale', header: 'Positivi per tamponi', percentage: this.percentageCasesBasedOnTests + '%', cols: 2, rows: 2, color: '#99d6ff' },
+					{ footer: 'Tasso di crescita', header:'% incr. totale', percentage: this.currentGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+					{ footer: 'Tasso di crescita', header: '% incr. nuovi positivi', percentage: this.currentNewPositiveGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' }
+				];
+
+			}
+		});
+	}
+
 	private eraseAllData() {
 		this.totalCases = null;
 		this.totalDead = null;
@@ -179,11 +236,15 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 		this.totalIntensiveCare = null;
 		this.totalTests = null;
 		this.totalRecovered = null;
+		this.totalNewCases = null;
 
 		this.dataLabels = [];
 
 		this.totalCasesValues = [];
 		this.totalCasesIncreaseValues = [];
+
+		this.totalNewCaseValues = [];
+		this.totalNewCaseIncreaseValues = [];
 
 		this.totalHospitalizedValues = [];
 		this.totalHospitalizedIncreaseValues = [];
