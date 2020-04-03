@@ -69,6 +69,50 @@
     </div>
 </div>
 
+
+<div fxLayout="row wrap">
+    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <div class="d-flex flex-wrap">
+                    <div>
+                        <mat-card-title>Nuovi casi</mat-card-title>
+                        <mat-card-subtitle>Italia</mat-card-subtitle>
+                    </div>
+                    <div class="ml-auto">
+                        <ul class="list-inline">
+                            <li>
+                                <h6 class="text-success m-0"><i
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Nuovi casi ad oggi</h6>
+                            </li>
+                            <li>
+                                <h6 class=" text-info m-0"><i
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                    giornaliero
+                                </h6>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <p>
+                    Il seguente grafico rappresenta l'andamento dei nuovi casi in Italia
+                </p>
+                <div *ngIf="totalNewCases" class="ct-chart">
+                    <x-chartist class="" [data]="totalNewCases.data" [type]="totalNewCases.type"
+                        [options]="totalNewCases.options" [responsiveOptions]="totalNewCases.responsiveOptions"
+                        [events]="totalNewCases.events"> </x-chartist>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <span *ngIf="!totalNewCases">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </span>
+    </div>
+</div>
+
 <div fxLayout="row wrap">
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-card>

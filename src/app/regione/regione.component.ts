@@ -29,6 +29,10 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 	totalCasesIncreaseValues = [];
 	totalCases: Chart;
 
+	totalNewCaseValues = [];
+	totalNewCaseIncreaseValues = [];
+	totalNewCases: Chart;
+
 	totalHospitalizedValues = [];
 	totalHospitalizedIncreaseValues = [];
 	totalHospitalized: Chart;
@@ -100,12 +104,27 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 			}
 
 			this.createTotalDead();
+			this.createNewCases();
 			this.createTotalHospitalized();
 			this.createTotalIntensiveCare();
 			this.createTotalTests();
 			this.createTotalRecovered();
 			this.isLoading = false;
 		});
+
+	}
+
+	private createNewCases() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					this.totalNewCaseValues.push(item.value);
+					this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
+				});
+			}
+			this.totalNewCases = this.chartService.createChart(this.dataLabels, this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
+		});
+
 
 	}
 
@@ -217,11 +236,15 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 		this.totalIntensiveCare = null;
 		this.totalTests = null;
 		this.totalRecovered = null;
+		this.totalNewCases = null;
 
 		this.dataLabels = [];
 
 		this.totalCasesValues = [];
 		this.totalCasesIncreaseValues = [];
+
+		this.totalNewCaseValues = [];
+		this.totalNewCaseIncreaseValues = [];
 
 		this.totalHospitalizedValues = [];
 		this.totalHospitalizedIncreaseValues = [];
