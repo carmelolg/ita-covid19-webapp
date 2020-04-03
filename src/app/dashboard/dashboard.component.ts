@@ -22,6 +22,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 	totalCasesIncreaseValues = [];
 	totalCases: Chart;
 
+	totalNewCaseValues = [];
+	totalNewCaseIncreaseValues = [];
+	totalNewCases: Chart;
+
 	totalHospitalizedValues = [];
 	totalHospitalizedIncreaseValues = [];
 	totalHospitalized: Chart;
@@ -73,6 +77,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 		this.totalIntensiveCare = null;
 		this.totalTests = null;
 		this.totalRecovered = null;
+		this.totalNewCases = null;
 	}
 
 	private createTotalCases() {
@@ -91,6 +96,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				this.createTotalIntensiveCare();
 				this.createTotalTests();
 				this.createTotalRecovered();
+				this.createTotalNewCases();
 			}
 		});
 
@@ -107,6 +113,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 				});
 			}
 			this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
+		});
+	}
+
+	private createTotalNewCases() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/new").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+					// this.dataLabels.push(innerDate);
+					this.totalNewCaseValues.push(item.value);
+					this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
+				});
+			}
+			this.totalNewCases = this.chartService.createChart(this.dataLabels, this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
 		});
 	}
 
