@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
 	growthRateDateLabels = [];
 	growthRateValues = [];
-	growthRateIncreaseValues = [];
 	growthRates: Chart;
 
 	totalCasesValues = [];
