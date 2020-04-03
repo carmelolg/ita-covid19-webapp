@@ -8,6 +8,51 @@
                         <mat-card-subtitle>Andamento giornaliero e statistiche</mat-card-subtitle>
                     </div>
                 </div>
+                <!-- <mat-list>
+                    <mat-list-item>
+                        Tasso di crescita totale
+                        <button mat-raised-button color="primary">
+                            {{currentGrowthRate}}%
+                        </button>
+                    </mat-list-item>
+                    <mat-list-item>
+                        Tasso di crescita nuovi positivi
+                        <button mat-raised-button color="primary">
+                            {{currentNewPositiveGrowthRate}}%
+                        </button>
+                    </mat-list-item><br />
+                    <mat-list-item>
+                        Percentuale <span class="description-text">(positivi su tamponi effettuati)</span>
+                        <button mat-raised-button color="primary">
+                            {{percentageCasesBasedOnTests}}%
+                        </button>
+                    </mat-list-item>
+                </mat-list> -->
+
+                <mat-grid-list cols="4" rowHeight="50px">
+                    <mat-grid-tile *ngFor="let tile of tiles"[colspan]="tile.cols" [rowspan]="tile.rows"
+                        [style.background]="tile.color">
+                        <mat-grid-tile-header>
+                            {{tile.header}}
+                        </mat-grid-tile-header>
+                        <span class="percentage">{{tile.percentage}}</span>
+                        <!-- <mat-grid-tile-footer>
+                            {{tile.footer}}
+                        </mat-grid-tile-footer> -->
+                    </mat-grid-tile>
+                </mat-grid-list>
+
+            </mat-card-content>
+
+
+        </mat-card>
+        <!-- <mat-card-content>
+                <div class="d-flex flex-wrap">
+                    <div>
+                        <mat-card-title>Epidemia da COVID-19 in Italia</mat-card-title>
+                        <mat-card-subtitle>Andamento giornaliero e statistiche</mat-card-subtitle>
+                    </div>
+                </div>
             </mat-card-content>
             <div fxLayout="row wrap">
                 <mat-card>
@@ -40,8 +85,7 @@
                         <p class="percentage">{{percentageCasesBasedOnTests}}%</p>
                     </mat-card-content>
                 </mat-card>
-            </div>
-        </mat-card>
+            </div> -->
     </div>
 </div>
 <div fxLayout="row wrap">

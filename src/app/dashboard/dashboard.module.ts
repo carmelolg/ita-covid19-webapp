@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutes } from './dashboard.routing';
 import { ChartistModule } from 'ng-chartist';
+import { CdkColumnDef } from '@angular/cdk/table';
 
 @NgModule({
   imports: [
@@ -15,7 +16,7 @@ import { ChartistModule } from 'ng-chartist';
     ChartistModule,
     RouterModule.forChild(DashboardRoutes)
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, CdkColumnDef],
   declarations: [DashboardComponent]
 })  
 export class DashboardModule {}
