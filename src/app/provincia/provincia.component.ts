@@ -25,6 +25,11 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 	dataLabels = [];
 
+	growthRateDateLabels = [];
+	growthRateValues = [];
+	growthRateIncreaseValues = [];
+	growthRates: Chart;
+
 	totalCasesValues = [];
 	totalCasesIncreaseValues = [];
 	totalCases: Chart;
@@ -39,6 +44,22 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 		this.createTotalCases();
 
 		this.getGenericStats();
+	}
+
+	private getGrowthRates() {
+		this.growthRateValues = [];
+		this.growthRateDateLabels = [];
+
+		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput +"/growthRate").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					let innerDate = this.datepipe.transform(item.date, 'dd/MM');
+					this.growthRateDateLabels.push(innerDate);
+					this.growthRateValues.push(item.value);
+				});
+				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, this.growthRateValues, [], 'Bar');
+			}
+		});
 	}
 
 	public createTotalCases() {
@@ -74,9 +95,8 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 			this.isLoading = false;
 		});
 
-
 		this.getGenericStats();
-
+		this.getGrowthRates();
 	}
 
 
