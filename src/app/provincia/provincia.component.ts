@@ -7,6 +7,7 @@ import { Chart } from '../shared/model/Chart';
 declare var require: any
 require('chartist-plugin-tooltips-updated');
 import { ChartService } from '../dashboard/chart.service';
+import { Tile } from '../shared/model/Tiles';
 
 @Component({
 	selector: 'app-provincia',
@@ -29,17 +30,19 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	totalCases: Chart;
 	totalCasesIncrease: Chart;
 
+	currentGrowthRate = 0;
+
+	tiles: Tile[] = [];
 
 	ngOnInit() {
 
 		this.createTotalCases();
+
+		this.getGenericStats();
 	}
 
 	public createTotalCases() {
 
-		// if (this.districtName.length === 0) {
-		// 	this.totalCases = this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, null);
-		// } else {
 		this.isLoading = true;
 		if (this.districtNameInput.length === 0) {
 			this.districtNameInput = this.districtName;
@@ -70,10 +73,23 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 			this.isLoading = false;
 		});
-		// }
 
 
+		this.getGenericStats();
 
 	}
 
+
+	private getGenericStats() {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/stats").subscribe(data => {
+			if (!!data) {
+				this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
+
+				this.tiles = [
+					{ footer: 'Tasso di crescita', header:'Tasso di crescita sul totale', percentage: this.currentGrowthRate + '%', cols: 4, rows: 2, color: '#b3e0ff' }
+				];
+
+			}
+		});
+	}
 }
