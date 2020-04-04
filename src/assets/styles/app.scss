@@ -46,11 +46,30 @@ Global Styles
     text-align: center;
 }
 
+.img-us {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.img-us div > img{
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-height: 100%;
+  min-width: 100%;
+  transform: translate(-50%, -50%);
+}
+
 .description-text{
     font-size: 8px;
     color: rgba(0, 0, 0, 0.54);
 }
 
+.link-nostyle a, a:hover, a:focus {
+    text-decoration: none;
+}
 
 * {
     outline: none;

@@ -20,23 +20,39 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Breve guida</mat-card-title>
+                        <mat-card-title>Bacheca</mat-card-title>
                         <mat-card-subtitle></mat-card-subtitle>
                     </div>
                 </div>
 
-                <span>
-                    <br>
-                    <ul>
-                        <li>I dati vengono aggiornati tutti i giorni alle 18:30</li>
-                        <li>La maggior parte dei grafici prende in considerazione i dati degli ultimi 30 giorni</li>
-                        <li>Per visualizzare i valori per ogni giornata:</li>
-                        <ul>
-                            <li>Da Desktop: passaggio con il mouse sui punti all'interno del grafico</li>
-                            <li>Da Mobile: cliccare sui punti all'interno del grafico</li>
-                        </ul>
-                    </ul>
-                </span>
+                <mat-list>
+                    <div mat-subheader>Aggiornamento dati</div>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon>done</mat-icon>
+                        I dati saranno aggiornati tutti i giorni dalle 18:00 alle 18:30
+                    </mat-list-item>
+                    <!-- <mat-divider></mat-divider> -->
+                    <div mat-subheader>Grafici</div>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon>done</mat-icon>
+                        Per facilità di utilizzo è rappresentato il trend degli ultimi 30 giorni
+                    </mat-list-item>
+                    <div mat-subheader>Dati grafico su Desktop</div>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon>done</mat-icon>
+                        Passaggio del mouse sui punti all'interno del grafico
+                    </mat-list-item>
+                    <div mat-subheader>Dati grafico su Mobile</div>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon>done</mat-icon>
+                        Click sui punti all'interno del grafico
+                    </mat-list-item>
+                    <div mat-subheader>Tasso di crescita</div>
+                    <mat-list-item>
+                        <mat-icon mat-list-icon>done</mat-icon>
+                        Il calcolo è spiegato&nbsp; <a href="https://it.wikipedia.org/wiki/Tasso_di_crescita" target="_blank"> qui</a>
+                    </mat-list-item>
+                </mat-list>
             </mat-card-content>
         </mat-card>
     </div>
@@ -48,16 +64,34 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Autore</mat-card-title>
+                        <mat-card-title>Team</mat-card-title>
                         <mat-card-subtitle></mat-card-subtitle>
                     </div>
                 </div>
-                <img width="12%"
-                    src="https://1.gravatar.com/avatar/abe1110a1a0c830f3a00d20fb578b76b?s=240&d=identicon&r=G">
-                <br>
-                <p class="mat-subheading-2">Carmelo La Gamba (<a href="https://github.com/carmelolg">GitHub</a>)</p>
+                <mat-grid-list cols="1" rowHeight="100px">
+                    <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+                        [style.background]="tile.color">
+                        <mat-grid-tile-header>
+                            {{tile.header}}
+                        </mat-grid-tile-header>
+                        <div class="img-us">
+                            <img width="100%" src="{{tile.imgUrl}}">
+                        </div>
+                        <mat-grid-tile-footer>
+                            <!-- <a class="link-nostyle" target="_blank" href="{{tile.url}}"><i
+                                    class="material-icons">language</i></a> -->
+                            {{tile.footer}}
+                        </mat-grid-tile-footer>
+                    </mat-grid-tile>
+                </mat-grid-list>
             </mat-card-content>
         </mat-card>
+        <span *ngIf="!tiles || tiles.length === 0">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </span>
     </div>
 </div>
 
@@ -67,7 +101,7 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Riconoscimenti e attribuzioni</mat-card-title>
+                        <mat-card-title>Riconoscimenti ed attribuzioni</mat-card-title>
                         <mat-card-subtitle></mat-card-subtitle>
                     </div>
                 </div>
