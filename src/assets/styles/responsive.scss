@@ -92,3 +92,21 @@ File: scss
         display: flex;
     }
 }
+
+/*-- ============================================================== 
+ Override mat-tab-header in odert to make header swipe 
+ without changing selected tab
+ ============================================================== */
+
+.mat-tab-header-pagination {
+    display: none !important;
+}
+.mat-tab-header {
+    overflow: scroll !important;
+}
+.mat-tab-header::-webkit-scrollbar {
+    display: none !important;
+}
+.mat-tab-label-container {
+    overflow: initial !important;
+}
