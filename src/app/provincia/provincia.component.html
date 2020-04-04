@@ -41,7 +41,7 @@
                     </mat-grid-list>
             </mat-card-content>
         </mat-card>
-        <span *ngIf="!currentGrowthRate">
+        <span *ngIf="!tiles || tiles.length === 0">
             <div class="spinner">
                 <div class="double-bounce1"></div>
                 <div class="double-bounce2"></div>

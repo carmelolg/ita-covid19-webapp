@@ -41,16 +41,32 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 
+		this.eraseAll();
+
 		this.createTotalCases();
 
 		this.getGenericStats();
+	}
+
+	private eraseAll() {
+		this.totalCasesValues = [];
+		this.totalCasesIncreaseValues = [];
+		this.growthRateIncreaseValues
+		this.dataLabels = [];
+		this.totalCases = null;
+		this.totalCasesIncrease = null;
+
+		this.growthRateDateLabels = [];
+		this.growthRateValues = [];
+		this.growthRateIncreaseValues = [];
+		this.growthRates = null;
 	}
 
 	private getGrowthRates() {
 		this.growthRateValues = [];
 		this.growthRateDateLabels = [];
 
-		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput +"/growthRate").subscribe(data => {
+		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/growthRate").subscribe(data => {
 			if (data.results.length > 0) {
 				data.results.forEach(item => {
 					let innerDate = this.datepipe.transform(item.date, 'dd/MM');
@@ -69,11 +85,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 			this.districtNameInput = this.districtName;
 		}
 
-		this.totalCasesValues = [];
-		this.totalCasesIncreaseValues = [];
-		this.dataLabels = [];
-		this.totalCases = null;
-		this.totalCasesIncrease = null;
+		this.eraseAll();
 
 		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/total").subscribe(data => {
 			if (data.results.length > 0) {
@@ -106,7 +118,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 				this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
 
 				this.tiles = [
-					{ footer: 'Tasso di crescita', header:'Tasso di crescita sul totale', percentage: this.currentGrowthRate + '%', cols: 4, rows: 2, color: '#b3e0ff' }
+					{ footer: 'Tasso di crescita', header: 'Tasso di crescita sul totale', percentage: this.currentGrowthRate + '%', cols: 4, rows: 2, color: '#b3e0ff' }
 				];
 
 			}
