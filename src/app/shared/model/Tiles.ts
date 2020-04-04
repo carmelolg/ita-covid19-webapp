@@ -5,5 +5,7 @@ export interface Tile {
 	rows: number;
 	header: string;
 	footer: string;
-	percentage: string;
+	percentage?: string;
+	url?: string;
+	imgUrl?: string;
 }
