@@ -21,399 +21,420 @@
                         </mat-grid-tile-footer> -->
                     </mat-grid-tile>
                 </mat-grid-list>
-
+                <span *ngIf="!tiles || tiles.length === 0">
+                    <div class="spinner">
+                        <div class="double-bounce1"></div>
+                        <div class="double-bounce2"></div>
+                    </div>
+                </span>
             </mat-card-content>
         </mat-card>
     </div>
 </div>
 
-<!-- Min height in order to fix angular material bug that scroll to top when tab change -->
-<div style="min-height: 800px;">
-    <mat-tab-group (selectedTabChange)="changeTabHandler($event)">
-        <!-- <mat-tab label="Riepilogo">
+<div fxLayout="row wrap">
+    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card>
+            <!-- Min height in order to fix angular material bug that scroll to top when tab change -->
+            <div class="min-height-800">
+                <mat-tab-group mat-align-tabs="center" mat-stretch-tabs (selectedTabChange)="changeTabHandler($event)">
+                    <!-- <mat-tab label="Riepilogo">
         </mat-tab> -->
-        <mat-tab label="Contagi">
+                    <mat-tab label="Contagi">
 
-            <div fxLayout="row wrap">
-                <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <mat-card-title>Tasso di crescita</mat-card-title>
-                                    <mat-card-subtitle>Italia</mat-card-subtitle>
-                                </div>
-                                <div class="ml-auto">
-                                    <ul class="list-inline">
-                                        <li>
-                                            <h6 class="text-success m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Tasso di
-                                                crescita
-                                                giornaliero</h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <div fxLayout="row wrap">
+                            <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+                                <!-- <mat-card> -->
+                                    <mat-card-content>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <mat-card-title>Tasso di crescita</mat-card-title>
+                                                <mat-card-subtitle>Italia</mat-card-subtitle>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <h6 class="text-success m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Tasso
+                                                            di
+                                                            crescita
+                                                            giornaliero</h6>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            Il seguente grafico rappresenta l'andamento del tasso di crescita
+                                            dell'epidemia in
+                                            Italia
+                                        </p>
+                                        <div *ngIf="growthRates" class="ct-chart">
+                                            <x-chartist #growthRatesChart class="" [data]="growthRates.data"
+                                                [type]="growthRates.type" [options]="growthRates.options"
+                                                [responsiveOptions]="growthRates.responsiveOptions"
+                                                [events]="growthRates.events">
+                                            </x-chartist>
+                                        </div>
+                                    </mat-card-content>
+                                <!-- </mat-card> -->
+                                <span *ngIf="!growthRates">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                </span>
                             </div>
-                            <p>
-                                Il seguente grafico rappresenta l'andamento del tasso di crescita dell'epidemia in
-                                Italia
-                            </p>
-                            <div *ngIf="growthRates" class="ct-chart">
-                                <x-chartist #growthRatesChart class="" [data]="growthRates.data"
-                                    [type]="growthRates.type" [options]="growthRates.options"
-                                    [responsiveOptions]="growthRates.responsiveOptions" [events]="growthRates.events">
-                                </x-chartist>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <span *ngIf="!growthRates">
-                        <div class="spinner">
-                            <div class="double-bounce1"></div>
-                            <div class="double-bounce2"></div>
                         </div>
-                    </span>
-                </div>
-            </div>
-            <div fxLayout="row wrap">
-                <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <mat-card-title>Casi totali</mat-card-title>
-                                    <mat-card-subtitle>Italia</mat-card-subtitle>
-                                </div>
-                                <div class="ml-auto">
-                                    <ul class="list-inline">
-                                        <li>
-                                            <h6 class="text-success m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad
-                                                oggi
-                                            </h6>
-                                        </li>
-                                        <li>
-                                            <h6 class=" text-info m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
-                                                giornaliero
-                                            </h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <mat-divider></mat-divider>
+                        <div fxLayout="row wrap">
+                            <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+                                <!-- <mat-card> -->
+                                    <mat-card-content>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <mat-card-title>Casi totali</mat-card-title>
+                                                <mat-card-subtitle>Italia</mat-card-subtitle>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <h6 class="text-success m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi
+                                                            ad
+                                                            oggi
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <h6 class=" text-info m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                                            giornaliero
+                                                        </h6>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            Il seguente grafico rappresenta l'andamento dei casi totali in Italia
+                                        </p>
+                                        <div *ngIf="totalCases" class="ct-chart">
+                                            <x-chartist #totalCasesChart class="" [data]="totalCases.data"
+                                                [type]="totalCases.type" [options]="totalCases.options"
+                                                [responsiveOptions]="totalCases.responsiveOptions"
+                                                [events]="totalCases.events"> </x-chartist>
+                                        </div>
+                                    </mat-card-content>
+                                <!-- </mat-card> -->
+                                <span *ngIf="!totalCases">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                </span>
                             </div>
-                            <p>
-                                Il seguente grafico rappresenta l'andamento dei casi totali in Italia
-                            </p>
-                            <div *ngIf="totalCases" class="ct-chart">
-                                <x-chartist #totalCasesChart class="" [data]="totalCases.data" [type]="totalCases.type"
-                                    [options]="totalCases.options" [responsiveOptions]="totalCases.responsiveOptions"
-                                    [events]="totalCases.events"> </x-chartist>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <span *ngIf="!totalCases">
-                        <div class="spinner">
-                            <div class="double-bounce1"></div>
-                            <div class="double-bounce2"></div>
                         </div>
-                    </span>
-                </div>
-            </div>
-
-
-            <div fxLayout="row wrap">
-                <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <mat-card-title>Nuovi casi</mat-card-title>
-                                    <mat-card-subtitle>Italia</mat-card-subtitle>
-                                </div>
-                                <div class="ml-auto">
-                                    <ul class="list-inline">
-                                        <li>
-                                            <h6 class="text-success m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Nuovi casi
-                                                ad
-                                                oggi
-                                            </h6>
-                                        </li>
-                                        <li>
-                                            <h6 class=" text-info m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
-                                                giornaliero
-                                            </h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <mat-divider></mat-divider>
+                        <div fxLayout="row wrap">
+                            <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+                                <!-- <mat-card> -->
+                                    <mat-card-content>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <mat-card-title>Nuovi casi</mat-card-title>
+                                                <mat-card-subtitle>Italia</mat-card-subtitle>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <h6 class="text-success m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Nuovi
+                                                            casi
+                                                            ad
+                                                            oggi
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <h6 class=" text-info m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                                            giornaliero
+                                                        </h6>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            Il seguente grafico rappresenta l'andamento dei nuovi casi in Italia
+                                        </p>
+                                        <div *ngIf="totalNewCases" class="ct-chart">
+                                            <x-chartist #totalNewCasesChart class="" [data]="totalNewCases.data"
+                                                [type]="totalNewCases.type" [options]="totalNewCases.options"
+                                                [responsiveOptions]="totalNewCases.responsiveOptions"
+                                                [events]="totalNewCases.events"> </x-chartist>
+                                        </div>
+                                    </mat-card-content>
+                                <!-- </mat-card> -->
+                                <span *ngIf="!totalNewCases">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                </span>
                             </div>
-                            <p>
-                                Il seguente grafico rappresenta l'andamento dei nuovi casi in Italia
-                            </p>
-                            <div *ngIf="totalNewCases" class="ct-chart">
-                                <x-chartist #totalNewCasesChart class="" [data]="totalNewCases.data"
-                                    [type]="totalNewCases.type" [options]="totalNewCases.options"
-                                    [responsiveOptions]="totalNewCases.responsiveOptions"
-                                    [events]="totalNewCases.events"> </x-chartist>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <span *ngIf="!totalNewCases">
-                        <div class="spinner">
-                            <div class="double-bounce1"></div>
-                            <div class="double-bounce2"></div>
                         </div>
-                    </span>
-                </div>
-            </div>
-
-
-        </mat-tab>
-        <mat-tab label="Ricoveri">
-
-
-            <div fxLayout="row wrap">
-                <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <mat-card-title>Ospedalizzati totali</mat-card-title>
-                                    <mat-card-subtitle>Italia</mat-card-subtitle>
-                                </div>
-                                <div class="ml-auto">
-                                    <ul class="list-inline">
-                                        <li>
-                                            <h6 class="text-success m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad
-                                                oggi
-                                            </h6>
-                                        </li>
-                                        <li>
-                                            <h6 class=" text-info m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
-                                                giornaliero
-                                            </h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                    </mat-tab>
+                    <mat-tab label="Ricoveri">
+                        <div fxLayout="row wrap">
+                            <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+                                <!-- <mat-card> -->
+                                    <mat-card-content>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <mat-card-title>Ospedalizzati totali</mat-card-title>
+                                                <mat-card-subtitle>Italia</mat-card-subtitle>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <h6 class="text-success m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi
+                                                            ad
+                                                            oggi
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <h6 class=" text-info m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                                            giornaliero
+                                                        </h6>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            Il seguente grafico rappresenta l'andamento dei casi ospedalizzati totali in
+                                            Italia
+                                        </p>
+                                        <div *ngIf="totalHospitalized" class="ct-chart">
+                                            <x-chartist #totalHospitalizedChart class="" [data]="totalHospitalized.data"
+                                                [type]="totalHospitalized.type" [options]="totalHospitalized.options"
+                                                [responsiveOptions]="totalHospitalized.responsiveOptions"
+                                                [events]="totalHospitalized.events"> </x-chartist>
+                                        </div>
+                                    </mat-card-content>
+                                <!-- </mat-card> -->
+                                <span *ngIf="!totalHospitalized">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                </span>
                             </div>
-                            <p>
-                                Il seguente grafico rappresenta l'andamento dei casi ospedalizzati totali in Italia
-                            </p>
-                            <div *ngIf="totalHospitalized" class="ct-chart">
-                                <x-chartist #totalHospitalizedChart class="" [data]="totalHospitalized.data"
-                                    [type]="totalHospitalized.type" [options]="totalHospitalized.options"
-                                    [responsiveOptions]="totalHospitalized.responsiveOptions"
-                                    [events]="totalHospitalized.events"> </x-chartist>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <span *ngIf="!totalHospitalized">
-                        <div class="spinner">
-                            <div class="double-bounce1"></div>
-                            <div class="double-bounce2"></div>
                         </div>
-                    </span>
-                </div>
-            </div>
-
-
-            <div fxLayout="row wrap">
-                <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <mat-card-title>Pazienti in terapia intensiva</mat-card-title>
-                                    <mat-card-subtitle>Italia</mat-card-subtitle>
-                                </div>
-                                <div class="ml-auto">
-                                    <ul class="list-inline">
-                                        <li>
-                                            <h6 class="text-success m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad
-                                                oggi
-                                            </h6>
-                                        </li>
-                                        <li>
-                                            <h6 class=" text-info m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
-                                                giornaliero
-                                            </h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <mat-divider></mat-divider>
+                        <div fxLayout="row wrap">
+                            <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+                                <!-- <mat-card> -->
+                                    <mat-card-content>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <mat-card-title>Pazienti in terapia intensiva</mat-card-title>
+                                                <mat-card-subtitle>Italia</mat-card-subtitle>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <h6 class="text-success m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi
+                                                            ad
+                                                            oggi
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <h6 class=" text-info m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                                            giornaliero
+                                                        </h6>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            Il seguente grafico rappresenta l'andamento delle persone che hanno avuto
+                                            bisogno di
+                                            cure in
+                                            terapia
+                                            intensiva in Italia
+                                        </p>
+                                        <div *ngIf="totalIntensiveCare" class="ct-chart">
+                                            <x-chartist #totalIntensiveCareChart class=""
+                                                [data]="totalIntensiveCare.data" [type]="totalIntensiveCare.type"
+                                                [options]="totalIntensiveCare.options"
+                                                [responsiveOptions]="totalIntensiveCare.responsiveOptions"
+                                                [events]="totalIntensiveCare.events">
+                                            </x-chartist>
+                                        </div>
+                                    </mat-card-content>
+                                <!-- </mat-card> -->
+                                <span *ngIf="!totalIntensiveCare">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                </span>
                             </div>
-                            <p>
-                                Il seguente grafico rappresenta l'andamento delle persone che hanno avuto bisogno di
-                                cure in
-                                terapia
-                                intensiva in Italia
-                            </p>
-                            <div *ngIf="totalIntensiveCare" class="ct-chart">
-                                <x-chartist #totalIntensiveCareChart class="" [data]="totalIntensiveCare.data"
-                                    [type]="totalIntensiveCare.type" [options]="totalIntensiveCare.options"
-                                    [responsiveOptions]="totalIntensiveCare.responsiveOptions"
-                                    [events]="totalIntensiveCare.events">
-                                </x-chartist>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <span *ngIf="!totalIntensiveCare">
-                        <div class="spinner">
-                            <div class="double-bounce1"></div>
-                            <div class="double-bounce2"></div>
                         </div>
-                    </span>
-                </div>
-            </div>
-        </mat-tab>
-        <mat-tab label="Deceduti / Guariti">
+                    </mat-tab>
+                    <mat-tab label="Deceduti / Guariti">
 
-            <div fxLayout="row wrap">
-                <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <mat-card-title>Morti totali</mat-card-title>
-                                    <mat-card-subtitle>Italia</mat-card-subtitle>
-                                </div>
-                                <div class="ml-auto">
-                                    <ul class="list-inline">
-                                        <li>
-                                            <h6 class="text-success m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad
-                                                oggi
-                                            </h6>
-                                        </li>
-                                        <li>
-                                            <h6 class=" text-info m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
-                                                giornaliero
-                                            </h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <div fxLayout="row wrap">
+                            <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+                                <!-- <mat-card> -->
+                                    <mat-card-content>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <mat-card-title>Morti totali</mat-card-title>
+                                                <mat-card-subtitle>Italia</mat-card-subtitle>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <h6 class="text-success m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi
+                                                            ad
+                                                            oggi
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <h6 class=" text-info m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                                            giornaliero
+                                                        </h6>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            Il seguente grafico rappresenta l'andamento dei decessi in Italia
+                                        </p>
+                                        <div *ngIf="totalDead" class="ct-chart">
+                                            <x-chartist #totalDeadChart class="" [data]="totalDead.data"
+                                                [type]="totalDead.type" [options]="totalDead.options"
+                                                [responsiveOptions]="totalDead.responsiveOptions"
+                                                [events]="totalDead.events"> </x-chartist>
+                                        </div>
+                                    </mat-card-content>
+                                <!-- </mat-card> -->
+                                <span *ngIf="!totalDead">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                </span>
                             </div>
-                            <p>
-                                Il seguente grafico rappresenta l'andamento dei decessi in Italia
-                            </p>
-                            <div *ngIf="totalDead" class="ct-chart">
-                                <x-chartist #totalDeadChart class="" [data]="totalDead.data" [type]="totalDead.type"
-                                    [options]="totalDead.options" [responsiveOptions]="totalDead.responsiveOptions"
-                                    [events]="totalDead.events"> </x-chartist>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <span *ngIf="!totalDead">
-                        <div class="spinner">
-                            <div class="double-bounce1"></div>
-                            <div class="double-bounce2"></div>
                         </div>
-                    </span>
-                </div>
-            </div>
 
-
-            <div fxLayout="row wrap">
-                <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <mat-card-title>Guariti totali</mat-card-title>
-                                    <mat-card-subtitle>Italia</mat-card-subtitle>
-                                </div>
-                                <div class="ml-auto">
-                                    <ul class="list-inline">
-                                        <li>
-                                            <h6 class="text-success m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad
-                                                oggi
-                                            </h6>
-                                        </li>
-                                        <li>
-                                            <h6 class=" text-info m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
-                                                giornaliero
-                                            </h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <mat-divider></mat-divider>
+                        <div fxLayout="row wrap">
+                            <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+                                <!-- <mat-card> -->
+                                    <mat-card-content>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <mat-card-title>Guariti totali</mat-card-title>
+                                                <mat-card-subtitle>Italia</mat-card-subtitle>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <h6 class="text-success m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi
+                                                            ad
+                                                            oggi
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <h6 class=" text-info m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                                            giornaliero
+                                                        </h6>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            Il seguente grafico rappresenta l'andamento dei guariti in Italia
+                                        </p>
+                                        <div *ngIf="totalRecovered" class="ct-chart">
+                                            <x-chartist #totalRecoveredChart class="" [data]="totalRecovered.data"
+                                                [type]="totalRecovered.type" [options]="totalRecovered.options"
+                                                [responsiveOptions]="totalRecovered.responsiveOptions"
+                                                [events]="totalRecovered.events">
+                                            </x-chartist>
+                                        </div>
+                                    </mat-card-content>
+                                <!-- </mat-card> -->
+                                <span *ngIf="!totalRecovered">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                </span>
                             </div>
-                            <p>
-                                Il seguente grafico rappresenta l'andamento dei guariti in Italia
-                            </p>
-                            <div *ngIf="totalRecovered" class="ct-chart">
-                                <x-chartist #totalRecoveredChart class="" [data]="totalRecovered.data"
-                                    [type]="totalRecovered.type" [options]="totalRecovered.options"
-                                    [responsiveOptions]="totalRecovered.responsiveOptions"
-                                    [events]="totalRecovered.events">
-                                </x-chartist>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <span *ngIf="!totalRecovered">
-                        <div class="spinner">
-                            <div class="double-bounce1"></div>
-                            <div class="double-bounce2"></div>
                         </div>
-                    </span>
-                </div>
-            </div>
 
 
-        </mat-tab>
-        <mat-tab label="Tamponi">
+                    </mat-tab>
+                    <mat-tab label="Tamponi">
 
-            <div fxLayout="row wrap">
-                <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-                    <mat-card>
-                        <mat-card-content>
-                            <div class="d-flex flex-wrap">
-                                <div>
-                                    <mat-card-title>Tamponi effettuati</mat-card-title>
-                                    <mat-card-subtitle>Italia</mat-card-subtitle>
-                                </div>
-                                <div class="ml-auto">
-                                    <ul class="list-inline">
-                                        <li>
-                                            <h6 class="text-success m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad
-                                                oggi
-                                            </h6>
-                                        </li>
-                                        <li>
-                                            <h6 class=" text-info m-0"><i
-                                                    class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
-                                                giornaliero
-                                            </h6>
-                                        </li>
-                                    </ul>
-                                </div>
+                        <div fxLayout="row wrap">
+                            <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+                                <!-- <mat-card> -->
+                                    <mat-card-content>
+                                        <div class="d-flex flex-wrap">
+                                            <div>
+                                                <mat-card-title>Tamponi effettuati</mat-card-title>
+                                                <mat-card-subtitle>Italia</mat-card-subtitle>
+                                            </div>
+                                            <div class="ml-auto">
+                                                <ul class="list-inline">
+                                                    <li>
+                                                        <h6 class="text-success m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi
+                                                            ad
+                                                            oggi
+                                                        </h6>
+                                                    </li>
+                                                    <li>
+                                                        <h6 class=" text-info m-0"><i
+                                                                class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
+                                                            giornaliero
+                                                        </h6>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <p>
+                                            Il seguente grafico rappresenta l'andamento dei tamponi effettuati in Italia
+                                        </p>
+                                        <div *ngIf="totalTests" class="ct-chart">
+                                            <x-chartist #totalTestsChart class="" [data]="totalTests.data"
+                                                [type]="totalTests.type" [options]="totalTests.options"
+                                                [responsiveOptions]="totalTests.responsiveOptions"
+                                                [events]="totalTests.events"> </x-chartist>
+                                        </div>
+                                    </mat-card-content>
+                                <!-- </mat-card> -->
+                                <span *ngIf="!totalTests">
+                                    <div class="spinner">
+                                        <div class="double-bounce1"></div>
+                                        <div class="double-bounce2"></div>
+                                    </div>
+                                </span>
                             </div>
-                            <p>
-                                Il seguente grafico rappresenta l'andamento dei tamponi effettuati in Italia
-                            </p>
-                            <div *ngIf="totalTests" class="ct-chart">
-                                <x-chartist #totalTestsChart class="" [data]="totalTests.data" [type]="totalTests.type"
-                                    [options]="totalTests.options" [responsiveOptions]="totalTests.responsiveOptions"
-                                    [events]="totalTests.events"> </x-chartist>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                    <span *ngIf="!totalTests">
-                        <div class="spinner">
-                            <div class="double-bounce1"></div>
-                            <div class="double-bounce2"></div>
                         </div>
-                    </span>
-                </div>
+
+                    </mat-tab>
+                </mat-tab-group>
             </div>
-
-
-        </mat-tab>
-    </mat-tab-group>
+        </mat-card>
+    </div>
 </div>

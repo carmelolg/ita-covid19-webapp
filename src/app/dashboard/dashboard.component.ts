@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -69,7 +69,6 @@ export class DashboardComponent implements OnInit {
   currentDeadPercentage = 0;
   currentIntensiveCarePercentage = 0;
   currentHospitalizedPercentage = 0;
-
 
   tiles: Tile[] = [];
 
