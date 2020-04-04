@@ -25,6 +25,11 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 
 	dataLabels = [];
 
+	growthRateDateLabels = [];
+	growthRateValues = [];
+	growthRateIncreaseValues = [];
+	growthRates: Chart;
+
 	totalCasesValues = [];
 	totalCasesIncreaseValues = [];
 	totalCases: Chart;
@@ -86,6 +91,22 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 		this.getGenericStats();
 	}
 
+	private createGrowthRates() {
+		this.growthRateDateLabels = [];
+		this.growthRateValues = [];
+
+		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/growthRate").subscribe(data => {
+			if (data.results.length > 0) {
+				data.results.forEach(item => {
+					let innerDate = this.datepipe.transform(item.date, 'dd/MM')
+					this.growthRateDateLabels.push(innerDate);
+					this.growthRateValues.push(item.value);
+				});
+				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, this.growthRateValues, [], 'Bar');
+			}
+		});
+	}
+
 	private createTotalCases() {
 		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total").subscribe(data => {
 
@@ -109,6 +130,7 @@ export class RegioneComponent implements OnInit, AfterViewInit {
 			this.createTotalIntensiveCare();
 			this.createTotalTests();
 			this.createTotalRecovered();
+			this.createGrowthRates();
 			this.isLoading = false;
 		});
 
