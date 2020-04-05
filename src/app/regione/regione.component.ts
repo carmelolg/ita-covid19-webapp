@@ -17,6 +17,7 @@ import { InfoChart } from '../shared/model/InfoChart';
 })
 export class RegioneComponent implements OnInit {
 
+  public resumeInfo: InfoChart;
   public growthRatesInfo: InfoChart;
   public totalCasesInfo: InfoChart;
   public totalNewCasesInfo: InfoChart;
@@ -33,6 +34,13 @@ export class RegioneComponent implements OnInit {
   isLoading = false;
 
   dataLabels = [];
+
+  resumeDateLabels = [];
+  resumeTotalValues = [];
+  resumeNewValues = [];
+  resumeRecoveredValues = [];
+  resumeDeadValues = [];
+  resume: Chart;
 
   growthRateDateLabels = [];
   growthRateValues = [];
@@ -82,6 +90,20 @@ export class RegioneComponent implements OnInit {
   tiles: Tile[] = [];
 
   ngOnInit() {
+
+    /**
+     * RIEPILOGO
+     */
+
+    this.resumeInfo = new InfoChart();
+    this.resumeInfo.title = 'Riepilogo';
+    this.resumeInfo.subtitle = this.regionName;
+    this.resumeInfo.firstLegend = 'Totale casi';
+    this.resumeInfo.secondLegend = 'Attualmente positivi';
+    this.resumeInfo.thirdLegend = 'Guariti';
+    this.resumeInfo.fourthLegend = 'Deceduti';
+    this.resumeInfo.desc = 'Il seguente grafico raggruppa i principali dati sull\'epidemia: totale casi, attualmente positivi, guariti, deceduti';
+
 
     /** CONTAGI */
     this.growthRatesInfo = new InfoChart();
@@ -157,11 +179,28 @@ export class RegioneComponent implements OnInit {
     if (this.regionNameInput.length === 0) {
       this.regionNameInput = this.regionName;
     }
-
+    
     this.eraseAllData();
-
+    this.createResume();
     this.createTotalCases();
     this.getGenericStats();
+  }
+
+  private createResume() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/resume", { params: { all: 'true' } }).subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+
+          let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+          this.resumeDateLabels.push(innerDate);
+          this.resumeTotalValues.push(item.totalCases);
+          this.resumeNewValues.push(item.nowPositives);
+          this.resumeRecoveredValues.push(item.recovered);
+          this.resumeDeadValues.push(item.dead);
+        });
+        this.resume = this.chartService.createChart(this.resumeDateLabels, 'Line', this.resumeTotalValues, this.resumeNewValues, this.resumeRecoveredValues, this.resumeDeadValues);
+      }
+    });
   }
 
   private createGrowthRates() {
@@ -196,7 +235,6 @@ export class RegioneComponent implements OnInit {
         this.regionName = data.description;
         this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
       }
-
       this.createTotalDead();
       this.createNewCases();
       this.createTotalHospitalized();
@@ -332,8 +370,15 @@ export class RegioneComponent implements OnInit {
     this.totalTests = null;
     this.totalRecovered = null;
     this.totalNewCases = null;
+    this.resume = null;
 
     this.dataLabels = [];
+
+    this.resumeDateLabels = [];
+    this.resumeTotalValues = [];
+    this.resumeNewValues = [];
+    this.resumeRecoveredValues = [];
+    this.resumeDeadValues = [];
 
     this.totalCasesValues = [];
     this.totalCasesIncreaseValues = [];
