@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -26,7 +26,11 @@ export class RegioneComponent implements OnInit {
   public totalRecoveredInfo: InfoChart;
   public totalTestsInfo: InfoChart;
 
-  constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
+  constructor(
+    private http: HttpClient,
+    public datepipe: DatePipe,
+    private chartService: ChartService,
+    private changeDetector: ChangeDetectorRef) { }
 
   regionName = "Lombardia";
   regionNameInput = "";
@@ -158,10 +162,21 @@ export class RegioneComponent implements OnInit {
       this.regionNameInput = this.regionName;
     }
 
+    this.growthRatesInfo.subtitle = this.regionNameInput;
+    this.totalCasesInfo.subtitle = this.regionNameInput;
+    this.totalNewCasesInfo.subtitle = this.regionNameInput;
+    this.totalHospitalizedInfo.subtitle = this.regionNameInput;
+    this.totalIntensiveCareInfo.subtitle = this.regionNameInput;
+    this.totalDeadInfo.subtitle = this.regionNameInput;
+    this.totalRecoveredInfo.subtitle = this.regionNameInput;
+    this.totalTestsInfo.subtitle = this.regionNameInput;
+
     this.eraseAllData();
 
     this.createTotalCases();
     this.getGenericStats();
+
+    this.changeDetector.detectChanges();
   }
 
   private createGrowthRates() {
