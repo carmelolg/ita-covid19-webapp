@@ -27,18 +27,18 @@
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-card>
             <mat-card-content>
-                    <mat-grid-list cols="4" rowHeight="50px">
-                        <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
-                            [style.background]="tile.color">
-                            <mat-grid-tile-header>
-                                {{tile.header}}
-                            </mat-grid-tile-header>
-                            <span class="percentage">{{tile.percentage}}</span>
-                            <!-- <mat-grid-tile-footer>
+                <mat-grid-list cols="4" rowHeight="50px">
+                    <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+                        [style.background]="tile.color">
+                        <mat-grid-tile-header>
+                            {{tile.header}}
+                        </mat-grid-tile-header>
+                        <span class="percentage">{{tile.percentage}}</span>
+                        <!-- <mat-grid-tile-footer>
                                 {{tile.footer}}
                             </mat-grid-tile-footer> -->
-                        </mat-grid-tile>
-                    </mat-grid-list>
+                    </mat-grid-tile>
+                </mat-grid-list>
             </mat-card-content>
         </mat-card>
         <span *ngIf="!currentGrowthRate">
@@ -53,388 +53,49 @@
 <div fxLayout="row wrap">
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Tasso di crescita</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Incremento giornaliero</h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p>
-                    Il seguente grafico rappresenta l'andamento del tasso di crescita nella regione <span
-                        class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="growthRates && growthRates.data.series.length > 0" class="ct-chart">
-                    <x-chartist class="" [data]="growthRates.data" [type]="growthRates.type"
-                        [options]="growthRates.options" [responsiveOptions]="growthRates.responsiveOptions"
-                        [events]="growthRates.events"> </x-chartist>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <span *ngIf="!growthRates">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
+            <!-- Min height in order to fix angular material bug that scroll to top when tab change -->
+            <div class="min-height-800">
+                <mat-tab-group mat-align-tabs="center" mat-stretch-tabs (selectedTabChange)="changeTabHandler($event)">
+                    <!-- <mat-tab label="Riepilogo">
+                    </mat-tab> -->
+                    <mat-tab label="Contagi">
+
+                        <app-chart [chartConfig]="growthRates" [info]="growthRatesInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalCases" [info]="totalCasesInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalNewCases" [info]="totalNewCasesInfo"></app-chart>
+
+                    </mat-tab>
+                    <mat-tab label="Ricoveri">
+
+                        <app-chart [chartConfig]="totalHospitalized" [info]="totalHospitalizedInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalIntensiveCare" [info]="totalIntensiveCareInfo"></app-chart>
+
+                    </mat-tab>
+                    <mat-tab label="Deceduti / Guariti">
+
+                        <app-chart [chartConfig]="totalDead" [info]="totalDeadInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalRecovered" [info]="totalRecoveredInfo"></app-chart>
+
+                    </mat-tab>
+                    <mat-tab label="Tamponi">
+
+                        <app-chart [chartConfig]="totalTests" [info]="totalTestsInfo"></app-chart>
+
+                    </mat-tab>
+                </mat-tab-group>
             </div>
-        </span>
-    </div>
-</div>
-
-<div fxLayout="row wrap">
-    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Casi ad oggi</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
-                            </li>
-                            <li>
-                                <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p>
-                    Il seguente grafico rappresenta l'andamento dei casi totali nella regione <span
-                        class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="totalCases && totalCases.data.series.length > 0" class="ct-chart">
-                    <x-chartist class="" [data]="totalCases.data" [type]="totalCases.type"
-                        [options]="totalCases.options" [responsiveOptions]="totalCases.responsiveOptions"
-                        [events]="totalCases.events"> </x-chartist>
-                </div>
-            </mat-card-content>
         </mat-card>
-        <span *ngIf="!totalCases">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </span>
-    </div>
-</div>
-
-<div fxLayout="row wrap">
-    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Casi ad oggi</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
-                            </li>
-                            <li>
-                                <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p>
-                    Il seguente grafico rappresenta l'andamento dei casi totali nella regione <span
-                        class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="totalCases && totalCases.data.series.length > 0" class="ct-chart">
-                    <x-chartist class="" [data]="totalCases.data" [type]="totalCases.type"
-                        [options]="totalCases.options" [responsiveOptions]="totalCases.responsiveOptions"
-                        [events]="totalCases.events"> </x-chartist>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <span *ngIf="!totalCases">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </span>
-    </div>
-</div>
-
-
-<div fxLayout="row wrap">
-    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Nuovi casi</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Nuovi casi ad oggi</h6>
-                            </li>
-                            <li>
-                                <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento
-                                    giornaliero
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p>
-                    Il seguente grafico rappresenta l'andamento dei nuovi casi nella regione <span
-                    class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="totalNewCases" class="ct-chart">
-                    <x-chartist class="" [data]="totalNewCases.data" [type]="totalNewCases.type"
-                        [options]="totalNewCases.options" [responsiveOptions]="totalNewCases.responsiveOptions"
-                        [events]="totalNewCases.events"> </x-chartist>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <span *ngIf="!totalNewCases">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </span>
-    </div>
-</div>
-
-<div fxLayout="row wrap">
-    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Ospedalizzati totali</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
-                            </li>
-                            <li>
-                                <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p>
-                    Il seguente grafico rappresenta l'andamento delle persone Ospedalizzate nella regione <span
-                        class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="totalHospitalized" class="ct-chart">
-                    <x-chartist class="" [data]="totalHospitalized.data" [type]="totalHospitalized.type"
-                        [options]="totalHospitalized.options" [responsiveOptions]="totalHospitalized.responsiveOptions"
-                        [events]="totalHospitalized.events"> </x-chartist>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <span *ngIf="!totalHospitalized">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </span>
-    </div>
-</div>
-
-
-<div fxLayout="row wrap">
-    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Pazienti in terapia intensiva</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
-                            </li>
-                            <li>
-                                <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p>
-                    Il seguente grafico rappresenta l'andamento delle persone ricoverate in terapia intensiva nella
-                    regione <span class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="totalIntensiveCare" class="ct-chart">
-                    <x-chartist class="" [data]="totalIntensiveCare.data" [type]="totalIntensiveCare.type"
-                        [options]="totalIntensiveCare.options"
-                        [responsiveOptions]="totalIntensiveCare.responsiveOptions" [events]="totalIntensiveCare.events">
-                    </x-chartist>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <span *ngIf="!totalIntensiveCare">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </span>
-    </div>
-</div>
-
-
-<div fxLayout="row wrap">
-    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Morti totali</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
-                            </li>
-                            <li>
-                                <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <p>
-                    Il seguente grafico rappresenta l'andamento delle persone decedute nella regione <span
-                        class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="totalDead" class="ct-chart">
-                    <x-chartist class="" [data]="totalDead.data" [type]="totalDead.type" [options]="totalDead.options"
-                        [responsiveOptions]="totalDead.responsiveOptions" [events]="totalDead.events"> </x-chartist>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <span *ngIf="!totalDead">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </span>
-    </div>
-</div>
-
-
-<div fxLayout="row wrap">
-    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Guariti totali</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
-                            </li>
-                            <li>
-                                <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <p>
-                    Il seguente grafico rappresenta l'andamento delle persone guarite nella regione <span
-                        class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="totalRecovered" class="ct-chart">
-                    <x-chartist class="" [data]="totalRecovered.data" [type]="totalRecovered.type"
-                        [options]="totalRecovered.options" [responsiveOptions]="totalRecovered.responsiveOptions"
-                        [events]="totalRecovered.events"> </x-chartist>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <span *ngIf="!totalRecovered">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </span>
-    </div>
-</div>
-
-<div fxLayout="row wrap">
-    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
-        <mat-card>
-            <mat-card-content>
-                <div class="d-flex flex-wrap">
-                    <div>
-                        <mat-card-title>Tamponi effettuati</mat-card-title>
-                        <mat-card-subtitle>{{regionName | uppercase}}</mat-card-subtitle>
-                    </div>
-                    <div class="ml-auto">
-                        <ul class="list-inline">
-                            <li>
-                                <h6 class="text-success m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
-                            </li>
-                            <li>
-                                <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
-                                </h6>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <p>
-                    Il seguente grafico rappresenta l'andamento dei tamponi effettuati nella regione <span
-                        class="mat-subheading-2">{{regionName | uppercase}}</span>
-                </p>
-                <div *ngIf="totalTests" class="ct-chart">
-                    <x-chartist class="" [data]="totalTests.data" [type]="totalTests.type"
-                        [options]="totalTests.options" [responsiveOptions]="totalTests.responsiveOptions"
-                        [events]="totalTests.events"> </x-chartist>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <span *ngIf="!totalTests">
-            <div class="spinner">
-                <div class="double-bounce1"></div>
-                <div class="double-bounce2"></div>
-            </div>
-        </span>
     </div>
 </div>

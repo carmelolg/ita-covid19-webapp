@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import { Chart } from '../shared/model/Chart';
 import { Tile } from '../shared/model/Tiles';
 import { ChartService } from './chart.service'
+import { InfoChart } from '../shared/model/InfoChart';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,14 +14,14 @@ import { ChartService } from './chart.service'
 })
 export class DashboardComponent implements OnInit {
 
-  @ViewChild('growthRatesChart') growthRatesChart: any;
-  @ViewChild('totalCasesChart') totalCasesChart: any;
-  @ViewChild('totalNewCasesChart') totalNewCasesChart: any;
-  @ViewChild('totalHospitalizedChart') totalHospitalizedChart: any;
-  @ViewChild('totalIntensiveCareChart') totalIntensiveCareChart: any;
-  @ViewChild('totalDeadChart') totalDeadChart: any;
-  @ViewChild('totalRecoveredChart') totalRecoveredChart: any;
-  @ViewChild('totalTestsChart') totalTestsChart: any;
+  public growthRatesInfo: InfoChart;
+  public totalCasesInfo: InfoChart;
+  public totalNewCasesInfo: InfoChart;
+  public totalHospitalizedInfo: InfoChart;
+  public totalIntensiveCareInfo: InfoChart;
+  public totalDeadInfo: InfoChart;
+  public totalRecoveredInfo: InfoChart;
+  public totalTestsInfo: InfoChart;
 
   constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
 
@@ -74,6 +75,65 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
 
+    /** CONTAGI */
+    this.growthRatesInfo = new InfoChart();
+    this.growthRatesInfo.title = 'Tasso di crescita';
+    this.growthRatesInfo.subtitle = 'Italia';
+    this.growthRatesInfo.firstLegend = 'Tasso di crescita giornaliero';
+    this.growthRatesInfo.desc = 'Il seguente grafico rappresenta l\'andamento del tasso di crescita dell\'epidemia in Italia';
+
+    this.totalCasesInfo = new InfoChart();
+    this.totalCasesInfo.title = 'Casi totali';
+    this.totalCasesInfo.subtitle = 'Italia';
+    this.totalCasesInfo.firstLegend = 'Casi ad oggi';
+    this.totalCasesInfo.secondLegend = 'Incremento giornaliero';
+    this.totalCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei casi totali in Italia';
+
+    this.totalNewCasesInfo = new InfoChart();
+    this.totalNewCasesInfo.title = 'Nuovi casi';
+    this.totalNewCasesInfo.subtitle = 'Italia';
+    this.totalNewCasesInfo.firstLegend = 'Nuovi casi ad oggi';
+    this.totalNewCasesInfo.secondLegend = 'Incremento giornaliero';
+    this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei nuovi casi in Italia';
+
+    /** RICOVERI */
+    this.totalHospitalizedInfo = new InfoChart();
+    this.totalHospitalizedInfo.title = 'Ricoverati totali';
+    this.totalHospitalizedInfo.subtitle = 'Italia';
+    this.totalHospitalizedInfo.firstLegend = 'Casi ad oggi';
+    this.totalHospitalizedInfo.secondLegend = 'Incremento giornaliero';
+    this.totalHospitalizedInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei pazienti ricoverati in Italia';
+
+    this.totalIntensiveCareInfo = new InfoChart();
+    this.totalIntensiveCareInfo.title = 'Pazienti in terapia intensiva';
+    this.totalIntensiveCareInfo.subtitle = 'Italia';
+    this.totalIntensiveCareInfo.firstLegend = 'Casi ad oggi';
+    this.totalIntensiveCareInfo.secondLegend = 'Incremento giornaliero';
+    this.totalIntensiveCareInfo.desc = 'Il seguente grafico rappresenta l\'andamento delle persone che hanno avuto bisogno di cure in terapia intensiva in Italia';
+
+    /** DECDEDUTI/GUARITI */
+    this.totalDeadInfo = new InfoChart();
+    this.totalDeadInfo.title = 'Deceduti totali';
+    this.totalDeadInfo.subtitle = 'Italia';
+    this.totalDeadInfo.firstLegend = 'Casi ad oggi';
+    this.totalDeadInfo.secondLegend = 'Incremento giornaliero';
+    this.totalDeadInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei decessi in Italia';
+
+    this.totalRecoveredInfo = new InfoChart();
+    this.totalRecoveredInfo.title = 'Guariti totali';
+    this.totalRecoveredInfo.subtitle = 'Italia';
+    this.totalRecoveredInfo.firstLegend = 'Casi ad oggi';
+    this.totalRecoveredInfo.secondLegend = 'Incremento giornaliero';
+    this.totalRecoveredInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei guariti in Italia';
+
+    /** TAMPONI */
+    this.totalTestsInfo = new InfoChart();
+    this.totalTestsInfo.title = 'Tamponi effettuati';
+    this.totalTestsInfo.subtitle = 'Italia';
+    this.totalTestsInfo.firstLegend = 'Tamponi effettuati ad oggi';
+    this.totalTestsInfo.secondLegend = 'Incremento giornaliero';
+    this.totalTestsInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei tamponi effettuati in Italia';
+
     this.eraseAllData();
 
     this.createGrowthRates();
@@ -89,26 +149,7 @@ export class DashboardComponent implements OnInit {
   }
 
   public changeTabHandler(tab): void {
-    switch (tab.index + 1) { // TODO rimuovere il +1 dopo aver accesso il tab riepilogo
-      case 0: // Tab Riepilogo
-        break;
-      case 1: // Tab Contagi
-        this.growthRatesChart.chart.container.__chartist__.update();
-        this.totalCasesChart.chart.container.__chartist__.update();
-        this.totalNewCasesChart.chart.container.__chartist__.update();
-        break;
-      case 2: // Tab Ricoveri
-        this.totalHospitalizedChart.chart.container.__chartist__.update();
-        this.totalIntensiveCareChart.chart.container.__chartist__.update();
-        break;
-      case 3: // Tab Deceduti/Guariti
-        this.totalDeadChart.chart.container.__chartist__.update();
-        this.totalRecoveredChart.chart.container.__chartist__.update();
-        break;
-      case 4: // Tab Tamponi
-        this.totalTestsChart.chart.container.__chartist__.update();
-        break;
-    }
+    this.chartService.updateChartModel();
   }
 
   private eraseAllData() {
@@ -144,8 +185,6 @@ export class DashboardComponent implements OnInit {
           this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
         });
         this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues, this.totalCasesIncreaseValues);
-
-
       }
     });
   }
@@ -223,7 +262,6 @@ export class DashboardComponent implements OnInit {
       }
       this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
     });
-
   }
 
   private createTotalRecovered() {
@@ -259,7 +297,6 @@ export class DashboardComponent implements OnInit {
           { footer: 'Tasso di crescita', header: '% incr. totale', percentage: this.currentGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' },
           { footer: 'Tasso di crescita', header: '% incr. nuovi positivi', percentage: this.currentNewPositiveGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' }
         ];
-
       }
     });
   }

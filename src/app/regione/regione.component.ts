@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -8,280 +8,353 @@ declare var require: any
 require('chartist-plugin-tooltips-updated');
 import { ChartService } from '../dashboard/chart.service';
 import { Tile } from '../shared/model/Tiles';
+import { InfoChart } from '../shared/model/InfoChart';
 
 @Component({
-	selector: 'app-regione',
-	templateUrl: './regione.component.html',
-	styleUrls: ['./regione.component.scss']
+  selector: 'app-regione',
+  templateUrl: './regione.component.html',
+  styleUrls: ['./regione.component.scss']
 })
-export class RegioneComponent implements OnInit, AfterViewInit {
-	ngAfterViewInit() { }
+export class RegioneComponent implements OnInit {
 
-	constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
+  public growthRatesInfo: InfoChart;
+  public totalCasesInfo: InfoChart;
+  public totalNewCasesInfo: InfoChart;
+  public totalHospitalizedInfo: InfoChart;
+  public totalIntensiveCareInfo: InfoChart;
+  public totalDeadInfo: InfoChart;
+  public totalRecoveredInfo: InfoChart;
+  public totalTestsInfo: InfoChart;
 
-	regionName = "Lombardia";
-	regionNameInput = "";
-	isLoading = false;
+  constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
 
-	dataLabels = [];
+  regionName = "Lombardia";
+  regionNameInput = "";
+  isLoading = false;
 
-	growthRateDateLabels = [];
-	growthRateValues = [];
-	growthRateIncreaseValues = [];
-	growthRates: Chart;
+  dataLabels = [];
 
-	totalCasesValues = [];
-	totalCasesIncreaseValues = [];
-	totalCases: Chart;
+  growthRateDateLabels = [];
+  growthRateValues = [];
+  growthRateIncreaseValues = [];
+  growthRates: Chart;
 
-	totalNewCaseValues = [];
-	totalNewCaseIncreaseValues = [];
-	totalNewCases: Chart;
+  totalCasesValues = [];
+  totalCasesIncreaseValues = [];
+  totalCases: Chart;
 
-	totalHospitalizedValues = [];
-	totalHospitalizedIncreaseValues = [];
-	totalHospitalized: Chart;
+  totalNewCaseValues = [];
+  totalNewCaseIncreaseValues = [];
+  totalNewCases: Chart;
 
-
-	totalDeadValues = [];
-	totalDeadIncreaseValues = [];
-	totalDead: Chart;
-
-
-	totalTestsValues = [];
-	totalTestsIncreaseValues = [];
-	totalTests: Chart;
+  totalHospitalizedValues = [];
+  totalHospitalizedIncreaseValues = [];
+  totalHospitalized: Chart;
 
 
-	totalIntensiveCareValues = [];
-	totalIntensiveCareIncreaseValues = [];
-	totalIntensiveCare: Chart;
+  totalDeadValues = [];
+  totalDeadIncreaseValues = [];
+  totalDead: Chart;
 
 
-	totalRecoveredValues = [];
-	totalRecoveredIncreaseValues = [];
-	totalRecovered: Chart;
-
-	currentGrowthRate = 0;
-	currentNewPositiveGrowthRate = 0;
-	percentageCasesBasedOnTests = 0;
-	currentRecoveredPercentage = 0;
-	currentDeadPercentage = 0;
-    currentIntensiveCarePercentage = 0;
-	currentHospitalizedPercentage = 0;
-	
-	tiles: Tile[] = [];
-	
-	ngOnInit() {
-		this.call();
-
-		this.getGenericStats();
-	}
-
-	public call() {
-
-		this.isLoading = true;
-		if (this.regionNameInput.length === 0) {
-			this.regionNameInput = this.regionName;
-		}
-
-		this.eraseAllData();
-
-		this.createTotalCases();
-		this.getGenericStats();
-	}
-
-	private createGrowthRates() {
-		this.growthRateDateLabels = [];
-		this.growthRateValues = [];
-
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/growthRate").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					let innerDate = this.datepipe.transform(item.date, 'dd/MM')
-					this.growthRateDateLabels.push(innerDate);
-					this.growthRateValues.push(item.value);
-				});
-				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, this.growthRateValues, [], 'Bar');
-			}
-		});
-	}
-
-	private createTotalCases() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total").subscribe(data => {
-
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-					this.dataLabels.push(innerDate);
-					this.totalCasesValues.push(item.value);
-					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
-				});
-				this.regionName = this.regionNameInput;
-				this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues, this.totalCasesIncreaseValues);
-			} else {
-				this.regionName = data.description;
-				this.totalCases = this.chartService.createChart(this.dataLabels, null);
-			}
-
-			this.createTotalDead();
-			this.createNewCases();
-			this.createTotalHospitalized();
-			this.createTotalIntensiveCare();
-			this.createTotalTests();
-			this.createTotalRecovered();
-			this.createGrowthRates();
-			this.isLoading = false;
-		});
-
-	}
-
-	private createNewCases() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					this.totalNewCaseValues.push(item.value);
-					this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
-				});
-			}
-			this.totalNewCases = this.chartService.createChart(this.dataLabels, this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
-		});
+  totalTestsValues = [];
+  totalTestsIncreaseValues = [];
+  totalTests: Chart;
 
 
-	}
-
-	private createTotalHospitalized() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/hospitalized").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					this.totalHospitalizedValues.push(item.value);
-					this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
-				});
-			}
-			this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
-		});
+  totalIntensiveCareValues = [];
+  totalIntensiveCareIncreaseValues = [];
+  totalIntensiveCare: Chart;
 
 
-	}
+  totalRecoveredValues = [];
+  totalRecoveredIncreaseValues = [];
+  totalRecovered: Chart;
+
+  currentGrowthRate = 0;
+  currentNewPositiveGrowthRate = 0;
+  percentageCasesBasedOnTests = 0;
+  currentRecoveredPercentage = 0;
+  currentDeadPercentage = 0;
+  currentIntensiveCarePercentage = 0;
+  currentHospitalizedPercentage = 0;
+
+  tiles: Tile[] = [];
+
+  ngOnInit() {
+
+    /** CONTAGI */
+    this.growthRatesInfo = new InfoChart();
+    this.growthRatesInfo.title = 'Tasso di crescita';
+    this.growthRatesInfo.subtitle = this.regionName;
+    this.growthRatesInfo.firstLegend = 'Tasso di crescita giornaliero';
+    this.growthRatesInfo.desc = 'Il seguente grafico rappresenta l\'andamento del tasso di crescita dell\'epidemia';
+
+    this.totalCasesInfo = new InfoChart();
+    this.totalCasesInfo.title = 'Casi totali';
+    this.totalCasesInfo.subtitle = this.regionName;
+    this.totalCasesInfo.firstLegend = 'Casi ad oggi';
+    this.totalCasesInfo.secondLegend = 'Incremento giornaliero';
+    this.totalCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei casi totali';
+
+    this.totalNewCasesInfo = new InfoChart();
+    this.totalNewCasesInfo.title = 'Nuovi casi';
+    this.totalNewCasesInfo.subtitle = this.regionName;
+    this.totalNewCasesInfo.firstLegend = 'Nuovi casi ad oggi';
+    this.totalNewCasesInfo.secondLegend = 'Incremento giornaliero';
+    this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei nuovi casi';
+
+    /** RICOVERI */
+    this.totalHospitalizedInfo = new InfoChart();
+    this.totalHospitalizedInfo.title = 'Ricoverati totali';
+    this.totalHospitalizedInfo.subtitle = this.regionName;
+    this.totalHospitalizedInfo.firstLegend = 'Casi ad oggi';
+    this.totalHospitalizedInfo.secondLegend = 'Incremento giornaliero';
+    this.totalHospitalizedInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei pazienti ricoverati';
+
+    this.totalIntensiveCareInfo = new InfoChart();
+    this.totalIntensiveCareInfo.title = 'Pazienti in terapia intensiva';
+    this.totalIntensiveCareInfo.subtitle = this.regionName;
+    this.totalIntensiveCareInfo.firstLegend = 'Casi ad oggi';
+    this.totalIntensiveCareInfo.secondLegend = 'Incremento giornaliero';
+    this.totalIntensiveCareInfo.desc = 'Il seguente grafico rappresenta l\'andamento delle persone che hanno avuto bisogno di cure in terapia intensiva';
+
+    /** DECDEDUTI/GUARITI */
+    this.totalDeadInfo = new InfoChart();
+    this.totalDeadInfo.title = 'Deceduti totali';
+    this.totalDeadInfo.subtitle = this.regionName;
+    this.totalDeadInfo.firstLegend = 'Casi ad oggi';
+    this.totalDeadInfo.secondLegend = 'Incremento giornaliero';
+    this.totalDeadInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei decessi';
+
+    this.totalRecoveredInfo = new InfoChart();
+    this.totalRecoveredInfo.title = 'Guariti totali';
+    this.totalRecoveredInfo.subtitle = this.regionName;
+    this.totalRecoveredInfo.firstLegend = 'Casi ad oggi';
+    this.totalRecoveredInfo.secondLegend = 'Incremento giornaliero';
+    this.totalRecoveredInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei guariti';
+
+    /** TAMPONI */
+    this.totalTestsInfo = new InfoChart();
+    this.totalTestsInfo.title = 'Tamponi effettuati';
+    this.totalTestsInfo.subtitle = this.regionName;
+    this.totalTestsInfo.firstLegend = 'Tamponi effettuati ad oggi';
+    this.totalTestsInfo.secondLegend = 'Incremento giornaliero';
+    this.totalTestsInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei tamponi effettuati';
+
+    this.call();
+
+    this.getGenericStats();
+  }
+
+  public changeTabHandler(tab): void {
+    this.chartService.updateChartModel();
+  }
+
+  public call() {
+
+    this.isLoading = true;
+    if (this.regionNameInput.length === 0) {
+      this.regionNameInput = this.regionName;
+    }
+
+    this.eraseAllData();
+
+    this.createTotalCases();
+    this.getGenericStats();
+  }
+
+  private createGrowthRates() {
+    this.growthRateDateLabels = [];
+    this.growthRateValues = [];
+
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/growthRate").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          let innerDate = this.datepipe.transform(item.date, 'dd/MM')
+          this.growthRateDateLabels.push(innerDate);
+          this.growthRateValues.push(item.value);
+        });
+        this.growthRates = this.chartService.createChart(this.growthRateDateLabels, this.growthRateValues, [], 'Bar');
+      }
+    });
+  }
+
+  private createTotalCases() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total").subscribe(data => {
+
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+          this.dataLabels.push(innerDate);
+          this.totalCasesValues.push(item.value);
+          this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
+        });
+        this.regionName = this.regionNameInput;
+        this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues, this.totalCasesIncreaseValues);
+      } else {
+        this.regionName = data.description;
+        this.totalCases = this.chartService.createChart(this.dataLabels, null);
+      }
+
+      this.createTotalDead();
+      this.createNewCases();
+      this.createTotalHospitalized();
+      this.createTotalIntensiveCare();
+      this.createTotalTests();
+      this.createTotalRecovered();
+      this.createGrowthRates();
+      this.isLoading = false;
+    });
+
+  }
+
+  private createNewCases() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          this.totalNewCaseValues.push(item.value);
+          this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
+        });
+      }
+      this.totalNewCases = this.chartService.createChart(this.dataLabels, this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
+    });
 
 
-	private createTotalDead() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/dead").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-					// this.dataLabels.push(innerDate);
-					this.totalDeadValues.push(item.value);
-					this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
-				});
-			}
-			this.totalDead = this.chartService.createChart(this.dataLabels, this.totalDeadValues, this.totalDeadIncreaseValues);
-		});
+  }
 
-	}
+  private createTotalHospitalized() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/hospitalized").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          this.totalHospitalizedValues.push(item.value);
+          this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
+        });
+      }
+      this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
+    });
 
 
-	private createTotalTests() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/test").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-					// this.dataLabels.push(innerDate);
-					this.totalTestsValues.push(item.value);
-					this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
-				});
-			}
-			this.totalTests = this.chartService.createChart(this.dataLabels, this.totalTestsValues, this.totalTestsIncreaseValues);
-		});
-
-	}
+  }
 
 
-	private createTotalIntensiveCare() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/intensive-care").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-					// this.dataLabels.push(innerDate);
-					this.totalIntensiveCareValues.push(item.value);
-					this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
-				});
-			}
-			this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
-		});
+  private createTotalDead() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/dead").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+          // this.dataLabels.push(innerDate);
+          this.totalDeadValues.push(item.value);
+          this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
+        });
+      }
+      this.totalDead = this.chartService.createChart(this.dataLabels, this.totalDeadValues, this.totalDeadIncreaseValues);
+    });
 
-	}
+  }
 
-	private createTotalRecovered() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/recovered").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					// let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-					// this.dataLabels.push(innerDate);
-					this.totalRecoveredValues.push(item.value);
-					this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
-				});
-			}
-			this.totalRecovered = this.chartService.createChart(this.dataLabels, this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
-		});
 
-	}
+  private createTotalTests() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/test").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+          // this.dataLabels.push(innerDate);
+          this.totalTestsValues.push(item.value);
+          this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
+        });
+      }
+      this.totalTests = this.chartService.createChart(this.dataLabels, this.totalTestsValues, this.totalTestsIncreaseValues);
+    });
 
-	private getGenericStats() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/stats").subscribe(data => {
-			if (!!data) {
-				this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
-				this.currentNewPositiveGrowthRate = (!!data.currentNewPositiveRateOfGrowth) ? data.currentNewPositiveRateOfGrowth : 0;
-				this.percentageCasesBasedOnTests = (!!data.currentPositivePercentageBasedOnTests) ? data.currentPositivePercentageBasedOnTests : 0;
-				this.currentRecoveredPercentage = (!!data.currentRecoveredPercentage) ? data.currentRecoveredPercentage : 0;
-				this.currentDeadPercentage = (!!data.currentDeadPercentage) ? data.currentDeadPercentage : 0;
-				this.currentIntensiveCarePercentage = (!!data.currentIntensiveCarePercentage) ? data.currentIntensiveCarePercentage : 0;
-				this.currentHospitalizedPercentage = (!!data.currentHospitalizedPercentage) ? data.currentHospitalizedPercentage : 0;
+  }
 
-				this.tiles = [
-					{ footer: 'Percentuale', header: 'Deceduti', percentage: this.currentDeadPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
-					{ footer: 'Percentuale', header: 'Guariti', percentage: this.currentRecoveredPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
-					{ footer: 'Percentuale', header: 'Terapia intensiva', percentage: this.currentIntensiveCarePercentage + '%', cols: 2, rows: 2, color: '#99d6ff' },
-					{ footer: 'Percentuale', header: 'Positivi per tamponi', percentage: this.percentageCasesBasedOnTests + '%', cols: 2, rows: 2, color: '#99d6ff' },
-					{ footer: 'Tasso di crescita', header:'% incr. totale', percentage: this.currentGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' },
-					{ footer: 'Tasso di crescita', header: '% incr. nuovi positivi', percentage: this.currentNewPositiveGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' }
-				];
 
-			}
-		});
-	}
+  private createTotalIntensiveCare() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/intensive-care").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+          // this.dataLabels.push(innerDate);
+          this.totalIntensiveCareValues.push(item.value);
+          this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
+        });
+      }
+      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
+    });
 
-	private eraseAllData() {
-		this.totalCases = null;
-		this.totalDead = null;
-		this.totalHospitalized = null;
-		this.totalIntensiveCare = null;
-		this.totalTests = null;
-		this.totalRecovered = null;
-		this.totalNewCases = null;
+  }
 
-		this.dataLabels = [];
+  private createTotalRecovered() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/recovered").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+          // this.dataLabels.push(innerDate);
+          this.totalRecoveredValues.push(item.value);
+          this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
+        });
+      }
+      this.totalRecovered = this.chartService.createChart(this.dataLabels, this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
+    });
 
-		this.totalCasesValues = [];
-		this.totalCasesIncreaseValues = [];
+  }
 
-		this.totalNewCaseValues = [];
-		this.totalNewCaseIncreaseValues = [];
+  private getGenericStats() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/stats").subscribe(data => {
+      if (!!data) {
+        this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
+        this.currentNewPositiveGrowthRate = (!!data.currentNewPositiveRateOfGrowth) ? data.currentNewPositiveRateOfGrowth : 0;
+        this.percentageCasesBasedOnTests = (!!data.currentPositivePercentageBasedOnTests) ? data.currentPositivePercentageBasedOnTests : 0;
+        this.currentRecoveredPercentage = (!!data.currentRecoveredPercentage) ? data.currentRecoveredPercentage : 0;
+        this.currentDeadPercentage = (!!data.currentDeadPercentage) ? data.currentDeadPercentage : 0;
+        this.currentIntensiveCarePercentage = (!!data.currentIntensiveCarePercentage) ? data.currentIntensiveCarePercentage : 0;
+        this.currentHospitalizedPercentage = (!!data.currentHospitalizedPercentage) ? data.currentHospitalizedPercentage : 0;
 
-		this.totalHospitalizedValues = [];
-		this.totalHospitalizedIncreaseValues = [];
+        this.tiles = [
+          { footer: 'Percentuale', header: 'Deceduti', percentage: this.currentDeadPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: 'Percentuale', header: 'Guariti', percentage: this.currentRecoveredPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: 'Percentuale', header: 'Terapia intensiva', percentage: this.currentIntensiveCarePercentage + '%', cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: 'Percentuale', header: 'Positivi per tamponi', percentage: this.percentageCasesBasedOnTests + '%', cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: 'Tasso di crescita', header: '% incr. totale', percentage: this.currentGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: 'Tasso di crescita', header: '% incr. nuovi positivi', percentage: this.currentNewPositiveGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' }
+        ];
 
-		this.totalDeadValues = [];
-		this.totalDeadIncreaseValues = [];
+      }
+    });
+  }
 
-		this.totalTestsValues = [];
-		this.totalTestsIncreaseValues = [];
+  private eraseAllData() {
+    this.totalCases = null;
+    this.totalDead = null;
+    this.totalHospitalized = null;
+    this.totalIntensiveCare = null;
+    this.totalTests = null;
+    this.totalRecovered = null;
+    this.totalNewCases = null;
 
-		this.totalIntensiveCareValues = [];
-		this.totalIntensiveCareIncreaseValues = [];
+    this.dataLabels = [];
 
-		this.totalRecoveredValues = [];
-		this.totalRecoveredIncreaseValues = [];
-	}
+    this.totalCasesValues = [];
+    this.totalCasesIncreaseValues = [];
+
+    this.totalNewCaseValues = [];
+    this.totalNewCaseIncreaseValues = [];
+
+    this.totalHospitalizedValues = [];
+    this.totalHospitalizedIncreaseValues = [];
+
+    this.totalDeadValues = [];
+    this.totalDeadIncreaseValues = [];
+
+    this.totalTestsValues = [];
+    this.totalTestsIncreaseValues = [];
+
+    this.totalIntensiveCareValues = [];
+    this.totalIntensiveCareIncreaseValues = [];
+
+    this.totalRecoveredValues = [];
+    this.totalRecoveredIncreaseValues = [];
+  }
 
 }

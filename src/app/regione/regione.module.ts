@@ -7,6 +7,7 @@ import { RegioneComponent } from './regione.component';
 import { ChartistModule } from 'ng-chartist';
 import { FormsModule } from '@angular/forms';
 import { RegioneRoutes } from './regione.routing';
+import { ChartModule } from '../charts/chart.module';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { RegioneRoutes } from './regione.routing';
     DemoMaterialModule,
     FlexLayoutModule,
     ChartistModule,
+    ChartModule,
     FormsModule,
     RouterModule.forChild(RegioneRoutes)
   ],
