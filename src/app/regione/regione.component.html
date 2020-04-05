@@ -27,6 +27,9 @@
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-card>
             <mat-card-content>
+                <span *ngIf ="tiles && tiles.length === 0" class="title">
+                    Dati non presenti, assicurati che il nome della regione sia valido.
+                </span>
                 <mat-grid-list cols="4" rowHeight="50px">
                     <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
                         [style.background]="tile.color">
@@ -41,7 +44,7 @@
                 </mat-grid-list>
             </mat-card-content>
         </mat-card>
-        <span *ngIf="!currentGrowthRate">
+        <span *ngIf="!tiles">
             <div class="spinner">
                 <div class="double-bounce1"></div>
                 <div class="double-bounce2"></div>

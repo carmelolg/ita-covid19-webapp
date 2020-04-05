@@ -29,8 +29,10 @@ export class ChartService {
 
 		if (values !== null && values !== undefined) {
 			values.forEach(function (array) {
-				array = array.map(function (v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
-				_series.push({ data: array });
+				if(array !== null && array !== undefined && array.length > 0){
+					array = array.map(function (v, idx) { return { meta: 'Data: ' + labels[idx], value: v }; });
+					_series.push({ data: array });
+				}
 			});
 		}
 

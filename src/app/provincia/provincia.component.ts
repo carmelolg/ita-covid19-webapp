@@ -46,13 +46,14 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 		this.createTotalCases();
 
 		this.getGenericStats();
+
+		this.tiles = null;
 	}
 
 	private eraseAll() {
+		this.dataLabels = [];
 		this.totalCasesValues = [];
 		this.totalCasesIncreaseValues = [];
-		this.growthRateIncreaseValues
-		this.dataLabels = [];
 		this.totalCases = null;
 		this.totalCasesIncrease = null;
 
@@ -74,6 +75,9 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					this.growthRateValues.push(item.value);
 				});
 				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Bar', this.growthRateValues);
+			}else {
+				this.districtName = data.description;
+				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Line', null);
 			}
 		});
 	}
@@ -122,6 +126,8 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 				];
 
 			}
+		}, error => {
+			this.tiles = [];
 		});
 	}
 }
