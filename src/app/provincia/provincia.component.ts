@@ -73,7 +73,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					this.growthRateDateLabels.push(innerDate);
 					this.growthRateValues.push(item.value);
 				});
-				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, this.growthRateValues, [], 'Bar');
+				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Bar', this.growthRateValues);
 			}
 		});
 	}
@@ -96,12 +96,12 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
 				});
 				this.districtName = this.districtNameInput;
-				this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues);
-				this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, this.totalCasesIncreaseValues);
+				this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
+				this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesIncreaseValues);
 			} else {
 				this.districtName = data.description;
-				this.totalCases = this.chartService.createChart(this.dataLabels, null);
-				this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, null);
+				this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
+				this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', null);
 			}
 
 			this.isLoading = false;

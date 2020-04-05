@@ -14,6 +14,7 @@ import { InfoChart } from '../shared/model/InfoChart';
 })
 export class DashboardComponent implements OnInit {
 
+  public resumeInfo: InfoChart;
   public growthRatesInfo: InfoChart;
   public totalCasesInfo: InfoChart;
   public totalNewCasesInfo: InfoChart;
@@ -26,6 +27,13 @@ export class DashboardComponent implements OnInit {
   constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
 
   dataLabels = [];
+
+  resumeDateLabels = [];
+  resumeTotalValues = [];
+  resumeNewValues = [];
+  resumeRecoveredValues = [];
+  resumeDeadValues = [];
+  resume: Chart;
 
   growthRateDateLabels = [];
   growthRateValues = [];
@@ -74,6 +82,20 @@ export class DashboardComponent implements OnInit {
   tiles: Tile[] = [];
 
   ngOnInit() {
+
+    /**
+     * RIEPILOGO
+     */
+
+     this.resumeInfo = new InfoChart();
+     this.resumeInfo.title = 'Riepilogo';
+     this.resumeInfo.subtitle = 'Italia';
+     this.resumeInfo.firstLegend = 'Totale casi';
+     this.resumeInfo.secondLegend = 'Attualmente positivi';
+     this.resumeInfo.thirdLegend = 'Guariti';
+     this.resumeInfo.fourthLegend = 'Deceduti';
+     this.resumeInfo.desc = 'Il seguente grafico raggruppa i principali dati sull\'epidemia: totale casi, attualmente positivi, guariti, deceduti';
+
 
     /** CONTAGI */
     this.growthRatesInfo = new InfoChart();
@@ -144,6 +166,7 @@ export class DashboardComponent implements OnInit {
     this.createTotalTests();
     this.createTotalRecovered();
     this.createTotalNewCases();
+    this.createResume();
 
     this.getGenericStats();
   }
@@ -160,6 +183,24 @@ export class DashboardComponent implements OnInit {
     this.totalTests = null;
     this.totalRecovered = null;
     this.totalNewCases = null;
+    this.resume = null;
+  }
+
+  private createResume() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/italy/resume", { params: { all: 'true' } }).subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          
+          let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+          this.resumeDateLabels.push(innerDate);
+          this.resumeTotalValues.push(item.totalCases);
+          this.resumeNewValues.push(item.nowPositives);
+          this.resumeRecoveredValues.push(item.recovered);
+          this.resumeDeadValues.push(item.dead);
+        });
+        this.resume = this.chartService.createChart(this.resumeDateLabels, 'Line', this.resumeTotalValues, this.resumeNewValues, this.resumeRecoveredValues, this.resumeDeadValues);
+      }
+    });
   }
 
   private createGrowthRates() {
@@ -170,7 +211,7 @@ export class DashboardComponent implements OnInit {
           this.growthRateDateLabels.push(innerDate);
           this.growthRateValues.push(item.value);
         });
-        this.growthRates = this.chartService.createChart(this.growthRateDateLabels, this.growthRateValues, [], 'Bar');
+        this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Bar', this.growthRateValues);
       }
     });
   }
@@ -184,7 +225,7 @@ export class DashboardComponent implements OnInit {
           this.totalCasesValues.push(item.value);
           this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
         });
-        this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues, this.totalCasesIncreaseValues);
+        this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues, this.totalCasesIncreaseValues);
       }
     });
   }
@@ -199,7 +240,7 @@ export class DashboardComponent implements OnInit {
           this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
+      this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
     });
   }
 
@@ -213,7 +254,7 @@ export class DashboardComponent implements OnInit {
           this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalNewCases = this.chartService.createChart(this.dataLabels, this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
+      this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
     });
   }
 
@@ -228,7 +269,7 @@ export class DashboardComponent implements OnInit {
           this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalDead = this.chartService.createChart(this.dataLabels, this.totalDeadValues, this.totalDeadIncreaseValues);
+      this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues, this.totalDeadIncreaseValues);
     });
 
   }
@@ -244,7 +285,7 @@ export class DashboardComponent implements OnInit {
           this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalTests = this.chartService.createChart(this.dataLabels, this.totalTestsValues, this.totalTestsIncreaseValues);
+      this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues, this.totalTestsIncreaseValues);
     });
 
   }
@@ -260,7 +301,7 @@ export class DashboardComponent implements OnInit {
           this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
+      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
     });
   }
 
@@ -274,7 +315,7 @@ export class DashboardComponent implements OnInit {
           this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalRecovered = this.chartService.createChart(this.dataLabels, this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
+      this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
     });
 
   }

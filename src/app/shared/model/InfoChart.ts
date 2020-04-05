@@ -6,5 +6,6 @@ export class InfoChart {
   firstLegend: string;
   secondLegend: string;
   thirdLegend: string;
+  fourthLegend: string;
 
 }

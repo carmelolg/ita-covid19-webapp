@@ -38,8 +38,9 @@
             <!-- Min height in order to fix angular material bug that scroll to top when tab change -->
             <div class="min-height-800">
                 <mat-tab-group mat-align-tabs="center" mat-stretch-tabs (selectedTabChange)="changeTabHandler($event)">
-                    <!-- <mat-tab label="Riepilogo">
-                    </mat-tab> -->
+                    <mat-tab label="Riepilogo">
+                        <app-chart [chartConfig]="resume" [info]="resumeInfo"></app-chart>
+                    </mat-tab>
                     <mat-tab label="Contagi">
 
                         <app-chart [chartConfig]="growthRates" [info]="growthRatesInfo"></app-chart>

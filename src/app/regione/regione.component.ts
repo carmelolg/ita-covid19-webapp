@@ -175,7 +175,7 @@ export class RegioneComponent implements OnInit {
           this.growthRateDateLabels.push(innerDate);
           this.growthRateValues.push(item.value);
         });
-        this.growthRates = this.chartService.createChart(this.growthRateDateLabels, this.growthRateValues, [], 'Bar');
+        this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Bar', this.growthRateValues);
       }
     });
   }
@@ -191,10 +191,10 @@ export class RegioneComponent implements OnInit {
           this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
         });
         this.regionName = this.regionNameInput;
-        this.totalCases = this.chartService.createChart(this.dataLabels, this.totalCasesValues, this.totalCasesIncreaseValues);
+        this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues, this.totalCasesIncreaseValues);
       } else {
         this.regionName = data.description;
-        this.totalCases = this.chartService.createChart(this.dataLabels, null);
+        this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
       }
 
       this.createTotalDead();
@@ -217,7 +217,7 @@ export class RegioneComponent implements OnInit {
           this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalNewCases = this.chartService.createChart(this.dataLabels, this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
+      this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
     });
 
 
@@ -231,7 +231,7 @@ export class RegioneComponent implements OnInit {
           this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalHospitalized = this.chartService.createChart(this.dataLabels, this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
+      this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
     });
 
 
@@ -248,7 +248,7 @@ export class RegioneComponent implements OnInit {
           this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalDead = this.chartService.createChart(this.dataLabels, this.totalDeadValues, this.totalDeadIncreaseValues);
+      this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues, this.totalDeadIncreaseValues);
     });
 
   }
@@ -264,7 +264,7 @@ export class RegioneComponent implements OnInit {
           this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalTests = this.chartService.createChart(this.dataLabels, this.totalTestsValues, this.totalTestsIncreaseValues);
+      this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues, this.totalTestsIncreaseValues);
     });
 
   }
@@ -280,7 +280,7 @@ export class RegioneComponent implements OnInit {
           this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
+      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
     });
 
   }
@@ -295,7 +295,7 @@ export class RegioneComponent implements OnInit {
           this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalRecovered = this.chartService.createChart(this.dataLabels, this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
+      this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
     });
 
   }
