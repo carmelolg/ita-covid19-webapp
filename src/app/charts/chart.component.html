@@ -1,0 +1,55 @@
+<div fxLayout="row wrap">
+    <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+        <mat-card-content>
+            <div class="d-flex flex-wrap">
+                <div>
+                    <mat-card-title>{{info?.title}}</mat-card-title>
+                    <mat-card-subtitle>{{info?.subtitle}}</mat-card-subtitle>
+                </div>
+                <div class="ml-auto">
+                    <ul class="list-inline">
+                        <li>
+                            <h6 class="text-success m-0" *ngIf="info?.firstLegend">
+                                <i class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>
+                                {{info?.firstLegend}}
+                            </h6>
+                        </li>
+                        <li>
+                            <h6 class="text-info m-0" *ngIf="info?.secondLegend">
+                                <i class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>
+                                {{info?.secondLegend}}
+                            </h6>
+                        </li>
+                        <li>
+                            <h6 class="text-warning m-0" *ngIf="info?.thirdLegend">
+                                <i class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>
+                                {{info?.thirdLegend}}
+                            </h6>
+                        </li>
+                        <li>
+                            <h6 class="text-danger m-0" *ngIf="info?.fourthLegend">
+                                <i class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>
+                                {{info?.fourthLegend}}
+                            </h6>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <p>
+                {{info?.desc}}
+            </p>
+            <div *ngIf="chartConfig" class="ct-chart">
+                <x-chartist #chart class="" [data]="chartConfig.data" [type]="chartConfig.type"
+                    [options]="chartConfig.options" [responsiveOptions]="chartConfig.responsiveOptions"
+                    [events]="chartConfig.events">
+                </x-chartist>
+            </div>
+        </mat-card-content>
+        <span *ngIf="!chartConfig">
+            <div class="spinner">
+                <div class="double-bounce1"></div>
+                <div class="double-bounce2"></div>
+            </div>
+        </span>
+    </div>
+</div>

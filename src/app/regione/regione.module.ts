@@ -5,8 +5,9 @@ import { DemoMaterialModule } from '../demo-material-module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RegioneComponent } from './regione.component';
 import { ChartistModule } from 'ng-chartist';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegioneRoutes } from './regione.routing';
+import { ChartModule } from '../charts/chart.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,9 @@ import { RegioneRoutes } from './regione.routing';
     DemoMaterialModule,
     FlexLayoutModule,
     ChartistModule,
+    ChartModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(RegioneRoutes)
   ],
   providers: [DatePipe],

@@ -7,6 +7,7 @@ import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutes } from './dashboard.routing';
 import { ChartistModule } from 'ng-chartist';
 import { CdkColumnDef } from '@angular/cdk/table';
+import { ChartModule } from '../charts/chart.module';
 
 @NgModule({
   imports: [
@@ -14,9 +15,10 @@ import { CdkColumnDef } from '@angular/cdk/table';
     DemoMaterialModule,
     FlexLayoutModule,
     ChartistModule,
+    ChartModule,
     RouterModule.forChild(DashboardRoutes)
   ],
   providers: [DatePipe, CdkColumnDef],
   declarations: [DashboardComponent]
-})  
-export class DashboardModule {}
+})
+export class DashboardModule { }
