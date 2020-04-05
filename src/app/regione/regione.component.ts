@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectorRef, Input } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
@@ -9,6 +9,9 @@ require('chartist-plugin-tooltips-updated');
 import { ChartService } from '../dashboard/chart.service';
 import { Tile } from '../shared/model/Tiles';
 import { InfoChart } from '../shared/model/InfoChart';
+import { FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-regione',
@@ -33,9 +36,14 @@ export class RegioneComponent implements OnInit {
     private chartService: ChartService,
     private changeDetector: ChangeDetectorRef) { }
 
+
   regionName = "Lombardia";
   regionNameInput = "";
   isLoading = false;
+
+  formControl = new FormControl({ value: '', disabled: this.isLoading });
+  options: string[] = [];
+  filteredOptions: Observable<string[]>;
 
   dataLabels = [];
 
@@ -94,6 +102,10 @@ export class RegioneComponent implements OnInit {
   tiles: Tile[] = [];
 
   ngOnInit() {
+
+    this.http.get<any>("https://ita-covid19.herokuapp.com/regions").subscribe(regions => {
+      this.options = regions;
+    });
 
     /**
      * RIEPILOGO
@@ -168,9 +180,21 @@ export class RegioneComponent implements OnInit {
     this.totalTestsInfo.secondLegend = 'Incremento giornaliero';
     this.totalTestsInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei tamponi effettuati';
 
+    this.filteredOptions = this.formControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+
     this.call();
 
     this.getGenericStats();
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   public changeTabHandler(tab): void {
@@ -179,26 +203,29 @@ export class RegioneComponent implements OnInit {
 
   public call() {
 
-    this.isLoading = true;
-    if (this.regionNameInput.length === 0) {
-      this.regionNameInput = this.regionName;
+    if (!this.isLoading) {
+      this.isLoading = true;
+      if (this.regionNameInput.length === 0) {
+        this.regionNameInput = this.regionName;
+      }
+
+      this.resumeInfo.subtitle = this.regionNameInput;
+      this.growthRatesInfo.subtitle = this.regionNameInput;
+      this.totalCasesInfo.subtitle = this.regionNameInput;
+      this.totalNewCasesInfo.subtitle = this.regionNameInput;
+      this.totalHospitalizedInfo.subtitle = this.regionNameInput;
+      this.totalIntensiveCareInfo.subtitle = this.regionNameInput;
+      this.totalDeadInfo.subtitle = this.regionNameInput;
+      this.totalRecoveredInfo.subtitle = this.regionNameInput;
+      this.totalTestsInfo.subtitle = this.regionNameInput;
+
+      this.eraseAllData();
+      this.createResume();
+      this.getGenericStats();
+
+      this.changeDetector.detectChanges();
     }
 
-    this.resumeInfo.subtitle = this.regionNameInput;
-    this.growthRatesInfo.subtitle = this.regionNameInput;
-    this.totalCasesInfo.subtitle = this.regionNameInput;
-    this.totalNewCasesInfo.subtitle = this.regionNameInput;
-    this.totalHospitalizedInfo.subtitle = this.regionNameInput;
-    this.totalIntensiveCareInfo.subtitle = this.regionNameInput;
-    this.totalDeadInfo.subtitle = this.regionNameInput;
-    this.totalRecoveredInfo.subtitle = this.regionNameInput;
-    this.totalTestsInfo.subtitle = this.regionNameInput;
-
-    this.eraseAllData();
-    this.createResume();
-    this.getGenericStats();
-
-    this.changeDetector.detectChanges();
   }
 
   private createResume() {
@@ -214,11 +241,11 @@ export class RegioneComponent implements OnInit {
           this.resumeDeadValues.push(item.dead);
         });
         this.resume = this.chartService.createChart(this.resumeDateLabels, 'Line', this.resumeTotalValues, this.resumeNewValues, this.resumeRecoveredValues, this.resumeDeadValues);
-      }else {
+      } else {
         this.resumeInfo.subtitle = data.description;
-				this.resume = this.chartService.createChart(this.resumeDateLabels, 'Line', null);
+        this.resume = this.chartService.createChart(this.resumeDateLabels, 'Line', null);
       }
-      
+
       this.createGrowthRates();
       this.createTotalCases();
       this.createNewCases();
@@ -243,10 +270,10 @@ export class RegioneComponent implements OnInit {
           this.growthRateValues.push(item.value);
         });
         this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Bar', this.growthRateValues);
-      }else {
+      } else {
         this.growthRatesInfo.subtitle = data.description;
-				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Line', null);
-			}
+        this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Line', null);
+      }
     });
   }
 
@@ -277,8 +304,8 @@ export class RegioneComponent implements OnInit {
           this.totalNewCaseValues.push(item.value);
           this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
         });
-      }else{
-          this.totalNewCasesInfo.subtitle = data.description;
+      } else {
+        this.totalNewCasesInfo.subtitle = data.description;
       }
       this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
     });
@@ -293,9 +320,9 @@ export class RegioneComponent implements OnInit {
           this.totalHospitalizedValues.push(item.value);
           this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
         });
-      }else{
+      } else {
         this.totalHospitalizedInfo.subtitle = data.description;
-    }
+      }
       this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
     });
 
@@ -312,9 +339,9 @@ export class RegioneComponent implements OnInit {
           this.totalDeadValues.push(item.value);
           this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
         });
-      }else{
+      } else {
         this.totalDeadInfo.subtitle = data.description;
-    }
+      }
       this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues, this.totalDeadIncreaseValues);
     });
 
@@ -330,9 +357,9 @@ export class RegioneComponent implements OnInit {
           this.totalTestsValues.push(item.value);
           this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
         });
-      }else{
+      } else {
         this.totalTestsInfo.subtitle = data.description;
-    }
+      }
       this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues, this.totalTestsIncreaseValues);
     });
 
@@ -348,9 +375,9 @@ export class RegioneComponent implements OnInit {
           this.totalIntensiveCareValues.push(item.value);
           this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
         });
-      }else{
+      } else {
         this.totalIntensiveCareInfo.subtitle = data.description;
-    }
+      }
       this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
     });
 
@@ -365,9 +392,9 @@ export class RegioneComponent implements OnInit {
           this.totalRecoveredValues.push(item.value);
           this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
         });
-      }else{
+      } else {
         this.totalRecoveredInfo.subtitle = data.description;
-    }
+      }
       this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
     });
 

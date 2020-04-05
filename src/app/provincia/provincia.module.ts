@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ProvinciaComponent } from './provincia.component';
 import { ProvinciaRoutes } from './provincia.routing';
 import { ChartistModule } from 'ng-chartist';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
     FlexLayoutModule,
     ChartistModule,
     FormsModule,
+    ReactiveFormsModule,
     RouterModule.forChild(ProvinciaRoutes)
   ],
   providers: [DatePipe],

@@ -8,6 +8,9 @@ declare var require: any
 require('chartist-plugin-tooltips-updated');
 import { ChartService } from '../dashboard/chart.service';
 import { Tile } from '../shared/model/Tiles';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-provincia',
@@ -18,6 +21,10 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() { }
 
 	constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
+
+	formControl = new FormControl();
+	options: string[] = [];
+	filteredOptions: Observable<string[]>;
 
 	districtName = "Torino";
 	districtNameInput = "";
@@ -41,6 +48,10 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 	ngOnInit() {
 
+		this.http.get<any>("https://ita-covid19.herokuapp.com/districts").subscribe(districts => {
+			this.options = districts;
+		});
+
 		this.eraseAll();
 
 		this.createTotalCases();
@@ -48,6 +59,18 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 		this.getGenericStats();
 
 		this.tiles = null;
+
+		this.filteredOptions = this.formControl.valueChanges
+			.pipe(
+				startWith(''),
+				map(value => this._filter(value))
+			);
+	}
+
+	private _filter(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return this.options.filter(option => option.toLowerCase().includes(filterValue));
 	}
 
 	private eraseAll() {
@@ -75,7 +98,7 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 					this.growthRateValues.push(item.value);
 				});
 				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Bar', this.growthRateValues);
-			}else {
+			} else {
 				this.districtName = data.description;
 				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Line', null);
 			}
@@ -84,35 +107,39 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 	public createTotalCases() {
 
-		this.isLoading = true;
-		if (this.districtNameInput.length === 0) {
-			this.districtNameInput = this.districtName;
-		}
+		if (!this.isLoading) {
 
-		this.eraseAll();
 
-		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/total").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-					this.dataLabels.push(innerDate);
-					this.totalCasesValues.push(item.value);
-					this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
-				});
-				this.districtName = this.districtNameInput;
-				this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
-				this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesIncreaseValues);
-			} else {
-				this.districtName = data.description;
-				this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
-				this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', null);
+			this.isLoading = true;
+			if (this.districtNameInput.length === 0) {
+				this.districtNameInput = this.districtName;
 			}
 
-			this.isLoading = false;
-		});
+			this.eraseAll();
 
-		this.getGenericStats();
-		this.getGrowthRates();
+			this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/total").subscribe(data => {
+				if (data.results.length > 0) {
+					data.results.forEach(item => {
+						let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+						this.dataLabels.push(innerDate);
+						this.totalCasesValues.push(item.value);
+						this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
+					});
+					this.districtName = this.districtNameInput;
+					this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
+					this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesIncreaseValues);
+				} else {
+					this.districtName = data.description;
+					this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
+					this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', null);
+				}
+
+				this.isLoading = false;
+			});
+
+			this.getGenericStats();
+			this.getGrowthRates();
+		}
 	}
 
 

@@ -11,10 +11,16 @@
             </mat-card-content>
             <mat-form-field class="form-field m-l-20">
                 <mat-label>Regione</mat-label>
-                <input matInput [disabled]="isLoading" type="text" [(ngModel)]="regionNameInput"
-                    placeholder="es. Piemonte/Calabria" (keyup.enter)="call()">
+                <input type="text" placeholder="es. Piemonte/Calabria" aria-label="Number" matInput
+                    [formControl]="formControl" [matAutocomplete]="auto" [(ngModel)]="regionNameInput"
+                    (keyup.enter)="call()">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
                 <button *ngIf="regionNameInput" mat-button matSuffix mat-icon-button aria-label="Search"
-                    (click)="call()">
+                    (click)="call()" [disabled]="isLoading">
                     <mat-icon>check</mat-icon>
                 </button>
             </mat-form-field>
@@ -27,7 +33,7 @@
     <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
         <mat-card>
             <mat-card-content>
-                <span *ngIf ="tiles && tiles.length === 0" class="title">
+                <span *ngIf="tiles && tiles.length === 0" class="title">
                     Dati non presenti, assicurati che il nome della regione sia valido.
                 </span>
                 <mat-grid-list cols="4" rowHeight="50px">

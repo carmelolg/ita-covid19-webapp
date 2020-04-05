@@ -12,13 +12,34 @@
             </mat-card-content>
             <mat-form-field class="form-field m-l-20">
                 <mat-label>Provincia</mat-label>
+                <input 
+                type="text" 
+                placeholder="es. Milano/Torino" 
+                aria-label="Number" 
+                matInput
+                [formControl]="formControl" 
+                [matAutocomplete]="auto" 
+                [(ngModel)]="districtNameInput"
+                (keyup.enter)="createTotalCases()">
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option}}
+                    </mat-option>
+                </mat-autocomplete>
+                <button *ngIf="districtNameInput" mat-button matSuffix mat-icon-button aria-label="Search"
+                    (click)="createTotalCases()" [disabled]="isLoading">
+                    <mat-icon>check</mat-icon>
+                </button>
+            </mat-form-field>
+            <!-- <mat-form-field class="form-field m-l-20">
+                <mat-label>Provincia</mat-label>
                 <input matInput [disabled]="isLoading" type="text" [(ngModel)]="districtNameInput"
                     placeholder="es. Milano/Torino" (keyup.enter)="createTotalCases()">
                 <button *ngIf="districtNameInput" mat-button matSuffix mat-icon-button aria-label="Search"
                     (click)="createTotalCases()">
                     <mat-icon>check</mat-icon>
                 </button>
-            </mat-form-field>
+            </mat-form-field> -->
         </mat-card>
     </div>
 </div>
