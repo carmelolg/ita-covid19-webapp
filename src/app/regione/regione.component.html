@@ -37,7 +37,7 @@
                     Dati non presenti, assicurati che il nome della regione sia valido.
                 </span>
                 <mat-grid-list cols="4" rowHeight="50px">
-                    <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+                    <mat-grid-tile *ngFor="let tile of genericTiles" [colspan]="tile.cols" [rowspan]="tile.rows"
                         [style.background]="tile.color">
                         <mat-grid-tile-header>
                             {{tile.header}}
@@ -50,7 +50,7 @@
                 </mat-grid-list>
             </mat-card-content>
         </mat-card>
-        <span *ngIf="!tiles">
+        <span *ngIf="!genericTiles">
             <div class="spinner">
                 <div class="double-bounce1"></div>
                 <div class="double-bounce2"></div>
@@ -67,6 +67,37 @@
                 <mat-tab-group mat-align-tabs="center" mat-stretch-tabs (selectedTabChange)="changeTabHandler($event)">
                     <mat-tab label="Riepilogo">
                         <app-chart [chartConfig]="resume" [(info)]="resumeInfo"></app-chart>
+
+                        <mat-card-content>
+                            <div class="d-flex flex-wrap">
+                                <div>
+                                    <mat-card-title>Situazione corrente</mat-card-title>
+                                    <mat-card-subtitle>Statistiche in percentuale</mat-card-subtitle>
+                                </div>
+                            </div>
+                            <span *ngIf="tiles && tiles.length === 0" class="title">
+                                Dati non presenti, assicurati che il nome della regione sia valido.
+                            </span>
+                            <mat-grid-list cols="4" rowHeight="50px">
+                                <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+                                    [style.background]="tile.color">
+                                    <mat-grid-tile-header>
+                                        {{tile.header}}
+                                    </mat-grid-tile-header>
+                                    <span class="percentage">{{tile.percentage}}</span>
+                                    <!-- <mat-grid-tile-footer>
+                                    {{tile.footer}}
+                                </mat-grid-tile-footer> -->
+                                </mat-grid-tile>
+                            </mat-grid-list>
+                            <span *ngIf="!tiles">
+                                <div class="spinner">
+                                    <div class="double-bounce1"></div>
+                                    <div class="double-bounce2"></div>
+                                </div>
+                            </span>
+
+                        </mat-card-content>
                     </mat-tab>
                     <mat-tab label="Contagi">
 

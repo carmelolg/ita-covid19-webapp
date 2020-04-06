@@ -79,7 +79,17 @@ export class DashboardComponent implements OnInit {
   currentIntensiveCarePercentage = 0;
   currentHospitalizedPercentage = 0;
 
+  currentTotalCases = 0;
+  currentPositives = 0;
+  currentDead = 0;
+  currentRecovered = 0;
+  currentTests = 0;
+  currentHospedalized = 0;
+  currentIntesiveCare = 0;
+  currentHomeIsolation = 0;
+
   tiles: Tile[] = [];
+  genericTiles: Tile[] = [];
 
   ngOnInit() {
 
@@ -87,14 +97,14 @@ export class DashboardComponent implements OnInit {
      * RIEPILOGO
      */
 
-     this.resumeInfo = new InfoChart();
-     this.resumeInfo.title = 'Riepilogo';
-     this.resumeInfo.subtitle = 'Italia';
-     this.resumeInfo.firstLegend = 'Totale casi';
-     this.resumeInfo.secondLegend = 'Attualmente positivi';
-     this.resumeInfo.thirdLegend = 'Guariti';
-     this.resumeInfo.fourthLegend = 'Deceduti';
-     this.resumeInfo.desc = 'Il seguente grafico raggruppa i principali dati sull\'epidemia: totale casi, attualmente positivi, guariti, deceduti';
+    this.resumeInfo = new InfoChart();
+    this.resumeInfo.title = 'Riepilogo';
+    this.resumeInfo.subtitle = 'Italia';
+    this.resumeInfo.firstLegend = 'Totale casi';
+    this.resumeInfo.secondLegend = 'Attualmente positivi';
+    this.resumeInfo.thirdLegend = 'Guariti';
+    this.resumeInfo.fourthLegend = 'Deceduti';
+    this.resumeInfo.desc = 'Il seguente grafico raggruppa i principali dati sull\'epidemia: totale casi, attualmente positivi, guariti, deceduti';
 
 
     /** CONTAGI */
@@ -190,7 +200,7 @@ export class DashboardComponent implements OnInit {
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/resume", { params: { all: 'true' } }).subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
-          
+
           let innerDate = this.datepipe.transform(item.data, 'dd/MM')
           this.resumeDateLabels.push(innerDate);
           this.resumeTotalValues.push(item.totalCases);
@@ -330,6 +340,15 @@ export class DashboardComponent implements OnInit {
         this.currentIntensiveCarePercentage = (!!data.currentIntensiveCarePercentage) ? data.currentIntensiveCarePercentage : 0;
         this.currentHospitalizedPercentage = (!!data.currentHospitalizedPercentage) ? data.currentHospitalizedPercentage : 0;
 
+        this.currentTotalCases = (!!data.currentTotalCases) ? data.currentTotalCases : 0;
+        this.currentPositives = (!!data.currentPositives) ? data.currentPositives : 0;
+        this.currentDead = (!!data.currentDead) ? data.currentDead : 0;
+        this.currentRecovered = (!!data.currentRecovered) ? data.currentRecovered : 0;
+        this.currentTests = (!!data.currentTests) ? data.currentTests : 0;
+        this.currentHospedalized = (!!data.currentHospedalized) ? data.currentHospedalized : 0;
+        this.currentIntesiveCare = (!!data.currentIntesiveCare) ? data.currentIntesiveCare : 0;
+        this.currentHomeIsolation = (!!data.currentHomeIsolation) ? data.currentHomeIsolation : 0;
+
         this.tiles = [
           { footer: 'Percentuale', header: 'Deceduti', percentage: this.currentDeadPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
           { footer: 'Percentuale', header: 'Guariti', percentage: this.currentRecoveredPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
@@ -338,8 +357,24 @@ export class DashboardComponent implements OnInit {
           { footer: 'Tasso di crescita', header: '% incr. totale', percentage: this.currentGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' },
           { footer: 'Tasso di crescita', header: '% incr. nuovi positivi', percentage: this.currentNewPositiveGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' }
         ];
+
+
+        this.genericTiles = [
+          { footer: '', header: 'Totale casi', percentage: this.formatHundreds(this.currentTotalCases + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Positivi oggi', percentage: this.formatHundreds(this.currentPositives+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Deceduti', percentage: this.formatHundreds(this.currentDead+ ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Guariti', percentage: this.formatHundreds(this.currentRecovered+ ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Ospedalizzati', percentage: this.formatHundreds(this.currentHospedalized+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Terapia intensiva', percentage: this.formatHundreds(this.currentIntesiveCare+ ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Isolamento domiciliare', percentage: this.formatHundreds(this.currentHomeIsolation+ ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Tamponi', percentage: this.formatHundreds(this.currentTests+ ''), cols: 2, rows: 2, color: '#b3e0ff' }
+        ];
       }
     });
+  }
+
+  private formatHundreds(s: String){
+    return s.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
 
 }

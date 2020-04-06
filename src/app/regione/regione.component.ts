@@ -99,7 +99,17 @@ export class RegioneComponent implements OnInit {
   currentIntensiveCarePercentage = 0;
   currentHospitalizedPercentage = 0;
 
+  currentTotalCases = 0;
+  currentPositives = 0;
+  currentDead = 0;
+  currentRecovered = 0;
+  currentTests = 0;
+  currentHospedalized = 0;
+  currentIntesiveCare = 0;
+  currentHomeIsolation = 0;
+
   tiles: Tile[] = [];
+  genericTiles: Tile[] = [];
 
   ngOnInit() {
 
@@ -411,6 +421,15 @@ export class RegioneComponent implements OnInit {
         this.currentIntensiveCarePercentage = (!!data.currentIntensiveCarePercentage) ? data.currentIntensiveCarePercentage : 0;
         this.currentHospitalizedPercentage = (!!data.currentHospitalizedPercentage) ? data.currentHospitalizedPercentage : 0;
 
+        this.currentTotalCases = (!!data.currentTotalCases) ? data.currentTotalCases : 0;
+        this.currentPositives = (!!data.currentPositives) ? data.currentPositives : 0;
+        this.currentDead = (!!data.currentDead) ? data.currentDead : 0;
+        this.currentRecovered = (!!data.currentRecovered) ? data.currentRecovered : 0;
+        this.currentTests = (!!data.currentTests) ? data.currentTests : 0;
+        this.currentHospedalized = (!!data.currentHospedalized) ? data.currentHospedalized : 0;
+        this.currentIntesiveCare = (!!data.currentIntesiveCare) ? data.currentIntesiveCare : 0;
+        this.currentHomeIsolation = (!!data.currentHomeIsolation) ? data.currentHomeIsolation : 0;
+
         this.tiles = [
           { footer: 'Percentuale', header: 'Deceduti', percentage: this.currentDeadPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
           { footer: 'Percentuale', header: 'Guariti', percentage: this.currentRecoveredPercentage + '%', cols: 2, rows: 2, color: '#b3e0ff' },
@@ -420,10 +439,26 @@ export class RegioneComponent implements OnInit {
           { footer: 'Tasso di crescita', header: '% incr. nuovi positivi', percentage: this.currentNewPositiveGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' }
         ];
 
+        this.genericTiles = [
+          { footer: '', header: 'Totale casi', percentage: this.formatHundreds(this.currentTotalCases + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Positivi oggi', percentage: this.formatHundreds(this.currentPositives+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Deceduti', percentage: this.formatHundreds(this.currentDead+ ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Guariti', percentage: this.formatHundreds(this.currentRecovered+ ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Ospedalizzati', percentage: this.formatHundreds(this.currentHospedalized+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Terapia intensiva', percentage: this.formatHundreds(this.currentIntesiveCare+ ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Isolamento domiciliare', percentage: this.formatHundreds(this.currentHomeIsolation+ ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Tamponi', percentage: this.formatHundreds(this.currentTests+ ''), cols: 2, rows: 2, color: '#b3e0ff' }
+        ];
+
       }
     }, error => {
       this.tiles = [];
+      this.genericTiles = [];
     });
+  }
+
+  private formatHundreds(s: String){
+    return s.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
 
   private eraseAllData() {
@@ -466,6 +501,7 @@ export class RegioneComponent implements OnInit {
     this.totalRecoveredIncreaseValues = [];
 
     this.tiles = null;
+    this.genericTiles = null;
   }
 
 }
