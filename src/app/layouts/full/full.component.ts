@@ -9,7 +9,8 @@ import {
   ViewChild,
   HostListener,
   Directive,
-  AfterViewInit
+  AfterViewInit,
+  OnInit
 } from '@angular/core';
 import { MenuItems } from '../../shared/menu-items/menu-items';
 import { AppHeaderComponent } from './header/header.component';
@@ -21,7 +22,7 @@ import { AppSidebarComponent } from './sidebar/sidebar.component';
   templateUrl: 'full.component.html',
   styleUrls: ['./full.component.scss']
 })
-export class FullComponent implements OnDestroy, AfterViewInit {
+export class FullComponent implements OnInit, OnDestroy, AfterViewInit {
   mobileQuery: MediaQueryList;
 
   private _mobileQueryListener: () => void;
@@ -29,15 +30,22 @@ export class FullComponent implements OnDestroy, AfterViewInit {
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    public menuItems: MenuItems
+    public menuItems: MenuItems,
+    private router: Router
   ) {
     this.mobileQuery = media.matchMedia('(min-width: 768px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
+  ngOnInit() { }
+
+  goToHome() {
+    this.router.navigate(['/dashboard']);
+  }
+
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
-  ngAfterViewInit() {}
+  ngAfterViewInit() { }
 }
