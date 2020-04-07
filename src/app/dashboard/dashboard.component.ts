@@ -361,19 +361,19 @@ export class DashboardComponent implements OnInit {
 
         this.genericTiles = [
           { footer: '', header: 'Totale casi', percentage: this.formatHundreds(this.currentTotalCases + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Positivi ad oggi', percentage: this.formatHundreds(this.currentPositives+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Deceduti', percentage: this.formatHundreds(this.currentDead+ ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Guariti', percentage: this.formatHundreds(this.currentRecovered+ ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Ospedalizzati', percentage: this.formatHundreds(this.currentHospedalized+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Terapia intensiva', percentage: this.formatHundreds(this.currentIntesiveCare+ ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Isolamento domiciliare', percentage: this.formatHundreds(this.currentHomeIsolation+ ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Tamponi', percentage: this.formatHundreds(this.currentTests+ ''), cols: 2, rows: 2, color: '#b3e0ff' }
+          { footer: '', header: 'Positivi ad oggi', percentage: this.formatHundreds(this.currentPositives + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Deceduti', percentage: this.formatHundreds(this.currentDead + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Guariti', percentage: this.formatHundreds(this.currentRecovered + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Ricoverati', percentage: this.formatHundreds(this.currentHospedalized + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Terapia intensiva', percentage: this.formatHundreds(this.currentIntesiveCare + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Isolamento domiciliare', percentage: this.formatHundreds(this.currentHomeIsolation + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Tamponi', percentage: this.formatHundreds(this.currentTests + ''), cols: 2, rows: 2, color: '#b3e0ff' }
         ];
       }
     });
   }
 
-  private formatHundreds(s: String){
+  private formatHundreds(s: String): string {
     return s.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
 
