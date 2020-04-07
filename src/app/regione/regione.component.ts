@@ -441,7 +441,7 @@ export class RegioneComponent implements OnInit {
 
         this.genericTiles = [
           { footer: '', header: 'Totale casi', percentage: this.formatHundreds(this.currentTotalCases + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Positivi oggi', percentage: this.formatHundreds(this.currentPositives+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Positivi ad oggi', percentage: this.formatHundreds(this.currentPositives+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
           { footer: '', header: 'Deceduti', percentage: this.formatHundreds(this.currentDead+ ''), cols: 2, rows: 2, color: '#99d6ff' },
           { footer: '', header: 'Guariti', percentage: this.formatHundreds(this.currentRecovered+ ''), cols: 2, rows: 2, color: '#99d6ff' },
           { footer: '', header: 'Ospedalizzati', percentage: this.formatHundreds(this.currentHospedalized+ ''), cols: 2, rows: 2, color: '#b3e0ff' },
