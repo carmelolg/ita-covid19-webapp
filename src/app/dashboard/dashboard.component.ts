@@ -145,7 +145,7 @@ export class DashboardComponent implements OnInit {
     this.totalHospitalizedIncreaseInfo = new InfoChart();
     this.totalHospitalizedIncreaseInfo.title = 'Numero pazienti ricoverati';
     this.totalHospitalizedIncreaseInfo.subtitle = 'Italia';
-    this.totalHospitalizedIncreaseInfo.secondLegend = 'Numero di ricoveri giornalieri';
+    this.totalHospitalizedIncreaseInfo.secondLegend = 'Variazione quotidiana dei ricoverati in Italia';
     this.totalHospitalizedIncreaseInfo.desc = 'Il seguente grafico mostra la variazione quotidiana degli ospedalizzati in Italia';
 
 
@@ -158,7 +158,7 @@ export class DashboardComponent implements OnInit {
     this.totalIntensiveCareIncreaseInfo = new InfoChart();
     this.totalIntensiveCareIncreaseInfo.title = 'Numero di pazienti in terapia intensiva';
     this.totalIntensiveCareIncreaseInfo.subtitle = 'Italia';
-    this.totalIntensiveCareIncreaseInfo.secondLegend = 'Numero di ricoveri in terapia intensiva giornalieri';
+    this.totalIntensiveCareIncreaseInfo.secondLegend = 'Variazione quotidiana dei ricoverati in terapia intensiva in Italia';
     this.totalIntensiveCareIncreaseInfo.desc = 'Il seguente grafico mostra la variazione quotidiana degli ospedalizzati in terapia intensiva in Italia';
 
     /** DECDEDUTI/GUARITI */
