@@ -25,10 +25,15 @@ export class RegioneComponent implements OnInit {
   public totalCasesInfo: InfoChart;
   public totalNewCasesInfo: InfoChart;
   public totalHospitalizedInfo: InfoChart;
+  public totalHospitalizedIncreaseInfo: InfoChart;
   public totalIntensiveCareInfo: InfoChart;
+  public totalIntensiveCareIncreaseInfo: InfoChart;
   public totalDeadInfo: InfoChart;
   public totalRecoveredInfo: InfoChart;
+  public totalDeadIncreaseInfo: InfoChart;
+  public totalRecoveredIncreaseInfo: InfoChart;
   public totalTestsInfo: InfoChart;
+  public totalTestsIncreaseInfo: InfoChart;
 
   constructor(
     private http: HttpClient,
@@ -60,36 +65,39 @@ export class RegioneComponent implements OnInit {
   growthRates: Chart;
 
   totalCasesValues = [];
-  totalCasesIncreaseValues = [];
   totalCases: Chart;
 
   totalNewCaseValues = [];
-  totalNewCaseIncreaseValues = [];
   totalNewCases: Chart;
 
   totalHospitalizedValues = [];
   totalHospitalizedIncreaseValues = [];
   totalHospitalized: Chart;
+  totalHospitalizedIncrease: Chart;
 
 
   totalDeadValues = [];
   totalDeadIncreaseValues = [];
   totalDead: Chart;
+  totalDeadIncrease: Chart;
 
 
   totalTestsValues = [];
   totalTestsIncreaseValues = [];
   totalTests: Chart;
+  totalTestsIncrease: Chart;
 
 
   totalIntensiveCareValues = [];
   totalIntensiveCareIncreaseValues = [];
   totalIntensiveCare: Chart;
+  totalIntensiveCareIncrease: Chart;
 
 
   totalRecoveredValues = [];
   totalRecoveredIncreaseValues = [];
   totalRecovered: Chart;
+  totalRecoveredIncrease: Chart;
 
   currentGrowthRate = 0;
   currentNewPositiveGrowthRate = 0;
@@ -139,48 +147,68 @@ export class RegioneComponent implements OnInit {
     this.growthRatesInfo.desc = 'Il seguente grafico rappresenta l\'andamento del tasso di crescita dell\'epidemia';
 
     this.totalCasesInfo = new InfoChart();
-    this.totalCasesInfo.title = 'Casi totali';
+    this.totalCasesInfo.title = 'Totali risultati positivi';
     this.totalCasesInfo.subtitle = this.regionName;
-    this.totalCasesInfo.firstLegend = 'Casi ad oggi';
-    this.totalCasesInfo.secondLegend = 'Incremento giornaliero';
+    this.totalCasesInfo.firstLegend = 'Numero di casi totali';
     this.totalCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei casi totali';
 
     this.totalNewCasesInfo = new InfoChart();
-    this.totalNewCasesInfo.title = 'Nuovi casi';
+    this.totalNewCasesInfo.title = 'Nuovi positivi giorno per giorno';
     this.totalNewCasesInfo.subtitle = this.regionName;
-    this.totalNewCasesInfo.firstLegend = 'Nuovi casi ad oggi';
-    this.totalNewCasesInfo.secondLegend = 'Incremento giornaliero';
-    this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei nuovi casi';
+    this.totalNewCasesInfo.firstLegend = 'Nuovi positivi';
+    this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero delle persone risultate positive';
 
     /** RICOVERI */
     this.totalHospitalizedInfo = new InfoChart();
-    this.totalHospitalizedInfo.title = 'Ricoverati totali';
+    this.totalHospitalizedInfo.title = 'Andamento ricoveri ospedalieri';
     this.totalHospitalizedInfo.subtitle = this.regionName;
-    this.totalHospitalizedInfo.firstLegend = 'Casi ad oggi';
-    this.totalHospitalizedInfo.secondLegend = 'Incremento giornaliero';
+    this.totalHospitalizedInfo.firstLegend = 'Pazienti ricoverati in ospedale';
     this.totalHospitalizedInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei pazienti ricoverati';
 
+    this.totalHospitalizedIncreaseInfo = new InfoChart();
+    this.totalHospitalizedIncreaseInfo.title = 'Numero pazienti ricoverati';
+    this.totalHospitalizedInfo.subtitle = this.regionName;
+    this.totalHospitalizedIncreaseInfo.secondLegend = 'Variazione quotidiana dei ricoverati';
+    this.totalHospitalizedIncreaseInfo.desc = 'Il seguente grafico mostra la variazione quotidiana degli ospedalizzati';
+
     this.totalIntensiveCareInfo = new InfoChart();
-    this.totalIntensiveCareInfo.title = 'Pazienti in terapia intensiva';
+    this.totalIntensiveCareInfo.title = 'Pazienti ricoverati in terapia intensiva';
     this.totalIntensiveCareInfo.subtitle = this.regionName;
-    this.totalIntensiveCareInfo.firstLegend = 'Casi ad oggi';
-    this.totalIntensiveCareInfo.secondLegend = 'Incremento giornaliero';
+    this.totalIntensiveCareInfo.firstLegend = 'Pazienti ricoverati in terapia intensiva';
     this.totalIntensiveCareInfo.desc = 'Il seguente grafico rappresenta l\'andamento delle persone che hanno avuto bisogno di cure in terapia intensiva';
+
+    this.totalIntensiveCareIncreaseInfo = new InfoChart();
+    this.totalIntensiveCareIncreaseInfo.title = 'Numero di pazienti in terapia intensiva';
+    this.totalIntensiveCareIncreaseInfo.subtitle = 'Italia';
+    this.totalIntensiveCareIncreaseInfo.secondLegend = 'Variazione quotidiana dei ricoverati in terapia intensiva';
+    this.totalIntensiveCareIncreaseInfo.desc = 'Il seguente grafico mostra la variazione quotidiana degli ospedalizzati in terapia intensiva';
+
 
     /** DECDEDUTI/GUARITI */
     this.totalDeadInfo = new InfoChart();
     this.totalDeadInfo.title = 'Deceduti totali';
     this.totalDeadInfo.subtitle = this.regionName;
     this.totalDeadInfo.firstLegend = 'Casi ad oggi';
-    this.totalDeadInfo.secondLegend = 'Incremento giornaliero';
+    this.totalDeadInfo.secondLegend = 'Persone decedute totali';
     this.totalDeadInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei decessi';
+
+    this.totalDeadIncreaseInfo = new InfoChart();
+    this.totalDeadIncreaseInfo.title = 'Numero di deceduti giornalieri';
+    this.totalDeadInfo.subtitle = this.regionName;
+    this.totalDeadIncreaseInfo.firstLegend = 'Persone decedute';
+    this.totalDeadIncreaseInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero dei decessi';
 
     this.totalRecoveredInfo = new InfoChart();
     this.totalRecoveredInfo.title = 'Guariti totali';
     this.totalRecoveredInfo.subtitle = this.regionName;
-    this.totalRecoveredInfo.firstLegend = 'Casi ad oggi';
-    this.totalRecoveredInfo.secondLegend = 'Incremento giornaliero';
+    this.totalRecoveredInfo.firstLegend = 'Persone guarite totali';
     this.totalRecoveredInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei guariti';
+
+    this.totalRecoveredIncreaseInfo = new InfoChart();
+    this.totalRecoveredIncreaseInfo.title = 'Numero di guariti giornalieri';
+    this.totalDeadInfo.subtitle = this.regionName;
+    this.totalRecoveredIncreaseInfo.firstLegend = 'Persone guarite';
+    this.totalRecoveredIncreaseInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero dei guariti';
 
     /** TAMPONI */
     this.totalTestsInfo = new InfoChart();
@@ -189,6 +217,12 @@ export class RegioneComponent implements OnInit {
     this.totalTestsInfo.firstLegend = 'Tamponi effettuati ad oggi';
     this.totalTestsInfo.secondLegend = 'Incremento giornaliero';
     this.totalTestsInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei tamponi effettuati';
+
+    this.totalTestsIncreaseInfo = new InfoChart();
+    this.totalTestsIncreaseInfo.title = 'Numero giornaliero di tamponi effettuati';
+    this.totalTestsInfo.subtitle = this.regionName;
+    this.totalTestsIncreaseInfo.firstLegend = 'Tamponi effettuati giorno per giorno';
+    this.totalTestsIncreaseInfo.desc = 'Il seguente grafico rappresenta la variazione giornaliera dei tamponi effettuati';
 
     this.filteredOptions = this.formControl.valueChanges
       .pipe(
@@ -224,10 +258,15 @@ export class RegioneComponent implements OnInit {
       this.totalCasesInfo.subtitle = this.regionNameInput;
       this.totalNewCasesInfo.subtitle = this.regionNameInput;
       this.totalHospitalizedInfo.subtitle = this.regionNameInput;
+      this.totalHospitalizedIncreaseInfo.subtitle = this.regionNameInput;
       this.totalIntensiveCareInfo.subtitle = this.regionNameInput;
+      this.totalIntensiveCareIncreaseInfo.subtitle = this.regionNameInput;
       this.totalDeadInfo.subtitle = this.regionNameInput;
+      this.totalDeadIncreaseInfo.subtitle = this.regionNameInput;
       this.totalRecoveredInfo.subtitle = this.regionNameInput;
+      this.totalRecoveredIncreaseInfo.subtitle = this.regionNameInput;
       this.totalTestsInfo.subtitle = this.regionNameInput;
+      this.totalTestsIncreaseInfo.subtitle = this.regionNameInput;
 
       this.eraseAllData();
       this.createResume();
@@ -295,10 +334,9 @@ export class RegioneComponent implements OnInit {
           let innerDate = this.datepipe.transform(item.data, 'dd/MM')
           this.dataLabels.push(innerDate);
           this.totalCasesValues.push(item.value);
-          this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
         });
         this.regionName = this.regionNameInput;
-        this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues, this.totalCasesIncreaseValues);
+        this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
       } else {
         this.totalCasesInfo.subtitle = data.description;
         this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
@@ -312,12 +350,11 @@ export class RegioneComponent implements OnInit {
       if (data.results.length > 0) {
         data.results.forEach(item => {
           this.totalNewCaseValues.push(item.value);
-          this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
         });
       } else {
         this.totalNewCasesInfo.subtitle = data.description;
       }
-      this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
+      this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues);
     });
 
 
@@ -333,7 +370,8 @@ export class RegioneComponent implements OnInit {
       } else {
         this.totalHospitalizedInfo.subtitle = data.description;
       }
-      this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
+      this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues);
+      this.totalHospitalizedIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalHospitalizedIncreaseValues);
     });
 
 
@@ -352,7 +390,8 @@ export class RegioneComponent implements OnInit {
       } else {
         this.totalDeadInfo.subtitle = data.description;
       }
-      this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues, this.totalDeadIncreaseValues);
+      this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues);
+      this.totalDeadIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadIncreaseValues);
     });
 
   }
@@ -370,7 +409,8 @@ export class RegioneComponent implements OnInit {
       } else {
         this.totalTestsInfo.subtitle = data.description;
       }
-      this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues, this.totalTestsIncreaseValues);
+      this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues);
+      this.totalTestsIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsIncreaseValues);
     });
 
   }
@@ -388,7 +428,8 @@ export class RegioneComponent implements OnInit {
       } else {
         this.totalIntensiveCareInfo.subtitle = data.description;
       }
-      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
+      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues);
+      this.totalIntensiveCareIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalIntensiveCareIncreaseValues);
     });
 
   }
@@ -405,7 +446,8 @@ export class RegioneComponent implements OnInit {
       } else {
         this.totalRecoveredInfo.subtitle = data.description;
       }
-      this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
+      this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues);
+      this.totalRecoveredIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredIncreaseValues);
     });
 
   }
@@ -480,10 +522,8 @@ export class RegioneComponent implements OnInit {
     this.resumeDeadValues = [];
 
     this.totalCasesValues = [];
-    this.totalCasesIncreaseValues = [];
 
     this.totalNewCaseValues = [];
-    this.totalNewCaseIncreaseValues = [];
 
     this.totalHospitalizedValues = [];
     this.totalHospitalizedIncreaseValues = [];

@@ -101,15 +101,15 @@
                     </mat-tab>
                     <mat-tab label="Contagi">
 
-                        <app-chart [chartConfig]="totalNewCases" [info]="totalNewCasesInfo"></app-chart>
-                        
-                        <mat-divider></mat-divider>
-                        
-                        <app-chart [chartConfig]="growthRates" [info]="growthRatesInfo"></app-chart>
-                        
-                        <mat-divider></mat-divider>
-                        
                         <app-chart [chartConfig]="totalCases" [info]="totalCasesInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalNewCases" [info]="totalNewCasesInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="growthRates" [info]="growthRatesInfo"></app-chart>
 
                     </mat-tab>
                     <mat-tab label="Ricoveri">
@@ -118,7 +118,17 @@
 
                         <mat-divider></mat-divider>
 
+                        <app-chart [chartConfig]="totalHospitalizedIncrease" [info]="totalHospitalizedIncreaseInfo">
+                        </app-chart>
+
+                        <mat-divider></mat-divider>
+
                         <app-chart [chartConfig]="totalIntensiveCare" [info]="totalIntensiveCareInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalIntensiveCareIncrease" [info]="totalIntensiveCareIncreaseInfo">
+                        </app-chart>
 
                     </mat-tab>
                     <mat-tab label="Deceduti / Guariti">
@@ -127,12 +137,24 @@
 
                         <mat-divider></mat-divider>
 
+                        <app-chart [chartConfig]="totalDeadIncrease" [info]="totalDeadIncreaseInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
                         <app-chart [chartConfig]="totalRecovered" [info]="totalRecoveredInfo"></app-chart>
 
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalRecoveredIncrease" [info]="totalRecoveredIncreaseInfo">
+                        </app-chart>
                     </mat-tab>
                     <mat-tab label="Tamponi">
 
                         <app-chart [chartConfig]="totalTests" [info]="totalTestsInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalTestsIncrease" [info]="totalTestsIncreaseInfo"></app-chart>
 
                     </mat-tab>
                 </mat-tab-group>

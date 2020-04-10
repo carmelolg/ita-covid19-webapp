@@ -45,11 +45,9 @@ export class DashboardComponent implements OnInit {
   growthRates: Chart;
 
   totalCasesValues = [];
-  totalCasesIncreaseValues = [];
   totalCases: Chart;
 
   totalNewCaseValues = [];
-  totalNewCaseIncreaseValues = [];
   totalNewCases: Chart;
 
   totalHospitalizedValues = [];
@@ -267,7 +265,6 @@ export class DashboardComponent implements OnInit {
           let innerDate = this.datepipe.transform(item.data, 'dd/MM')
           this.dataLabels.push(innerDate);
           this.totalCasesValues.push(item.value);
-          // this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
         });
         this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
       }
@@ -296,7 +293,6 @@ export class DashboardComponent implements OnInit {
           // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
           // this.dataLabels.push(innerDate);
           this.totalNewCaseValues.push(item.value);
-          // this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
         });
       }
       this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues);
