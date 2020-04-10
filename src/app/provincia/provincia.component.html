@@ -31,15 +31,6 @@
                     <mat-icon>check</mat-icon>
                 </button>
             </mat-form-field>
-            <!-- <mat-form-field class="form-field m-l-20">
-                <mat-label>Provincia</mat-label>
-                <input matInput [disabled]="isLoading" type="text" [(ngModel)]="districtNameInput"
-                    placeholder="es. Milano/Torino" (keyup.enter)="createTotalCases()">
-                <button *ngIf="districtNameInput" mat-button matSuffix mat-icon-button aria-label="Search"
-                    (click)="createTotalCases()">
-                    <mat-icon>check</mat-icon>
-                </button>
-            </mat-form-field> -->
         </mat-card>
     </div>
 </div>
@@ -80,14 +71,14 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Casi ad oggi</mat-card-title>
+                        <mat-card-title>Totali risultati positivi</mat-card-title>
                         <mat-card-subtitle>{{districtName | uppercase}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class="text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Casi ad oggi</h6>
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Numero di casi totali</h6>
                             </li>
                         </ul>
                     </div>
@@ -118,21 +109,21 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Incremento giornaliero</mat-card-title>
+                        <mat-card-title>Nuovi positivi giorno per giorno</mat-card-title>
                         <mat-card-subtitle>{{districtName | uppercase}}</mat-card-subtitle>
                     </div>
                     <div class="ml-auto">
                         <ul class="list-inline">
                             <li>
                                 <h6 class=" text-info m-0"><i
-                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Incremento giornaliero
+                                        class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Nuovi positivi
                                 </h6>
                             </li>
                         </ul>
                     </div>
                 </div>
                 <p>
-                    Il seguente grafico rappresenta l'andamento dell'incremento giornaliero dei positivi a <span
+                    Il seguente grafico rappresenta l\'andamento giornaliero delle persone risultate positive a <span
                         class="mat-subheading-2">{{districtName | uppercase}}</span>
                 </p>
                 <div *ngIf="totalCasesIncrease && totalCasesIncrease.data.series.length > 0" class="ct-chart">
