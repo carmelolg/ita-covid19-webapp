@@ -19,10 +19,15 @@ export class DashboardComponent implements OnInit {
   public totalCasesInfo: InfoChart;
   public totalNewCasesInfo: InfoChart;
   public totalHospitalizedInfo: InfoChart;
+  public totalHospitalizedIncreaseInfo: InfoChart;
   public totalIntensiveCareInfo: InfoChart;
+  public totalIntensiveCareIncreaseInfo: InfoChart;
   public totalDeadInfo: InfoChart;
   public totalRecoveredInfo: InfoChart;
+  public totalDeadIncreaseInfo: InfoChart;
+  public totalRecoveredIncreaseInfo: InfoChart;
   public totalTestsInfo: InfoChart;
+  public totalTestsIncreaseInfo: InfoChart;
 
   constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
 
@@ -50,26 +55,30 @@ export class DashboardComponent implements OnInit {
   totalHospitalizedValues = [];
   totalHospitalizedIncreaseValues = [];
   totalHospitalized: Chart;
-
-
+  totalHospitalizedIncrease: Chart;
+  
   totalDeadValues = [];
   totalDeadIncreaseValues = [];
   totalDead: Chart;
+  totalDeadIncrease: Chart;
 
 
   totalTestsValues = [];
   totalTestsIncreaseValues = [];
   totalTests: Chart;
+  totalTestsIncrease: Chart;
 
 
   totalIntensiveCareValues = [];
   totalIntensiveCareIncreaseValues = [];
   totalIntensiveCare: Chart;
+  totalIntensiveCareIncrease: Chart;
 
 
   totalRecoveredValues = [];
   totalRecoveredIncreaseValues = [];
   totalRecovered: Chart;
+  totalRecoveredIncrease: Chart;
 
   currentGrowthRate = 0;
   currentNewPositiveGrowthRate = 0;
@@ -111,60 +120,85 @@ export class DashboardComponent implements OnInit {
     this.growthRatesInfo = new InfoChart();
     this.growthRatesInfo.title = 'Tasso di crescita';
     this.growthRatesInfo.subtitle = 'Italia';
-    this.growthRatesInfo.firstLegend = 'Tasso di crescita giornaliero';
+    this.growthRatesInfo.secondLegend = 'Tasso di crescita giornaliero';
     this.growthRatesInfo.desc = 'Il seguente grafico rappresenta l\'andamento del tasso di crescita dell\'epidemia in Italia';
 
     this.totalCasesInfo = new InfoChart();
-    this.totalCasesInfo.title = 'Casi totali';
+    this.totalCasesInfo.title = 'Totali risultati positivi';
     this.totalCasesInfo.subtitle = 'Italia';
-    this.totalCasesInfo.firstLegend = 'Casi ad oggi';
-    this.totalCasesInfo.secondLegend = 'Incremento giornaliero';
+    this.totalCasesInfo.firstLegend = 'Numero di casi totali';
     this.totalCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei casi totali in Italia';
 
     this.totalNewCasesInfo = new InfoChart();
-    this.totalNewCasesInfo.title = 'Nuovi casi';
+    this.totalNewCasesInfo.title = 'Nuovi positivi giorno per giorno';
     this.totalNewCasesInfo.subtitle = 'Italia';
-    this.totalNewCasesInfo.firstLegend = 'Nuovi casi ad oggi';
-    this.totalNewCasesInfo.secondLegend = 'Incremento giornaliero';
-    this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei nuovi casi in Italia';
+    this.totalNewCasesInfo.firstLegend = 'Nuovi positivi';
+    this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero delle persone risultate positive in Italia';
 
     /** RICOVERI */
     this.totalHospitalizedInfo = new InfoChart();
-    this.totalHospitalizedInfo.title = 'Ricoverati totali';
+    this.totalHospitalizedInfo.title = 'Andamento ricoveri ospedalieri';
     this.totalHospitalizedInfo.subtitle = 'Italia';
-    this.totalHospitalizedInfo.firstLegend = 'Casi ad oggi';
-    this.totalHospitalizedInfo.secondLegend = 'Incremento giornaliero';
+    this.totalHospitalizedInfo.firstLegend = 'Pazienti ricoverati in ospedale';
     this.totalHospitalizedInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei pazienti ricoverati in Italia';
 
+    this.totalHospitalizedIncreaseInfo = new InfoChart();
+    this.totalHospitalizedIncreaseInfo.title = 'Numero pazienti ricoverati';
+    this.totalHospitalizedIncreaseInfo.subtitle = 'Italia';
+    this.totalHospitalizedIncreaseInfo.secondLegend = 'Numero di ricoveri giornalieri';
+    this.totalHospitalizedIncreaseInfo.desc = 'Il seguente grafico mostra la variazione quotidiana degli ospedalizzati in Italia';
+
+
     this.totalIntensiveCareInfo = new InfoChart();
-    this.totalIntensiveCareInfo.title = 'Pazienti in terapia intensiva';
+    this.totalIntensiveCareInfo.title = 'Pazienti ricoverati in terapia intensiva';
     this.totalIntensiveCareInfo.subtitle = 'Italia';
-    this.totalIntensiveCareInfo.firstLegend = 'Casi ad oggi';
-    this.totalIntensiveCareInfo.secondLegend = 'Incremento giornaliero';
+    this.totalIntensiveCareInfo.firstLegend = 'Pazienti ricoverati in terapia intensiva';
     this.totalIntensiveCareInfo.desc = 'Il seguente grafico rappresenta l\'andamento delle persone che hanno avuto bisogno di cure in terapia intensiva in Italia';
+
+    this.totalIntensiveCareIncreaseInfo = new InfoChart();
+    this.totalIntensiveCareIncreaseInfo.title = 'Numero di pazienti in terapia intensiva';
+    this.totalIntensiveCareIncreaseInfo.subtitle = 'Italia';
+    this.totalIntensiveCareIncreaseInfo.secondLegend = 'Numero di ricoveri in terapia intensiva giornalieri';
+    this.totalIntensiveCareIncreaseInfo.desc = 'Il seguente grafico mostra la variazione quotidiana degli ospedalizzati in terapia intensiva in Italia';
 
     /** DECDEDUTI/GUARITI */
     this.totalDeadInfo = new InfoChart();
     this.totalDeadInfo.title = 'Deceduti totali';
     this.totalDeadInfo.subtitle = 'Italia';
-    this.totalDeadInfo.firstLegend = 'Casi ad oggi';
-    this.totalDeadInfo.secondLegend = 'Incremento giornaliero';
+    this.totalDeadInfo.firstLegend = 'Persone decedute totali';
     this.totalDeadInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei decessi in Italia';
+
+    this.totalDeadIncreaseInfo = new InfoChart();
+    this.totalDeadIncreaseInfo.title = 'Numero di deceduti giornalieri';
+    this.totalDeadIncreaseInfo.subtitle = 'Italia';
+    this.totalDeadIncreaseInfo.firstLegend = 'Persone decedute';
+    this.totalDeadIncreaseInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero dei decessi in Italia';
 
     this.totalRecoveredInfo = new InfoChart();
     this.totalRecoveredInfo.title = 'Guariti totali';
     this.totalRecoveredInfo.subtitle = 'Italia';
-    this.totalRecoveredInfo.firstLegend = 'Casi ad oggi';
-    this.totalRecoveredInfo.secondLegend = 'Incremento giornaliero';
+    this.totalRecoveredInfo.firstLegend = 'Persone guarite totali';
     this.totalRecoveredInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei guariti in Italia';
+
+    this.totalRecoveredIncreaseInfo = new InfoChart();
+    this.totalRecoveredIncreaseInfo.title = 'Numero di guariti giornalieri';
+    this.totalRecoveredIncreaseInfo.subtitle = 'Italia';
+    this.totalRecoveredIncreaseInfo.firstLegend = 'Persone guarite';
+    this.totalRecoveredIncreaseInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero dei guariti in Italia';
 
     /** TAMPONI */
     this.totalTestsInfo = new InfoChart();
     this.totalTestsInfo.title = 'Tamponi effettuati';
     this.totalTestsInfo.subtitle = 'Italia';
     this.totalTestsInfo.firstLegend = 'Tamponi effettuati ad oggi';
-    this.totalTestsInfo.secondLegend = 'Incremento giornaliero';
     this.totalTestsInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei tamponi effettuati in Italia';
+
+    this.totalTestsIncreaseInfo = new InfoChart();
+    this.totalTestsIncreaseInfo.title = 'Numero giornaliero di tamponi effettuati';
+    this.totalTestsIncreaseInfo.subtitle = 'Italia';
+    this.totalTestsIncreaseInfo.firstLegend = 'Tamponi effettuati giorno per giorno';
+    this.totalTestsIncreaseInfo.desc = 'Il seguente grafico rappresenta la variazione giornaliera dei tamponi effettuati in Italia';
+
 
     this.eraseAllData();
 
@@ -233,9 +267,9 @@ export class DashboardComponent implements OnInit {
           let innerDate = this.datepipe.transform(item.data, 'dd/MM')
           this.dataLabels.push(innerDate);
           this.totalCasesValues.push(item.value);
-          this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
+          // this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
         });
-        this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues, this.totalCasesIncreaseValues);
+        this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
       }
     });
   }
@@ -250,7 +284,8 @@ export class DashboardComponent implements OnInit {
           this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues, this.totalHospitalizedIncreaseValues);
+      this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues);
+      this.totalHospitalizedIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalHospitalizedIncreaseValues);
     });
   }
 
@@ -261,10 +296,10 @@ export class DashboardComponent implements OnInit {
           // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
           // this.dataLabels.push(innerDate);
           this.totalNewCaseValues.push(item.value);
-          this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
+          // this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues, this.totalNewCaseIncreaseValues);
+      this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues);
     });
   }
 
@@ -279,7 +314,8 @@ export class DashboardComponent implements OnInit {
           this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues, this.totalDeadIncreaseValues);
+      this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues);
+      this.totalDeadIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadIncreaseValues);
     });
 
   }
@@ -295,7 +331,8 @@ export class DashboardComponent implements OnInit {
           this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues, this.totalTestsIncreaseValues);
+      this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues);
+      this.totalTestsIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsIncreaseValues);
     });
 
   }
@@ -311,7 +348,8 @@ export class DashboardComponent implements OnInit {
           this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues, this.totalIntensiveCareIncreaseValues);
+      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues);
+      this.totalIntensiveCareIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalIntensiveCareIncreaseValues);
     });
   }
 
@@ -325,7 +363,8 @@ export class DashboardComponent implements OnInit {
           this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues, this.totalRecoveredIncreaseValues);
+      this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues);
+      this.totalRecoveredIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredIncreaseValues);
     });
 
   }
