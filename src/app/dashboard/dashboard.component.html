@@ -77,9 +77,13 @@
                         <mat-divider></mat-divider>
 
                         <app-chart [chartConfig]="totalNewCases" [info]="totalNewCasesInfo"></app-chart>
-
+                        
                         <mat-divider></mat-divider>
 
+                        <app-chart [chartConfig]="totalPositives" [info]="totalPositivesInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+                        
                         <app-chart [chartConfig]="growthRates" [info]="growthRatesInfo"></app-chart>
 
                     </mat-tab>

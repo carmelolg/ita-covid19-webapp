@@ -23,6 +23,7 @@ export class RegioneComponent implements OnInit {
   public resumeInfo: InfoChart;
   public growthRatesInfo: InfoChart;
   public totalCasesInfo: InfoChart;
+  public totalPositivesInfo: InfoChart;
   public totalNewCasesInfo: InfoChart;
   public totalHospitalizedInfo: InfoChart;
   public totalHospitalizedIncreaseInfo: InfoChart;
@@ -66,6 +67,9 @@ export class RegioneComponent implements OnInit {
 
   totalCasesValues = [];
   totalCases: Chart;
+
+  totalPositiveValues = [];
+  totalPositives: Chart;
 
   totalNewCaseValues = [];
   totalNewCases: Chart;
@@ -151,6 +155,12 @@ export class RegioneComponent implements OnInit {
     this.totalCasesInfo.subtitle = this.regionName;
     this.totalCasesInfo.firstLegend = 'Numero di casi totali';
     this.totalCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei casi totali';
+
+    this.totalPositivesInfo = new InfoChart();
+    this.totalPositivesInfo.title = 'Persone attualmente positive';
+    this.totalPositivesInfo.subtitle = this.regionName;
+    this.totalPositivesInfo.firstLegend = 'Numero di persone attualmente positive';
+    this.totalPositivesInfo.desc = 'Il seguente grafico rappresenta l\'andamento delle persone attualmente positive';
 
     this.totalNewCasesInfo = new InfoChart();
     this.totalNewCasesInfo.title = 'Nuovi positivi giorno per giorno';
@@ -297,6 +307,7 @@ export class RegioneComponent implements OnInit {
 
       this.createGrowthRates();
       this.createTotalCases();
+      this.createTotalPositives();
       this.createNewCases();
       this.createTotalHospitalized();
       this.createTotalIntensiveCare();
@@ -343,6 +354,19 @@ export class RegioneComponent implements OnInit {
       }
     });
 
+  }
+
+  private createTotalPositives() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/positive").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          this.totalPositiveValues.push(item.value);
+        });
+      } else {
+        this.totalPositivesInfo.subtitle = data.description;
+      }
+      this.totalPositives = this.chartService.createChart(this.dataLabels, 'Line', this.totalPositiveValues);
+    });
   }
 
   private createNewCases() {
@@ -505,11 +529,17 @@ export class RegioneComponent implements OnInit {
 
   private eraseAllData() {
     this.totalCases = null;
+    this.totalPositives = null;
     this.totalDead = null;
+    this.totalDeadIncrease = null;
     this.totalHospitalized = null;
+    this.totalHospitalizedIncrease = null;
     this.totalIntensiveCare = null;
+    this.totalIntensiveCareIncrease = null;
     this.totalTests = null;
+    this.totalTestsIncrease = null;
     this.totalRecovered = null;
+    this.totalRecoveredIncrease = null;
     this.totalNewCases = null;
     this.resume = null;
 
@@ -522,6 +552,7 @@ export class RegioneComponent implements OnInit {
     this.resumeDeadValues = [];
 
     this.totalCasesValues = [];
+    this.totalPositiveValues = [];
 
     this.totalNewCaseValues = [];
 

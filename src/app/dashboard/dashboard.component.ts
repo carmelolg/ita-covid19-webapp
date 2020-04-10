@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
   public resumeInfo: InfoChart;
   public growthRatesInfo: InfoChart;
   public totalCasesInfo: InfoChart;
+  public totalPositivesInfo: InfoChart;
   public totalNewCasesInfo: InfoChart;
   public totalHospitalizedInfo: InfoChart;
   public totalHospitalizedIncreaseInfo: InfoChart;
@@ -49,6 +50,9 @@ export class DashboardComponent implements OnInit {
 
   totalNewCaseValues = [];
   totalNewCases: Chart;
+
+  totalPositiveValues = [];
+  totalPositives: Chart;
 
   totalHospitalizedValues = [];
   totalHospitalizedIncreaseValues = [];
@@ -127,6 +131,12 @@ export class DashboardComponent implements OnInit {
     this.totalCasesInfo.firstLegend = 'Numero di casi totali';
     this.totalCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento dei casi totali in Italia';
 
+    this.totalPositivesInfo = new InfoChart();
+    this.totalPositivesInfo.title = 'Persone attualmente positive';
+    this.totalPositivesInfo.subtitle = 'Italia';
+    this.totalPositivesInfo.firstLegend = 'Numero di persone attualmente positive';
+    this.totalPositivesInfo.desc = 'Il seguente grafico rappresenta l\'andamento delle persone attualmente positive in Italia';
+
     this.totalNewCasesInfo = new InfoChart();
     this.totalNewCasesInfo.title = 'Nuovi positivi giorno per giorno';
     this.totalNewCasesInfo.subtitle = 'Italia';
@@ -202,6 +212,7 @@ export class DashboardComponent implements OnInit {
 
     this.createGrowthRates();
     this.createTotalCases();
+    this.createTotalPositives();
     this.createTotalDead();
     this.createTotalHospitalized();
     this.createTotalIntensiveCare();
@@ -267,6 +278,18 @@ export class DashboardComponent implements OnInit {
           this.totalCasesValues.push(item.value);
         });
         this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
+      }
+    });
+  }
+
+
+  private createTotalPositives() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/positive").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          this.totalPositiveValues.push(item.value);
+        });
+        this.totalPositives = this.chartService.createChart(this.dataLabels, 'Line', this.totalPositiveValues);
       }
     });
   }
