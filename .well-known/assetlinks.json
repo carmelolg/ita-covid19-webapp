@@ -1,10 +1,9 @@
-[
-  {
-    "relation": ["delegate_permission/common.handle_all_urls"],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "xyz.appmaker.itslsn",
-      "sha256_cert_fingerprints": ["84:62:38:6C:AF:82:FF:74:0B:54:56:C1:3A:96:BF:6E:BD:8B:35:9E:EF:17:E5:6F:78:29:41:2C:71:4A:19:24"]
-    }
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "it.carmelolagamba.italycovid19",
+    "sha256_cert_fingerprints":
+    ["3F:04:3F:53:8A:0B:6B:45:F8:77:F4:35:E4:BB:1C:88:FE:61:A3:05:91:13:03:B0:77:1A:8F:E9:82:34:9A:0E"]
   }
-]
+}]
