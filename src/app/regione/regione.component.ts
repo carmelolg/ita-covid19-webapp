@@ -35,6 +35,8 @@ export class RegioneComponent implements OnInit {
   public totalRecoveredIncreaseInfo: InfoChart;
   public totalTestsInfo: InfoChart;
   public totalTestsIncreaseInfo: InfoChart;
+  public testTodaysWithNewPositiveInfo: InfoChart;
+  public percentageNewPositiveByTestInfo: InfoChart;
 
   constructor(
     private http: HttpClient,
@@ -102,6 +104,9 @@ export class RegioneComponent implements OnInit {
   totalRecoveredIncreaseValues = [];
   totalRecovered: Chart;
   totalRecoveredIncrease: Chart;
+
+  testTodaysWithNewPositive: Chart;
+  percentageNewPositiveByTest: Chart;
 
   currentGrowthRate = 0;
   currentNewPositiveGrowthRate = 0;
@@ -234,6 +239,21 @@ export class RegioneComponent implements OnInit {
     this.totalTestsIncreaseInfo.firstLegend = 'Tamponi effettuati giorno per giorno';
     this.totalTestsIncreaseInfo.desc = 'Il seguente grafico rappresenta la variazione giornaliera dei tamponi effettuati';
 
+    this.testTodaysWithNewPositiveInfo = new InfoChart();
+    this.testTodaysWithNewPositiveInfo.title = 'Nuovi positivi in relazione ai tamponi effettuati';
+    this.testTodaysWithNewPositiveInfo.subtitle = this.regionName;
+    this.testTodaysWithNewPositiveInfo.secondLegend = 'Nuovi positivi';
+    this.testTodaysWithNewPositiveInfo.firstLegend = 'Tamponi effettuati giorno per giorno';
+    this.testTodaysWithNewPositiveInfo.desc = 'Il seguente grafico rappresenta la relazione tra nuovi positivi e tamponi effettuati';
+
+
+    this.percentageNewPositiveByTestInfo = new InfoChart();
+    this.percentageNewPositiveByTestInfo.title = 'Percentuale di positivi sui test effettuati';
+    this.percentageNewPositiveByTestInfo.subtitle = this.regionName;
+    this.percentageNewPositiveByTestInfo.firstLegend = 'Percentuale';
+    this.percentageNewPositiveByTestInfo.desc = 'Il seguente grafico rappresenta l\'andamento della percentuale di positivi rispetto ai tamponi effettuati';
+
+
     this.filteredOptions = this.formControl.valueChanges
       .pipe(
         startWith(''),
@@ -306,19 +326,23 @@ export class RegioneComponent implements OnInit {
       }
 
       this.createGrowthRates();
-      this.createTotalCases();
-      this.createTotalPositives();
-      this.createNewCases();
-      this.createTotalHospitalized();
-      this.createTotalIntensiveCare();
-      this.createTotalDead();
-      this.createTotalRecovered();
-      this.createTotalTests();
+      this.createTotalPositives().subscribe(_sTP => {
+        this.createTotalHospitalized();
+        this.createTotalIntensiveCare();
+        this.createTotalDead();
+        this.createTotalRecovered();
+
+        this.createNewCases().subscribe(_s => {
+          this.createTotalTests().subscribe(_s1 => {
+            this.createTestWithPositiveDaily();
+          });
+        });
+      });
       this.isLoading = false;
     });
   }
 
-  private createGrowthRates() : Observable<any> {
+  private createGrowthRates(): Observable<any> {
 
     const promise = new Subject();
 
@@ -344,7 +368,21 @@ export class RegioneComponent implements OnInit {
     return promise;
   }
 
-  private createTotalCases() : Observable<any> {
+  private createTestWithPositiveDaily() {
+
+    this.testTodaysWithNewPositive = this.chartService.createChart(this.dataLabels, 'Bar', this.totalNewCaseValues, this.totalTestsIncreaseValues);
+
+    let _percentageNewPositiveByTest: number[] = [];
+    for (let index = 0; index < this.totalNewCaseValues.length; index++) {
+      const newPositive = this.totalNewCaseValues[index];
+      const test = this.totalTestsIncreaseValues[index];
+
+      _percentageNewPositiveByTest[index] = Number(((newPositive * 100) / test).toFixed(2));
+    }
+    this.percentageNewPositiveByTest = this.chartService.createChart(this.dataLabels, 'Line', _percentageNewPositiveByTest);
+  }
+  
+  private createTotalCases(): Observable<any> {
 
     const promise = new Subject();
 
@@ -368,13 +406,15 @@ export class RegioneComponent implements OnInit {
     return promise;
   }
 
-  private createTotalPositives() : Observable<any> {
+  private createTotalPositives(): Observable<any> {
 
     const promise = new Subject();
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/positive").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
+          let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+          this.dataLabels.push(innerDate);
           this.totalPositiveValues.push(item.value);
         });
       } else {
@@ -386,7 +426,7 @@ export class RegioneComponent implements OnInit {
     return promise;
   }
 
-  private createNewCases() : Observable<any> {
+  private createNewCases(): Observable<any> {
 
     const promise = new Subject();
 
@@ -406,7 +446,7 @@ export class RegioneComponent implements OnInit {
     return promise;
   }
 
-  private createTotalHospitalized() : Observable<any> {
+  private createTotalHospitalized(): Observable<any> {
 
     const promise = new Subject();
 
@@ -428,7 +468,7 @@ export class RegioneComponent implements OnInit {
   }
 
 
-  private createTotalDead() : Observable<any> {
+  private createTotalDead(): Observable<any> {
 
     const promise = new Subject();
 
@@ -452,7 +492,7 @@ export class RegioneComponent implements OnInit {
   }
 
 
-  private createTotalTests() : Observable<any> {
+  private createTotalTests(): Observable<any> {
 
     const promise = new Subject();
 
@@ -476,7 +516,7 @@ export class RegioneComponent implements OnInit {
   }
 
 
-  private createTotalIntensiveCare() : Observable<any> {
+  private createTotalIntensiveCare(): Observable<any> {
 
     const promise = new Subject();
 
@@ -499,7 +539,7 @@ export class RegioneComponent implements OnInit {
     return promise;
   }
 
-  private createTotalRecovered() : Observable<any> {
+  private createTotalRecovered(): Observable<any> {
 
     const promise = new Subject();
 
