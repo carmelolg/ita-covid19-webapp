@@ -73,18 +73,15 @@
                     <mat-tab label="Contagi">
 
                         <!-- <app-chart [chartConfig]="totalCases" [info]="totalCasesInfo"></app-chart> -->
-                        <app-chart [chartConfig]="testTodaysWithNewPositive" [info]="testTodaysWithNewPositiveInfo"></app-chart>
-
-                        <mat-divider></mat-divider>
 
                         <app-chart [chartConfig]="totalNewCases" [info]="totalNewCasesInfo"></app-chart>
-                        
+
                         <mat-divider></mat-divider>
 
                         <app-chart [chartConfig]="totalPositives" [info]="totalPositivesInfo"></app-chart>
 
                         <mat-divider></mat-divider>
-                        
+
                         <app-chart [chartConfig]="growthRates" [info]="growthRatesInfo"></app-chart>
 
                     </mat-tab>
@@ -114,22 +111,28 @@
                         <mat-divider></mat-divider>
 
                         <app-chart [chartConfig]="totalDeadIncrease" [info]="totalDeadIncreaseInfo"></app-chart>
- 
-                        <mat-divider></mat-divider>
- 
-                        <app-chart [chartConfig]="totalRecovered" [info]="totalRecoveredInfo"></app-chart>
- 
+
                         <mat-divider></mat-divider>
 
-                        <app-chart [chartConfig]="totalRecoveredIncrease" [info]="totalRecoveredIncreaseInfo"></app-chart>
+                        <app-chart [chartConfig]="totalRecovered" [info]="totalRecoveredInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalRecoveredIncrease" [info]="totalRecoveredIncreaseInfo">
+                        </app-chart>
                     </mat-tab>
                     <mat-tab label="Tamponi">
 
-                        <app-chart [chartConfig]="totalTests" [info]="totalTestsInfo"></app-chart>
-
-                        <mat-divider></mat-divider>
+                        <!-- <app-chart [chartConfig]="testTodaysWithNewPositive" [info]="testTodaysWithNewPositiveInfo">
+                        </app-chart>
+                        <mat-divider></mat-divider> -->
+                        <!-- <app-chart [chartConfig]="totalTests" [info]="totalTestsInfo"></app-chart>-->
 
                         <app-chart [chartConfig]="totalTestsIncrease" [info]="totalTestsIncreaseInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+                        
+                        <app-chart [chartConfig]="percentageNewPositiveByTest" [info]="percentageNewPositiveByTestInfo"></app-chart>
 
                     </mat-tab>
                 </mat-tab-group>
