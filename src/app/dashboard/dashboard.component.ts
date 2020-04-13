@@ -6,6 +6,7 @@ import { Chart } from '../shared/model/Chart';
 import { Tile } from '../shared/model/Tiles';
 import { ChartService } from './chart.service'
 import { InfoChart } from '../shared/model/InfoChart';
+import { Observable, Subscriber, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +30,7 @@ export class DashboardComponent implements OnInit {
   public totalRecoveredIncreaseInfo: InfoChart;
   public totalTestsInfo: InfoChart;
   public totalTestsIncreaseInfo: InfoChart;
+  public testTodaysWithNewPositiveInfo: InfoChart;
 
   constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
 
@@ -58,7 +60,7 @@ export class DashboardComponent implements OnInit {
   totalHospitalizedIncreaseValues = [];
   totalHospitalized: Chart;
   totalHospitalizedIncrease: Chart;
-  
+
   totalDeadValues = [];
   totalDeadIncreaseValues = [];
   totalDead: Chart;
@@ -81,6 +83,8 @@ export class DashboardComponent implements OnInit {
   totalRecoveredIncreaseValues = [];
   totalRecovered: Chart;
   totalRecoveredIncrease: Chart;
+
+  testTodaysWithNewPositive: Chart;
 
   currentGrowthRate = 0;
   currentNewPositiveGrowthRate = 0;
@@ -207,6 +211,13 @@ export class DashboardComponent implements OnInit {
     this.totalTestsIncreaseInfo.firstLegend = 'Tamponi effettuati giorno per giorno';
     this.totalTestsIncreaseInfo.desc = 'Il seguente grafico rappresenta la variazione giornaliera dei tamponi effettuati in Italia';
 
+    this.testTodaysWithNewPositiveInfo = new InfoChart();
+    this.testTodaysWithNewPositiveInfo.title = 'Nuovi positivi in relazione ai tamponi effettuati';
+    this.testTodaysWithNewPositiveInfo.subtitle = 'Italia';
+    this.testTodaysWithNewPositiveInfo.firstLegend = 'Nuovi positivi';
+    this.testTodaysWithNewPositiveInfo.firstLegend = 'Tamponi effettuati giorno per giorno';
+    this.testTodaysWithNewPositiveInfo.desc = 'Il seguente grafico rappresenta la relazione tra nuovi positivi e tamponi effettuati in Italia';
+
 
     this.eraseAllData();
 
@@ -216,11 +227,14 @@ export class DashboardComponent implements OnInit {
     this.createTotalDead();
     this.createTotalHospitalized();
     this.createTotalIntensiveCare();
-    this.createTotalTests();
     this.createTotalRecovered();
-    this.createTotalNewCases();
     this.createResume();
-
+    
+    this.createTotalNewCases().subscribe(_s => {
+      this.createTotalTests().subscribe(_s1 => {
+        this.createTestWithPositiveDaily();
+      });
+    });
     this.getGenericStats();
   }
 
@@ -237,9 +251,13 @@ export class DashboardComponent implements OnInit {
     this.totalRecovered = null;
     this.totalNewCases = null;
     this.resume = null;
+    this.testTodaysWithNewPositive = null;
   }
 
-  private createResume() {
+  private createResume(): Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/resume", { params: { all: 'true' } }).subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -252,8 +270,11 @@ export class DashboardComponent implements OnInit {
           this.resumeDeadValues.push(item.dead);
         });
         this.resume = this.chartService.createChart(this.resumeDateLabels, 'Line', this.resumeTotalValues, this.resumeNewValues, this.resumeRecoveredValues, this.resumeDeadValues);
+        promise.next();
       }
     });
+
+    return promise;
   }
 
   private createGrowthRates() {
@@ -294,6 +315,10 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  private createTestWithPositiveDaily() {
+    this.testTodaysWithNewPositive = this.chartService.createChart(this.dataLabels, 'Bar', this.totalNewCaseValues, this.totalTestsIncreaseValues);
+  }
+
   private createTotalHospitalized() {
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/hospitalized").subscribe(data => {
       if (data.results.length > 0) {
@@ -309,7 +334,10 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private createTotalNewCases() {
+  private createTotalNewCases() : Observable<any>{
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/new").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -319,7 +347,10 @@ export class DashboardComponent implements OnInit {
         });
       }
       this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues);
+      promise.next();
     });
+
+    return promise;
   }
 
 
@@ -340,7 +371,10 @@ export class DashboardComponent implements OnInit {
   }
 
 
-  private createTotalTests() {
+  private createTotalTests(): Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/test").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -352,7 +386,10 @@ export class DashboardComponent implements OnInit {
       }
       this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues);
       this.totalTestsIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsIncreaseValues);
+      promise.next();
     });
+
+    return promise;
 
   }
 

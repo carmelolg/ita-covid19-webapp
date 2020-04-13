@@ -72,7 +72,8 @@
                     </mat-tab>
                     <mat-tab label="Contagi">
 
-                        <app-chart [chartConfig]="totalCases" [info]="totalCasesInfo"></app-chart>
+                        <!-- <app-chart [chartConfig]="totalCases" [info]="totalCasesInfo"></app-chart> -->
+                        <app-chart [chartConfig]="testTodaysWithNewPositive" [info]="testTodaysWithNewPositiveInfo"></app-chart>
 
                         <mat-divider></mat-divider>
 
