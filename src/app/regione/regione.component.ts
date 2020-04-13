@@ -10,7 +10,7 @@ import { ChartService } from '../dashboard/chart.service';
 import { Tile } from '../shared/model/Tiles';
 import { InfoChart } from '../shared/model/InfoChart';
 import { FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
@@ -318,7 +318,10 @@ export class RegioneComponent implements OnInit {
     });
   }
 
-  private createGrowthRates() {
+  private createGrowthRates() : Observable<any> {
+
+    const promise = new Subject();
+
     this.growthRateDateLabels = [];
     this.growthRateValues = [];
 
@@ -334,10 +337,17 @@ export class RegioneComponent implements OnInit {
         this.growthRatesInfo.subtitle = data.description;
         this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Line', null);
       }
+
+      promise.next();
     });
+
+    return promise;
   }
 
-  private createTotalCases() {
+  private createTotalCases() : Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total").subscribe(data => {
 
       if (data.results.length > 0) {
@@ -352,11 +362,16 @@ export class RegioneComponent implements OnInit {
         this.totalCasesInfo.subtitle = data.description;
         this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
       }
+      promise.next();
     });
 
+    return promise;
   }
 
-  private createTotalPositives() {
+  private createTotalPositives() : Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/positive").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -366,10 +381,15 @@ export class RegioneComponent implements OnInit {
         this.totalPositivesInfo.subtitle = data.description;
       }
       this.totalPositives = this.chartService.createChart(this.dataLabels, 'Line', this.totalPositiveValues);
+      promise.next();
     });
+    return promise;
   }
 
-  private createNewCases() {
+  private createNewCases() : Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -379,12 +399,17 @@ export class RegioneComponent implements OnInit {
         this.totalNewCasesInfo.subtitle = data.description;
       }
       this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues);
+      promise.next();
     });
 
 
+    return promise;
   }
 
-  private createTotalHospitalized() {
+  private createTotalHospitalized() : Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/hospitalized").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -396,13 +421,17 @@ export class RegioneComponent implements OnInit {
       }
       this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues);
       this.totalHospitalizedIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalHospitalizedIncreaseValues);
+      promise.next();
     });
 
-
+    return promise;
   }
 
 
-  private createTotalDead() {
+  private createTotalDead() : Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/dead").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -416,12 +445,17 @@ export class RegioneComponent implements OnInit {
       }
       this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues);
       this.totalDeadIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadIncreaseValues);
+      promise.next();
     });
 
+    return promise;
   }
 
 
-  private createTotalTests() {
+  private createTotalTests() : Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/test").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -435,12 +469,17 @@ export class RegioneComponent implements OnInit {
       }
       this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues);
       this.totalTestsIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsIncreaseValues);
+      promise.next();
     });
 
+    return promise;
   }
 
 
-  private createTotalIntensiveCare() {
+  private createTotalIntensiveCare() : Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/intensive-care").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -454,11 +493,16 @@ export class RegioneComponent implements OnInit {
       }
       this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues);
       this.totalIntensiveCareIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalIntensiveCareIncreaseValues);
+      promise.next();
     });
 
+    return promise;
   }
 
-  private createTotalRecovered() {
+  private createTotalRecovered() : Observable<any> {
+
+    const promise = new Subject();
+
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/recovered").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
@@ -472,7 +516,10 @@ export class RegioneComponent implements OnInit {
       }
       this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues);
       this.totalRecoveredIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredIncreaseValues);
+      promise.next();
     });
+
+    return promise;
 
   }
 
