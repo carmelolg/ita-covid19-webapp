@@ -168,10 +168,10 @@ export class RegioneComponent implements OnInit {
     this.totalPositivesInfo.desc = 'Il seguente grafico rappresenta l\'andamento delle persone attualmente positive';
 
     this.totalNewCasesInfo = new InfoChart();
-    this.totalNewCasesInfo.title = 'Nuovi positivi giorno per giorno';
+    this.totalNewCasesInfo.title = 'Variazione totale contagiati';
     this.totalNewCasesInfo.subtitle = this.regionName;
-    this.totalNewCasesInfo.firstLegend = 'Nuovi positivi';
-    this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero delle persone risultate positive';
+    this.totalNewCasesInfo.firstLegend = 'Contagiati';
+    this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero dei contagiati totali';
 
     /** RICOVERI */
     this.totalHospitalizedInfo = new InfoChart();
