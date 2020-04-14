@@ -7,6 +7,7 @@
                         <mat-card-title>Epidemia da COVID-19 per province italiane</mat-card-title>
                         <mat-card-subtitle>Per visualizzare il grafico scrivi il nome della provincia
                         </mat-card-subtitle>
+                        <mat-card-subtitle *ngIf="migrationDate">Dati aggiornati alla data {{migrationDate}}</mat-card-subtitle>
                     </div>
                 </div>
             </mat-card-content>
