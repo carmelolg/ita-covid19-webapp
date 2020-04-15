@@ -277,7 +277,7 @@ export class DashboardComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/file/last").subscribe(data => {
       if (data!= null && data.date != null) {
-        this.migrationDate = data.date;
+        this.migrationDate = new Date(data.date);
       }
       promise.next();
     });

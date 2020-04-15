@@ -4,9 +4,15 @@
             <mat-card-content>
                 <div class="d-flex flex-wrap">
                     <div>
-                        <mat-card-title>Epidemia da COVID-19 in Italia</mat-card-title>
+                        <mat-card-title>Epidemia da COVID-19 in Italia </mat-card-title>
                         <mat-card-subtitle>Andamento giornaliero e statistiche</mat-card-subtitle>
-                        <mat-card-subtitle *ngIf="migrationDate">Dati aggiornati alla data {{migrationDate}}</mat-card-subtitle>
+
+                        <span ngIf="migrationDate"><br />
+                            <mat-card-title>Ultimo aggiornamento:
+                                {{migrationDate | date:  'dd-MM-yyyy, H:mm' }}</mat-card-title>
+                            <br />
+                        </span>
+                        <!-- <mat-card-subtitle *ngIf="migrationDate">Dati aggiornati alla data {{migrationDate | date:  'dd-MM-yyyy, H:mm' }}</mat-card-subtitle> -->
                     </div>
                 </div>
 
@@ -132,8 +138,9 @@
                         <app-chart [chartConfig]="totalTestsIncrease" [info]="totalTestsIncreaseInfo"></app-chart>
 
                         <mat-divider></mat-divider>
-                        
-                        <app-chart [chartConfig]="percentageNewPositiveByTest" [info]="percentageNewPositiveByTestInfo"></app-chart>
+
+                        <app-chart [chartConfig]="percentageNewPositiveByTest" [info]="percentageNewPositiveByTestInfo">
+                        </app-chart>
 
                     </mat-tab>
                 </mat-tab-group>
