@@ -461,8 +461,7 @@ export class RegioneComponent implements OnInit {
 
     const promise = new Subject();
 
-    // this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new/variation").subscribe(data => {
-    this.http.get<any>("http://localhost:8080/region/" + this.regionNameInput + "/total/new/variation").subscribe(data => {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new/variation").subscribe(data => {
       if (data.results.length > 0) {
         data.results.forEach(item => {
           this.totalNewCaseVariationValues.push(item.value);
