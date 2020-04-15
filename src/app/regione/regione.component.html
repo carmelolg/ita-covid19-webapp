@@ -6,7 +6,7 @@
                     <div>
                         <mat-card-title>Epidemia da COVID-19 per regioni italiane</mat-card-title>
                         <mat-card-subtitle>Per visualizzare il grafico scrivi il nome della regione</mat-card-subtitle>
-                        <span ngIf="migrationDate"><br />
+                        <span *ngIf="migrationDate"><br />
                             <mat-card-title>Ultimo aggiornamento:
                                 {{migrationDate | date:  'dd-MM-yyyy, H:mm' }}</mat-card-title>
                             <br />
@@ -112,6 +112,10 @@
                         <mat-divider></mat-divider> -->
 
                         <app-chart [chartConfig]="totalNewCases" [info]="totalNewCasesInfo"></app-chart>
+
+                        <mat-divider></mat-divider>
+
+                        <app-chart [chartConfig]="totalNewCasesVariation" [info]="totalNewCasesVariationInfo"></app-chart>
 
                         <mat-divider></mat-divider>
 

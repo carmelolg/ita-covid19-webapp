@@ -25,6 +25,7 @@ export class RegioneComponent implements OnInit {
   public totalCasesInfo: InfoChart;
   public totalPositivesInfo: InfoChart;
   public totalNewCasesInfo: InfoChart;
+  public totalNewCasesVariationInfo: InfoChart;
   public totalHospitalizedInfo: InfoChart;
   public totalHospitalizedIncreaseInfo: InfoChart;
   public totalIntensiveCareInfo: InfoChart;
@@ -75,6 +76,9 @@ export class RegioneComponent implements OnInit {
 
   totalNewCaseValues = [];
   totalNewCases: Chart;
+
+  totalNewCaseVariationValues = [];
+  totalNewCasesVariation: Chart;
 
   totalHospitalizedValues = [];
   totalHospitalizedIncreaseValues = [];
@@ -176,6 +180,12 @@ export class RegioneComponent implements OnInit {
     this.totalNewCasesInfo.subtitle = this.regionName;
     this.totalNewCasesInfo.firstLegend = 'Contagiati';
     this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero dei contagiati totali';
+
+    this.totalNewCasesVariationInfo = new InfoChart();
+    this.totalNewCasesVariationInfo.title = 'Variazione del totale positivi';
+    this.totalNewCasesVariationInfo.subtitle = this.regionName;
+    this.totalNewCasesVariationInfo.firstLegend = 'Positivi';
+    this.totalNewCasesVariationInfo.desc = 'Il seguente grafico rappresenta la variazione del totale dei positivi';
 
     /** RICOVERI */
     this.totalHospitalizedInfo = new InfoChart();
@@ -356,6 +366,9 @@ export class RegioneComponent implements OnInit {
           });
         });
       });
+
+      this.createTotalNewCasesVariation();
+
       this.isLoading = false;
     });
   }
@@ -441,6 +454,24 @@ export class RegioneComponent implements OnInit {
       this.totalPositives = this.chartService.createChart(this.dataLabels, 'Line', this.totalPositiveValues);
       promise.next();
     });
+    return promise;
+  }
+
+  private createTotalNewCasesVariation(): Observable<any> {
+
+    const promise = new Subject();
+
+    // this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new/variation").subscribe(data => {
+    this.http.get<any>("http://localhost:8080/region/" + this.regionNameInput + "/total/new/variation").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          this.totalNewCaseVariationValues.push(item.value);
+        });
+      }
+      this.totalNewCasesVariation = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseVariationValues);
+      promise.next();
+    });
+
     return promise;
   }
 
@@ -646,6 +677,7 @@ export class RegioneComponent implements OnInit {
     this.totalRecovered = null;
     this.totalRecoveredIncrease = null;
     this.totalNewCases = null;
+    this.totalNewCasesVariation = null;
     this.resume = null;
 
     this.dataLabels = [];

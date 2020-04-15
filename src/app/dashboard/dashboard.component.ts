@@ -20,6 +20,7 @@ export class DashboardComponent implements OnInit {
   public totalCasesInfo: InfoChart;
   public totalPositivesInfo: InfoChart;
   public totalNewCasesInfo: InfoChart;
+  public totalNewCasesVariationInfo: InfoChart;
   public totalHospitalizedInfo: InfoChart;
   public totalHospitalizedIncreaseInfo: InfoChart;
   public totalIntensiveCareInfo: InfoChart;
@@ -53,6 +54,9 @@ export class DashboardComponent implements OnInit {
 
   totalNewCaseValues = [];
   totalNewCases: Chart;
+
+  totalNewCaseVariationValues = [];
+  totalNewCasesVariation: Chart;
 
   totalPositiveValues = [];
   totalPositives: Chart;
@@ -153,6 +157,12 @@ export class DashboardComponent implements OnInit {
     this.totalNewCasesInfo.firstLegend = 'Contagiati';
     this.totalNewCasesInfo.desc = 'Il seguente grafico rappresenta l\'andamento giornaliero dei contagiati totali';
 
+    this.totalNewCasesVariationInfo = new InfoChart();
+    this.totalNewCasesVariationInfo.title = 'Variazione del totale positivi';
+    this.totalNewCasesVariationInfo.subtitle = 'Italia';
+    this.totalNewCasesVariationInfo.firstLegend = 'Positivi';
+    this.totalNewCasesVariationInfo.desc = 'Il seguente grafico rappresenta la variazione del totale dei positivi';
+
     /** RICOVERI */
     this.totalHospitalizedInfo = new InfoChart();
     this.totalHospitalizedInfo.title = 'Andamento ricoveri ospedalieri';
@@ -243,12 +253,14 @@ export class DashboardComponent implements OnInit {
       this.createTotalIntensiveCare();
       this.createTotalRecovered();
       this.createResume();
-      
+
       this.createTotalNewCases().subscribe(_s => {
         this.createTotalTests().subscribe(_s1 => {
           this.createTestWithPositiveDaily();
         });
       });
+
+      this.createTotalNewCasesVariation();
     });
 
     this.getGenericStats();
@@ -266,6 +278,7 @@ export class DashboardComponent implements OnInit {
     this.totalTests = null;
     this.totalRecovered = null;
     this.totalNewCases = null;
+    this.totalNewCasesVariation = null;
     this.resume = null;
     this.testTodaysWithNewPositive = null;
     this.percentageNewPositiveByTest = null;
@@ -276,7 +289,7 @@ export class DashboardComponent implements OnInit {
     const promise = new Subject();
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/file/last").subscribe(data => {
-      if (data!= null && data.date != null) {
+      if (data != null && data.date != null) {
         this.migrationDate = new Date(data.date);
       }
       promise.next();
@@ -388,6 +401,24 @@ export class DashboardComponent implements OnInit {
       this.totalHospitalizedIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalHospitalizedIncreaseValues);
       promise.next();
     });
+    return promise;
+  }
+
+  private createTotalNewCasesVariation(): Observable<any> {
+
+    const promise = new Subject();
+
+    // this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/new/variation").subscribe(data => {
+    this.http.get<any>("http://localhost:8080/italy/total/new/variation").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          this.totalNewCaseVariationValues.push(item.value);
+        });
+      }
+      this.totalNewCasesVariation = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseVariationValues);
+      promise.next();
+    });
+
     return promise;
   }
 
