@@ -108,7 +108,11 @@ export class DashboardComponent implements OnInit {
   tiles: Tile[] = [];
   genericTiles: Tile[] = [];
 
+  migrationDate;
+
   ngOnInit() {
+
+    this.getMigrationDate();
 
     /**
      * RIEPILOGO
@@ -265,6 +269,20 @@ export class DashboardComponent implements OnInit {
     this.resume = null;
     this.testTodaysWithNewPositive = null;
     this.percentageNewPositiveByTest = null;
+  }
+
+  private getMigrationDate(): Observable<any> {
+
+    const promise = new Subject();
+
+    this.http.get<any>("https://ita-covid19.herokuapp.com/italy/file/last").subscribe(data => {
+      if (data!= null && data.date != null) {
+        this.migrationDate = new Date(data.date);
+      }
+      promise.next();
+    });
+
+    return promise;
   }
 
   private createResume(): Observable<any> {

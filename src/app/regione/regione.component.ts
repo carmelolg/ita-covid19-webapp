@@ -128,7 +128,11 @@ export class RegioneComponent implements OnInit {
   tiles: Tile[] = [];
   genericTiles: Tile[] = [];
 
+  migrationDate;
+
   ngOnInit() {
+
+    this.getMigrationDate();
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/regions").subscribe(regions => {
       this.options = regions;
@@ -305,6 +309,20 @@ export class RegioneComponent implements OnInit {
       this.changeDetector.detectChanges();
     }
 
+  }
+
+  private getMigrationDate(): Observable<any> {
+
+    const promise = new Subject();
+
+    this.http.get<any>("https://ita-covid19.herokuapp.com/region/file/last").subscribe(data => {
+      if (data!= null && data.date != null) {
+        this.migrationDate = data.date;
+      }
+      promise.next();
+    });
+
+    return promise;
   }
 
   private createResume() {

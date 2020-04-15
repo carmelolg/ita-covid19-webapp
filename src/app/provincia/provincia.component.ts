@@ -9,7 +9,7 @@ require('chartist-plugin-tooltips-updated');
 import { ChartService } from '../dashboard/chart.service';
 import { Tile } from '../shared/model/Tiles';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
@@ -46,7 +46,11 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 
 	tiles: Tile[] = [];
 
+	migrationDate;
+
 	ngOnInit() {
+
+		this.getMigrationDate();
 
 		this.http.get<any>("https://ita-covid19.herokuapp.com/districts").subscribe(districts => {
 			this.options = districts;
@@ -85,6 +89,20 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
 		this.growthRateIncreaseValues = [];
 		this.growthRates = null;
 	}
+
+	private getMigrationDate(): Observable<any> {
+
+		const promise = new Subject();
+	
+		this.http.get<any>("https://ita-covid19.herokuapp.com/district/file/last").subscribe(data => {
+		  if (data!= null && data.date != null) {
+			this.migrationDate = data.date;
+		  }
+		  promise.next();
+		});
+	
+		return promise;
+	  }
 
 	private getGrowthRates() {
 		this.growthRateValues = [];
