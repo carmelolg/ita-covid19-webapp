@@ -8,7 +8,7 @@
                         <mat-card-subtitle>Per visualizzare il grafico scrivi il nome della provincia
                         </mat-card-subtitle>
 
-                        <span ngIf="migrationDate"><br />
+                        <span *ngIf="migrationDate"><br />
                             <mat-card-title>Ultimo aggiornamento:
                                 {{migrationDate | date:  'dd-MM-yyyy, H:mm' }}</mat-card-title>
                             <br />
