@@ -16,6 +16,7 @@ import { Observable, Subscriber, Subject } from 'rxjs';
 export class DashboardComponent implements OnInit {
 
   public resumeInfo: InfoChart;
+  public resumeVarianceInfo: InfoChart;
   public growthRatesInfo: InfoChart;
   public totalCasesInfo: InfoChart;
   public totalPositivesInfo: InfoChart;
@@ -52,9 +53,11 @@ export class DashboardComponent implements OnInit {
   totalCases: Chart;
 
   totalNewCaseValues = [];
+  totalNewCaseIncreaseValues = [];
   totalNewCases: Chart;
 
   totalPositiveValues = [];
+  totalPositiveIncreaseValues = [];
   totalPositives: Chart;
 
   totalHospitalizedValues = [];
@@ -87,6 +90,7 @@ export class DashboardComponent implements OnInit {
 
   testTodaysWithNewPositive: Chart;
   percentageNewPositiveByTest: Chart;
+  resumeVariance: Chart;
 
   currentGrowthRate = 0;
   currentNewPositiveGrowthRate = 0;
@@ -126,6 +130,15 @@ export class DashboardComponent implements OnInit {
     this.resumeInfo.thirdLegend = 'Guariti';
     this.resumeInfo.fourthLegend = 'Deceduti';
     this.resumeInfo.desc = 'Il seguente grafico raggruppa i principali dati sull\'epidemia: totale casi, attualmente positivi, guariti, deceduti';
+
+    this.resumeVarianceInfo = new InfoChart();
+    this.resumeVarianceInfo.title = 'Riepilogo';
+    this.resumeVarianceInfo.subtitle = 'Italia';
+    this.resumeVarianceInfo.firstLegend = 'Variazione giornaliera totali';
+    this.resumeVarianceInfo.secondLegend = 'Variazione giornaliera attualmente positivi';
+    this.resumeVarianceInfo.thirdLegend = 'Variazione giornaliera guariti';
+    this.resumeVarianceInfo.fourthLegend = 'Variazione giornaliera deceduti';
+    this.resumeVarianceInfo.desc = 'Il seguente grafico raggruppa i principali dati sulla variazione giornaliera: totale casi, attualmente positivi, guariti, deceduti';
 
 
     /** CONTAGI */
@@ -234,24 +247,27 @@ export class DashboardComponent implements OnInit {
 
     this.eraseAllData();
 
+    this.getGenericStats();
+    this.createResume();
     this.createGrowthRates();
     // this.createTotalCases();
     this.createTotalPositives().subscribe(_sTP => {
+      this.createTotalDead().subscribe(_d => {
+        this.createTotalRecovered().subscribe(_tr => {
+          this.createTotalNewCases().subscribe(_tn => {
+            this.createTotalTests().subscribe(_tt => {
 
-      this.createTotalDead();
-      this.createTotalHospitalized();
-      this.createTotalIntensiveCare();
-      this.createTotalRecovered();
-      this.createResume();
-      
-      this.createTotalNewCases().subscribe(_s => {
-        this.createTotalTests().subscribe(_s1 => {
-          this.createTestWithPositiveDaily();
+
+              this.createResumeVariance();
+              this.createTotalHospitalized();
+              this.createTotalIntensiveCare();
+              this.createTestWithPositiveDaily();
+            });
+          });
         });
       });
     });
 
-    this.getGenericStats();
   }
 
   public changeTabHandler(tab): void {
@@ -276,13 +292,19 @@ export class DashboardComponent implements OnInit {
     const promise = new Subject();
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/file/last").subscribe(data => {
-      if (data!= null && data.date != null) {
+      if (data != null && data.date != null) {
         this.migrationDate = new Date(data.date);
       }
       promise.next();
     });
 
     return promise;
+  }
+
+  private createResumeVariance() {
+
+    this.resumeVariance = this.chartService.createChart(this.dataLabels, 'Line', [], this.totalPositiveIncreaseValues, this.totalNewCaseIncreaseValues, this.totalRecoveredIncreaseValues, this.totalDeadIncreaseValues );
+
   }
 
   private createResume(): Observable<any> {
@@ -351,6 +373,8 @@ export class DashboardComponent implements OnInit {
           let innerDate = this.datepipe.transform(item.data, 'dd/MM')
           this.dataLabels.push(innerDate);
           this.totalPositiveValues.push(item.value);
+          this.totalPositiveIncreaseValues.push(item.increaseFromYesterday);
+          
         });
         this.totalPositives = this.chartService.createChart(this.dataLabels, 'Line', this.totalPositiveValues);
         promise.next();
@@ -401,6 +425,7 @@ export class DashboardComponent implements OnInit {
           // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
           // this.dataLabels.push(innerDate);
           this.totalNewCaseValues.push(item.value);
+          this.totalNewCaseIncreaseValues.push(item.increaseFromYesterday);
         });
       }
       this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues);
