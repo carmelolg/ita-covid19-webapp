@@ -208,7 +208,7 @@ export class RegioneComponent implements OnInit {
 
     this.totalIntensiveCareIncreaseInfo = new InfoChart();
     this.totalIntensiveCareIncreaseInfo.title = 'Numero di pazienti in terapia intensiva';
-    this.totalIntensiveCareIncreaseInfo.subtitle = 'Italia';
+    this.totalIntensiveCareInfo.subtitle = this.regionName;
     this.totalIntensiveCareIncreaseInfo.secondLegend = 'Variazione quotidiana dei ricoverati in terapia intensiva';
     this.totalIntensiveCareIncreaseInfo.desc = 'Il seguente grafico mostra la variazione quotidiana degli ospedalizzati in terapia intensiva';
 
@@ -311,6 +311,9 @@ export class RegioneComponent implements OnInit {
       this.totalRecoveredIncreaseInfo.subtitle = this.regionNameInput;
       this.totalTestsInfo.subtitle = this.regionNameInput;
       this.totalTestsIncreaseInfo.subtitle = this.regionNameInput;
+      this.totalNewCasesVariationInfo.subtitle = this.regionNameInput;
+      this.totalPositivesInfo.subtitle = this.regionNameInput;
+      this.percentageNewPositiveByTestInfo.subtitle = this.regionNameInput;
 
       this.eraseAllData();
       this.createResume();
@@ -410,6 +413,7 @@ export class RegioneComponent implements OnInit {
 
       _percentageNewPositiveByTest[index] = Number(((newPositive * 100) / test).toFixed(2));
     }
+
     this.percentageNewPositiveByTest = this.chartService.createChart(this.dataLabels, 'Line', _percentageNewPositiveByTest);
   }
   
