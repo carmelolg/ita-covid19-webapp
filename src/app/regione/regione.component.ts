@@ -368,9 +368,9 @@ export class RegioneComponent implements OnInit {
             this.createTestWithPositiveDaily();
           });
         });
+        this.createTotalNewCasesVariation();
       });
 
-      this.createTotalNewCasesVariation();
 
       this.isLoading = false;
     });
