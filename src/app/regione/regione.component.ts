@@ -703,6 +703,7 @@ export class RegioneComponent implements OnInit {
     this.totalPositiveValues = [];
 
     this.totalNewCaseValues = [];
+    this.totalNewCaseVariationValues = [];
 
     this.totalHospitalizedValues = [];
     this.totalHospitalizedIncreaseValues = [];
