@@ -247,7 +247,8 @@ export class DashboardComponent implements OnInit {
     this.createGrowthRates();
     // this.createTotalCases();
     this.createTotalPositives().subscribe(_sTP => {
-
+      
+      this.createTotalNewCasesVariation();
       this.createTotalDead();
       this.createTotalHospitalized();
       this.createTotalIntensiveCare();
@@ -260,7 +261,6 @@ export class DashboardComponent implements OnInit {
         });
       });
 
-      this.createTotalNewCasesVariation();
     });
 
     this.getGenericStats();
@@ -343,12 +343,12 @@ export class DashboardComponent implements OnInit {
     const promise = new Subject();
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalCasesValues.push(item.value);
         });
-        this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
+        this.totalCases = this.chartService.createChart(_dataLabels, 'Line', this.totalCasesValues);
         promise.next();
       }
     });
@@ -390,15 +390,15 @@ export class DashboardComponent implements OnInit {
     const promise = new Subject();
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/hospitalized").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalHospitalizedValues.push(item.value);
           this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues);
-      this.totalHospitalizedIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalHospitalizedIncreaseValues);
+      this.totalHospitalized = this.chartService.createChart(_dataLabels, 'Line', this.totalHospitalizedValues);
+      this.totalHospitalizedIncrease = this.chartService.createChart(_dataLabels, 'Bar', this.totalHospitalizedIncreaseValues);
       promise.next();
     });
     return promise;
@@ -410,11 +410,13 @@ export class DashboardComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/new/variation").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalNewCaseVariationValues.push(item.value);
         });
       }
-      this.totalNewCasesVariation = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseVariationValues);
+      this.totalNewCasesVariation = this.chartService.createChart(_dataLabels, 'Line', this.totalNewCaseVariationValues);
       promise.next();
     });
 
@@ -426,14 +428,14 @@ export class DashboardComponent implements OnInit {
     const promise = new Subject();
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/new").subscribe(data => {
-      if (data.results.length > 0) {
+      if (data.results.length > 0) {        
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalNewCaseValues.push(item.value);
         });
       }
-      this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues);
+      this.totalNewCases = this.chartService.createChart(_dataLabels, 'Line', this.totalNewCaseValues);
       promise.next();
     });
 
@@ -445,15 +447,15 @@ export class DashboardComponent implements OnInit {
     const promise = new Subject();
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/dead").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalDeadValues.push(item.value);
           this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues);
-      this.totalDeadIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadIncreaseValues);
+      this.totalDead = this.chartService.createChart(_dataLabels, 'Line', this.totalDeadValues);
+      this.totalDeadIncrease = this.chartService.createChart(_dataLabels, 'Line', this.totalDeadIncreaseValues);
       promise.next();
     });
     return promise;
@@ -467,15 +469,15 @@ export class DashboardComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/test").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalTestsValues.push(item.value);
           this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues);
-      this.totalTestsIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsIncreaseValues);
+      this.totalTests = this.chartService.createChart(_dataLabels, 'Line', this.totalTestsValues);
+      this.totalTestsIncrease = this.chartService.createChart(_dataLabels, 'Line', this.totalTestsIncreaseValues);
       promise.next();
     });
 
@@ -488,15 +490,15 @@ export class DashboardComponent implements OnInit {
     const promise = new Subject();
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/intensive-care").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalIntensiveCareValues.push(item.value);
           this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues);
-      this.totalIntensiveCareIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalIntensiveCareIncreaseValues);
+      this.totalIntensiveCare = this.chartService.createChart(_dataLabels, 'Line', this.totalIntensiveCareValues);
+      this.totalIntensiveCareIncrease = this.chartService.createChart(_dataLabels, 'Bar', this.totalIntensiveCareIncreaseValues);
       promise.next();
     });
     return promise;
@@ -507,15 +509,15 @@ export class DashboardComponent implements OnInit {
     const promise = new Subject();
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/total/recovered").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalRecoveredValues.push(item.value);
           this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
         });
       }
-      this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues);
-      this.totalRecoveredIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredIncreaseValues);
+      this.totalRecovered = this.chartService.createChart(_dataLabels, 'Line', this.totalRecoveredValues);
+      this.totalRecoveredIncrease = this.chartService.createChart(_dataLabels, 'Line', this.totalRecoveredIncreaseValues);
       promise.next();
     });
     return promise;
