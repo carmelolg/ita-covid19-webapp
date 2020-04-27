@@ -12,6 +12,7 @@ import { InfoChart } from '../shared/model/InfoChart';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { deprecate } from 'util';
 
 @Component({
   selector: 'app-regione',
@@ -358,6 +359,7 @@ export class RegioneComponent implements OnInit {
 
       this.createGrowthRates();
       this.createTotalPositives().subscribe(_sTP => {
+        this.createTotalNewCasesVariation();
         this.createTotalHospitalized();
         this.createTotalIntensiveCare();
         this.createTotalDead();
@@ -368,7 +370,6 @@ export class RegioneComponent implements OnInit {
             this.createTestWithPositiveDaily();
           });
         });
-        this.createTotalNewCasesVariation();
       });
 
 
@@ -417,6 +418,7 @@ export class RegioneComponent implements OnInit {
     this.percentageNewPositiveByTest = this.chartService.createChart(this.dataLabels, 'Line', _percentageNewPositiveByTest);
   }
   
+  //@deprecate
   private createTotalCases(): Observable<any> {
 
     const promise = new Subject();
@@ -467,11 +469,13 @@ export class RegioneComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new/variation").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalNewCaseVariationValues.push(item.value);
         });
       }
-      this.totalNewCasesVariation = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseVariationValues);
+      this.totalNewCasesVariation = this.chartService.createChart(_dataLabels, 'Line', this.totalNewCaseVariationValues);
       promise.next();
     });
 
@@ -484,13 +488,15 @@ export class RegioneComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/new").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalNewCaseValues.push(item.value);
         });
       } else {
         this.totalNewCasesInfo.subtitle = data.description;
       }
-      this.totalNewCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalNewCaseValues);
+      this.totalNewCases = this.chartService.createChart(_dataLabels, 'Line', this.totalNewCaseValues);
       promise.next();
     });
 
@@ -504,15 +510,17 @@ export class RegioneComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/hospitalized").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalHospitalizedValues.push(item.value);
           this.totalHospitalizedIncreaseValues.push(item.increaseFromYesterday);
         });
       } else {
         this.totalHospitalizedInfo.subtitle = data.description;
       }
-      this.totalHospitalized = this.chartService.createChart(this.dataLabels, 'Line', this.totalHospitalizedValues);
-      this.totalHospitalizedIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalHospitalizedIncreaseValues);
+      this.totalHospitalized = this.chartService.createChart(_dataLabels, 'Line', this.totalHospitalizedValues);
+      this.totalHospitalizedIncrease = this.chartService.createChart(_dataLabels, 'Bar', this.totalHospitalizedIncreaseValues);
       promise.next();
     });
 
@@ -526,17 +534,17 @@ export class RegioneComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/dead").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalDeadValues.push(item.value);
           this.totalDeadIncreaseValues.push(item.increaseFromYesterday);
         });
       } else {
         this.totalDeadInfo.subtitle = data.description;
       }
-      this.totalDead = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadValues);
-      this.totalDeadIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalDeadIncreaseValues);
+      this.totalDead = this.chartService.createChart(_dataLabels, 'Line', this.totalDeadValues);
+      this.totalDeadIncrease = this.chartService.createChart(_dataLabels, 'Line', this.totalDeadIncreaseValues);
       promise.next();
     });
 
@@ -550,17 +558,17 @@ export class RegioneComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/test").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalTestsValues.push(item.value);
           this.totalTestsIncreaseValues.push(item.increaseFromYesterday);
         });
       } else {
         this.totalTestsInfo.subtitle = data.description;
       }
-      this.totalTests = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsValues);
-      this.totalTestsIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalTestsIncreaseValues);
+      this.totalTests = this.chartService.createChart(_dataLabels, 'Line', this.totalTestsValues);
+      this.totalTestsIncrease = this.chartService.createChart(_dataLabels, 'Line', this.totalTestsIncreaseValues);
       promise.next();
     });
 
@@ -574,17 +582,17 @@ export class RegioneComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/intensive-care").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalIntensiveCareValues.push(item.value);
           this.totalIntensiveCareIncreaseValues.push(item.increaseFromYesterday);
         });
       } else {
         this.totalIntensiveCareInfo.subtitle = data.description;
       }
-      this.totalIntensiveCare = this.chartService.createChart(this.dataLabels, 'Line', this.totalIntensiveCareValues);
-      this.totalIntensiveCareIncrease = this.chartService.createChart(this.dataLabels, 'Bar', this.totalIntensiveCareIncreaseValues);
+      this.totalIntensiveCare = this.chartService.createChart(_dataLabels, 'Line', this.totalIntensiveCareValues);
+      this.totalIntensiveCareIncrease = this.chartService.createChart(_dataLabels, 'Bar', this.totalIntensiveCareIncreaseValues);
       promise.next();
     });
 
@@ -597,17 +605,17 @@ export class RegioneComponent implements OnInit {
 
     this.http.get<any>("https://ita-covid19.herokuapp.com/region/" + this.regionNameInput + "/total/recovered").subscribe(data => {
       if (data.results.length > 0) {
+        var _dataLabels = [];
         data.results.forEach(item => {
-          // let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-          // this.dataLabels.push(innerDate);
+          _dataLabels.push(this.datepipe.transform(item.data, 'dd/MM'));
           this.totalRecoveredValues.push(item.value);
           this.totalRecoveredIncreaseValues.push(item.increaseFromYesterday);
         });
       } else {
         this.totalRecoveredInfo.subtitle = data.description;
       }
-      this.totalRecovered = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredValues);
-      this.totalRecoveredIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalRecoveredIncreaseValues);
+      this.totalRecovered = this.chartService.createChart(_dataLabels, 'Line', this.totalRecoveredValues);
+      this.totalRecoveredIncrease = this.chartService.createChart(_dataLabels, 'Line', this.totalRecoveredIncreaseValues);
       promise.next();
     });
 
