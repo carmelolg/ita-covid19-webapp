@@ -13,166 +13,167 @@ import { Observable, Subject } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
-	selector: 'app-provincia',
-	templateUrl: './provincia.component.html',
-	styleUrls: ['./provincia.component.scss']
+  selector: 'app-provincia',
+  templateUrl: './provincia.component.html',
+  styleUrls: ['./provincia.component.scss']
 })
 export class ProvinciaComponent implements OnInit, AfterViewInit {
-	ngAfterViewInit() { }
+  ngAfterViewInit() { }
 
-	constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
+  constructor(private http: HttpClient, public datepipe: DatePipe, private chartService: ChartService) { }
 
-	formControl = new FormControl();
-	options: string[] = [];
-	filteredOptions: Observable<string[]>;
+  formControl = new FormControl();
+  options: string[] = [];
+  filteredOptions: Observable<string[]>;
 
-	districtName = "Torino";
-	districtNameInput = "";
-	isLoading = false;
+  districtName = "Torino";
+  districtNameInput = "";
+  isLoading = false;
 
-	dataLabels = [];
+  dataLabels = [];
 
-	growthRateDateLabels = [];
-	growthRateValues = [];
-	growthRateIncreaseValues = [];
-	growthRates: Chart;
+  growthRateDateLabels = [];
+  growthRateValues = [];
+  growthRateIncreaseValues = [];
+  growthRates: Chart;
 
-	totalCasesValues = [];
-	totalCasesIncreaseValues = [];
-	totalCases: Chart;
-	totalCasesIncrease: Chart;
+  totalCasesValues = [];
+  totalCasesIncreaseValues = [];
+  totalCases: Chart;
+  totalCasesIncrease: Chart;
 
-	currentGrowthRate = 0;
+  currentGrowthRate = 0;
 
-	tiles: Tile[] = [];
+  tiles: Tile[] = [];
 
-	migrationDate;
+  migrationDate;
 
-	ngOnInit() {
+  ngOnInit() {
 
-		this.getMigrationDate();
+    this.getMigrationDate();
 
-		this.http.get<any>("https://ita-covid19.herokuapp.com/districts").subscribe(districts => {
-			this.options = districts;
-		});
+    this.http.get<any>("https://ita-covid19.herokuapp.com/districts").subscribe(districts => {
+      this.options = districts;
+    });
 
-		this.eraseAll();
+    this.eraseAll();
 
-		this.createTotalCases();
+    this.createTotalCases();
 
-		this.getGenericStats();
+    this.getGenericStats();
 
-		this.tiles = null;
+    this.tiles = null;
 
-		this.filteredOptions = this.formControl.valueChanges
-			.pipe(
-				startWith(''),
-				map(value => this._filter(value))
-			);
-	}
+    this.filteredOptions = this.formControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+  }
 
-	private _filter(value: string): string[] {
-		const filterValue = value.toLowerCase();
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
 
-		return this.options.filter(option => option.toLowerCase().includes(filterValue));
-	}
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
 
-	private eraseAll() {
-		this.dataLabels = [];
-		this.totalCasesValues = [];
-		this.totalCasesIncreaseValues = [];
-		this.totalCases = null;
-		this.totalCasesIncrease = null;
+  private eraseAll() {
+    this.dataLabels = [];
+    this.totalCasesValues = [];
+    this.totalCasesIncreaseValues = [];
+    this.totalCases = null;
+    this.totalCasesIncrease = null;
 
-		this.growthRateDateLabels = [];
-		this.growthRateValues = [];
-		this.growthRateIncreaseValues = [];
-		this.growthRates = null;
-	}
+    this.growthRateDateLabels = [];
+    this.growthRateValues = [];
+    this.growthRateIncreaseValues = [];
+    this.growthRates = null;
+  }
 
-	private getMigrationDate(): Observable<any> {
+  private getMigrationDate(): Observable<any> {
 
-		const promise = new Subject();
-	
-		this.http.get<any>("https://ita-covid19.herokuapp.com/district/file/last").subscribe(data => {
-		  if (data!= null && data.date != null) {
-			this.migrationDate = data.date;
-		  }
-		  promise.next();
-		});
-	
-		return promise;
-	  }
+    const promise = new Subject();
 
-	private getGrowthRates() {
-		this.growthRateValues = [];
-		this.growthRateDateLabels = [];
+    this.http.get<any>("https://ita-covid19.herokuapp.com/district/file/last").subscribe(data => {
+      if (data != null && data.date != null) {
+        this.migrationDate = data.date;
+      }
+      promise.next();
+    });
 
-		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/growthRate").subscribe(data => {
-			if (data.results.length > 0) {
-				data.results.forEach(item => {
-					let innerDate = this.datepipe.transform(item.date, 'dd/MM');
-					this.growthRateDateLabels.push(innerDate);
-					this.growthRateValues.push(item.value);
-				});
-				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Bar', this.growthRateValues);
-			} else {
-				this.districtName = data.description;
-				this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Line', null);
-			}
-		});
-	}
+    return promise;
+  }
 
-	public createTotalCases() {
+  private getGrowthRates() {
+    this.growthRateValues = [];
+    this.growthRateDateLabels = [];
 
-		if (!this.isLoading) {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/growthRate").subscribe(data => {
+      if (data.results.length > 0) {
+        data.results.forEach(item => {
+          let innerDate = this.datepipe.transform(item.date, 'dd/MM');
+          this.growthRateDateLabels.push(innerDate);
+          this.growthRateValues.push(item.value);
+        });
+        this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Bar', this.growthRateValues);
+      } else {
+        this.districtName = data.description;
+        this.growthRates = this.chartService.createChart(this.growthRateDateLabels, 'Line', null);
+      }
+    });
+  }
 
+  public createTotalCases() {
 
-			this.isLoading = true;
-			if (this.districtNameInput.length === 0) {
-				this.districtNameInput = this.districtName;
-			}
-
-			this.eraseAll();
-
-			this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/total").subscribe(data => {
-				if (data.results.length > 0) {
-					data.results.forEach(item => {
-						let innerDate = this.datepipe.transform(item.data, 'dd/MM')
-						this.dataLabels.push(innerDate);
-						this.totalCasesValues.push(item.value);
-						this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
-					});
-					this.districtName = this.districtNameInput;
-					this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
-					this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesIncreaseValues);
-				} else {
-					this.districtName = data.description;
-					this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
-					this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', null);
-				}
-
-				this.isLoading = false;
-			});
-
-			this.getGenericStats();
-			this.getGrowthRates();
-		}
-	}
+    if (!this.isLoading) {
 
 
-	private getGenericStats() {
-		this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/stats").subscribe(data => {
-			if (!!data) {
-				this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
+      this.isLoading = true;
+      if (this.districtNameInput.length === 0) {
+        this.districtNameInput = this.districtName;
+      }
 
-				this.tiles = [
-					{ footer: 'Tasso di crescita', header: 'Tasso di crescita sul totale', percentage: this.currentGrowthRate + '%', cols: 4, rows: 2, color: '#b3e0ff' }
-				];
+      this.eraseAll();
 
-			}
-		}, error => {
-			this.tiles = [];
-		});
-	}
+      this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/total").subscribe(data => {
+        if (data.results.length > 0) {
+          data.results.forEach(item => {
+            let innerDate = this.datepipe.transform(item.data, 'dd/MM')
+            this.dataLabels.push(innerDate);
+            this.totalCasesValues.push(item.value);
+            this.totalCasesIncreaseValues.push(item.increaseFromYesterday);
+          });
+          this.districtName = this.districtNameInput;
+          this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesValues);
+          this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', this.totalCasesIncreaseValues);
+        } else {
+          this.districtName = data.description;
+          this.totalCases = this.chartService.createChart(this.dataLabels, 'Line', null);
+          this.totalCasesIncrease = this.chartService.createChart(this.dataLabels, 'Line', null);
+        }
+
+        this.isLoading = false;
+      });
+
+      this.getGenericStats();
+      this.getGrowthRates();
+    }
+  }
+
+
+  private getGenericStats() {
+    this.http.get<any>("https://ita-covid19.herokuapp.com/district/" + this.districtNameInput + "/stats").subscribe(data => {
+
+      if (!!data) {
+        this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
+
+        this.tiles = [
+          { footer: 'Tasso di crescita', header: 'Tasso di crescita sul totale', percentage: this.currentGrowthRate + '%', cols: 4, rows: 2, color: '#b3e0ff' }
+        ];
+
+      }
+    }, error => {
+      this.tiles = [];
+    });
+  }
 }

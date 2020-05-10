@@ -122,6 +122,8 @@ export class RegioneComponent implements OnInit {
 
   currentTotalCases = 0;
   currentPositives = 0;
+  newPositives = 0;
+  variationNewPositives = 0;
   currentDead = 0;
   currentRecovered = 0;
   currentTests = 0;
@@ -628,6 +630,8 @@ export class RegioneComponent implements OnInit {
 
         this.currentTotalCases = (!!data.currentTotalCases) ? data.currentTotalCases : 0;
         this.currentPositives = (!!data.currentPositives) ? data.currentPositives : 0;
+        this.newPositives = (!!data.newPositives) ? data.newPositives : 0;
+        this.variationNewPositives = (!!data.variationNewPositives) ? data.variationNewPositives : 0;
         this.currentDead = (!!data.currentDead) ? data.currentDead : 0;
         this.currentRecovered = (!!data.currentRecovered) ? data.currentRecovered : 0;
         this.currentTests = (!!data.currentTests) ? data.currentTests : 0;
@@ -647,12 +651,14 @@ export class RegioneComponent implements OnInit {
         this.genericTiles = [
           { footer: '', header: 'Totale casi', percentage: this.formatHundreds(this.currentTotalCases + ''), cols: 2, rows: 2, color: '#b3e0ff' },
           { footer: '', header: 'Positivi ad oggi', percentage: this.formatHundreds(this.currentPositives + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Deceduti', percentage: this.formatHundreds(this.currentDead + ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Guariti', percentage: this.formatHundreds(this.currentRecovered + ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Ricoverati', percentage: this.formatHundreds(this.currentHospedalized + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Terapia intensiva', percentage: this.formatHundreds(this.currentIntesiveCare + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Isolamento domiciliare', percentage: this.formatHundreds(this.currentHomeIsolation + ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Tamponi', percentage: this.formatHundreds(this.currentTests + ''), cols: 2, rows: 2, color: '#99d6ff' }
+          { footer: '', header: 'Nuovi positivi', percentage: this.formatHundreds(this.newPositives + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Variazione totale positivi', percentage: this.formatHundreds(this.variationNewPositives + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Deceduti', percentage: this.formatHundreds(this.currentDead + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Guariti', percentage: this.formatHundreds(this.currentRecovered + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Ricoverati', percentage: this.formatHundreds(this.currentHospedalized + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Terapia intensiva', percentage: this.formatHundreds(this.currentIntesiveCare + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Isolamento domiciliare', percentage: this.formatHundreds(this.currentHomeIsolation + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Tamponi', percentage: this.formatHundreds(this.currentTests + ''), cols: 2, rows: 2, color: '#b3e0ff' }
         ];
 
       }
