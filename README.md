@@ -4,7 +4,7 @@
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.0.
 
 ## Production
-Here the active production node: http://ita-covid19.herokuapp.com/
+Here the active production node: http://italy-covid19.herokuapp.com/
 
 ## Development server
 
