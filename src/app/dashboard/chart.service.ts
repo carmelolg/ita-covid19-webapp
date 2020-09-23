@@ -59,7 +59,7 @@ export class ChartService {
           labelInterpolationFnc: function (
             value: number
           ): string {
-            return Math.abs(value) > 999 ? Math.sign(value) * ((Math.abs(value) / 1000)) + 'k' : (Math.sign(value) * Math.abs(value)).toFixed();
+            return Math.abs(value) > 999 ? Math.sign(value) * ((Math.abs(value) / 1000)) + 'k' : (Math.sign(value) * Math.abs(value)).toFixed(1);
           }
         },
       },
@@ -102,7 +102,7 @@ export class ChartService {
         labelInterpolationFnc: function (
           value: number
         ): string {
-          return Math.abs(value) > 999 ? Math.sign(value) * ((Math.abs(value) / 1000)) + 'k' : (Math.sign(value) * Math.abs(value)).toFixed();
+          return Math.abs(value) > 999 ? Math.sign(value) * ((Math.abs(value) / 1000)) + 'k' : (Math.sign(value) * Math.abs(value)).toFixed(1);
         }
       },
       axisX: {
