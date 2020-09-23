@@ -153,10 +153,10 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
         }
 
         this.isLoading = false;
+        this.getGenericStats();
+        this.getGrowthRates();
       });
 
-      this.getGenericStats();
-      this.getGrowthRates();
     }
   }
 
@@ -168,7 +168,9 @@ export class ProvinciaComponent implements OnInit, AfterViewInit {
         this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
 
         this.tiles = [
-          { footer: 'Tasso di crescita', header: 'Tasso di crescita sul totale', percentage: this.currentGrowthRate + '%', cols: 4, rows: 2, color: '#b3e0ff' }
+          { footer: 'Totale', header: 'Totale', percentage: this.totalCasesValues[this.totalCasesValues.length - 1], cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: 'Incremento', header: 'Casi oggi', percentage: this.totalCasesIncreaseValues[this.totalCasesIncreaseValues.length - 1], cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: 'Tasso di crescita', header: 'Tasso di crescita', percentage: this.currentGrowthRate + '%', cols: 4, rows: 2, color: '#b3e0ff' }
         ];
 
       }
