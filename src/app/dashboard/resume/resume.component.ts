@@ -49,8 +49,8 @@ export class ResumeComponent implements OnInit {
         this.currentHomeIsolation = (!!data.currentHomeIsolation) ? data.currentHomeIsolation : 0;
 
         this.genericTiles = [
-          { footer: '', header: 'Tasso di positività oggi', percentage: this.percentageCasesBasedOnTests +  '%', cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Tamponi oggi', percentage: this.formatHundreds(this.currentTests + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Tasso di positività', percentage: this.percentageCasesBasedOnTests +  '%', cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Totale tamponi', percentage: this.formatHundreds(this.currentTests + ''), cols: 2, rows: 2, color: '#99d6ff' },
           { footer: '', header: 'Nuovi positivi', percentage: this.formatHundreds(this.newPositives + ''), cols: 2, rows: 2, color: '#b3e0ff' },
           { footer: '', header: 'Variazione totale positivi', percentage: this.formatHundreds(this.variationNewPositives + ''), cols: 2, rows: 2, color: '#99d6ff' },
           { footer: '', header: 'Ricoverati', percentage: this.formatHundreds(this.currentHospedalized + ''), cols: 2, rows: 2, color: '#b3e0ff' },
