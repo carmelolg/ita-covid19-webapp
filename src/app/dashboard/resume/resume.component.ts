@@ -11,8 +11,6 @@ import { Tile } from '../../shared/model/Tiles';
 export class ResumeComponent implements OnInit {
 
 
-  currentGrowthRate = 0;
-  currentNewPositiveGrowthRate = 0;
   percentageCasesBasedOnTests = 0;
 
   currentTotalCases = 0;
@@ -38,8 +36,6 @@ export class ResumeComponent implements OnInit {
   private getGenericStats() {
     this.http.get<any>("https://ita-covid19.herokuapp.com/italy/stats").subscribe(data => {
       if (!!data) {
-        this.currentGrowthRate = (!!data.currentRateOfGrowth) ? data.currentRateOfGrowth : 0;
-        this.currentNewPositiveGrowthRate = (!!data.currentNewPositiveRateOfGrowth) ? data.currentNewPositiveRateOfGrowth : 0;
         this.percentageCasesBasedOnTests = (!!data.currentPositivePercentageBasedOnTests) ? data.currentPositivePercentageBasedOnTests : 0;
         this.currentTotalCases = (!!data.currentTotalCases) ? data.currentTotalCases : 0;
         this.currentPositives = (!!data.currentPositives) ? data.currentPositives : 0;
@@ -53,19 +49,16 @@ export class ResumeComponent implements OnInit {
         this.currentHomeIsolation = (!!data.currentHomeIsolation) ? data.currentHomeIsolation : 0;
 
         this.genericTiles = [
-          { footer: '', header: 'Tasso di positività', percentage: this.percentageCasesBasedOnTests +  '%', cols: 4, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Totale casi', percentage: this.formatHundreds(this.currentTotalCases + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Positivi ad oggi', percentage: this.formatHundreds(this.currentPositives + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Nuovi positivi', percentage: this.formatHundreds(this.newPositives + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Tasso di positività oggi', percentage: this.percentageCasesBasedOnTests +  '%', cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Tamponi oggi', percentage: this.formatHundreds(this.currentTests + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Nuovi positivi', percentage: this.formatHundreds(this.newPositives + ''), cols: 2, rows: 2, color: '#b3e0ff' },
           { footer: '', header: 'Variazione totale positivi', percentage: this.formatHundreds(this.variationNewPositives + ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Deceduti', percentage: this.formatHundreds(this.currentDead + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Guariti', percentage: this.formatHundreds(this.currentRecovered + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Ricoverati', percentage: this.formatHundreds(this.currentHospedalized + ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Terapia intensiva', percentage: this.formatHundreds(this.currentIntesiveCare + ''), cols: 2, rows: 2, color: '#99d6ff' },
-          { footer: '', header: 'Isolamento domiciliare', percentage: this.formatHundreds(this.currentHomeIsolation + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: '', header: 'Tamponi', percentage: this.formatHundreds(this.currentTests + ''), cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: 'Tasso di crescita', header: '% incr. totale', percentage: this.currentGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' },
-          { footer: 'Tasso di crescita', header: '% incr. nuovi positivi', percentage: this.currentNewPositiveGrowthRate + '%', cols: 2, rows: 2, color: '#b3e0ff' }
+          { footer: '', header: 'Ricoverati', percentage: this.formatHundreds(this.currentHospedalized + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Terapia intensiva', percentage: this.formatHundreds(this.currentIntesiveCare + ''), cols: 2, rows: 2, color: '#99d6ff' }, //99d6ff
+          { footer: '', header: 'Totale decessi', percentage: this.formatHundreds(this.currentDead + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Totale guariti', percentage: this.formatHundreds(this.currentRecovered + ''), cols: 2, rows: 2, color: '#99d6ff' },
+          { footer: '', header: 'Totale casi', percentage: this.formatHundreds(this.currentTotalCases + ''), cols: 2, rows: 2, color: '#b3e0ff' },
+          { footer: '', header: 'Attualmente positivi', percentage: this.formatHundreds(this.currentPositives + ''), cols: 2, rows: 2, color: '#99d6ff' }
         ];
       }
     });
