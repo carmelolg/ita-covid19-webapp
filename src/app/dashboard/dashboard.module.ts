@@ -1,3 +1,4 @@
+import { ResumeComponent } from './resume/resume.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -8,6 +9,7 @@ import { DashboardRoutes } from './dashboard.routing';
 import { ChartistModule } from 'ng-chartist';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { ChartModule } from '../charts/chart.module';
+import { CasesComponent } from './cases/cases.component';
 
 @NgModule({
   imports: [
@@ -19,6 +21,6 @@ import { ChartModule } from '../charts/chart.module';
     RouterModule.forChild(DashboardRoutes)
   ],
   providers: [DatePipe, CdkColumnDef],
-  declarations: [DashboardComponent]
+  declarations: [DashboardComponent, ResumeComponent, CasesComponent]
 })
 export class DashboardModule { }
